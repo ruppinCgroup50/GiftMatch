@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GiftMatchServer.BL;
+
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -10,34 +12,15 @@ namespace GiftMatchServer.Controllers
     {
         // GET: api/<InterestsController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult GetIntersts()
         {
-            return new string[] { "value1", "value2" };
+            DBservices dbs = new DBservices();
+            List<Interests> res = dbs.getInterests();
+            if(res.Count > 0)
+                return Ok(res);
+            return NotFound();
         }
 
-        // GET api/<InterestsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<InterestsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<InterestsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<InterestsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+       
     }
 }

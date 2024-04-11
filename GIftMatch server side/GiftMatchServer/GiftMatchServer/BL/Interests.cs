@@ -4,11 +4,17 @@
     {
         public int Id { get; set; }
         public string InterestName { get; set; }
+        public string LogoPath { get; set; }
 
-        public Interests(int id, string interestName)
+        public Interests()
+        {
+     
+        }
+        public Interests(int id, string interestName,string logoPath)
         {
             Id = id;
             InterestName = interestName;
+            LogoPath = logoPath;
         }
     }
 
