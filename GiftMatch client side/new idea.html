@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>New Idea</title>
+    <title>הוספת רעיון חדש</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Wish shop project">
@@ -29,16 +29,21 @@
 
             }
             ajaxCall("GET", api +"Interests","",successInt,errFunction)
-
         });
+
         function successInt(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
-                str +=`<div class="interest">
-                        <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">
-                        <label for="music">
-                        <img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
-                        <span class="interest_title">${data[i].interestName}</span><br/></label></div>`
+                str += `<div class="interest">
+                        <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
+                if (data[i].interestName.length > 6) {
+                    str += `<label for="music" onclick="changeCheckbox('${data[i].id}')">`;
+                }
+                else {
+                    str += `<label for="music" onclick="changeCheckbox('${data[i].id}')"><br/>`;
+                }
+                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
+                        <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
             }
             document.getElementById("PHinterest_grid").innerHTML = str;
         }
@@ -46,6 +51,23 @@
             console.log(err);
         }
 
+        function changeCheckbox(checkboxId) {
+            var checkbox = document.getElementById(checkboxId);
+            checkbox.checked = !checkbox.checked;
+            changeColor(checkboxId);
+        }
+
+        function changeColor(interestId) {
+            var checkbox = document.getElementById(interestId);
+            var label = document.querySelector(`label[for="${interestId}"]`);
+            if (checkbox.checked) {
+                label.style.backgroundColor = '#937c6f';
+                label.style.color = '#fff';
+            } else {
+                label.style.backgroundColor = 'initial';
+                label.style.color = '#2f2f2f';
+            }
+        }
 
     </script>
 </head>
@@ -305,7 +327,6 @@
     <script src="styles/bootstrap4/bootstrap.min.js"></script>
     <script src="plugins/easing/easing.js"></script>
     <script src="plugins/parallax-js-master/parallax.min.js"></script>
-    <script src="js/contact_custom.js"></script>
     <script>
         function Logout() {
             window.location.href = "index.html";
