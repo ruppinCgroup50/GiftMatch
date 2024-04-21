@@ -37,10 +37,10 @@
                 str += `<div class="interest">
                         <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
                 if (data[i].interestName.length > 6) {
-                    str += `<label for="music" onclick="changeCheckbox('${data[i].id}')">`;
+                    str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')">`;
                 }
                 else {
-                    str += `<label for="music" onclick="changeCheckbox('${data[i].id}')"><br/>`;
+                    str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br/>`;
                 }
                 str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
                         <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
@@ -165,7 +165,7 @@
                                         <option value="1000">₪800-1000</option>
                                         <option value="10000">מעל ₪1000</option>
                                     </select><br />
-                                    <h6>בחר תחומי עניין המשתייכים למתנה:</h6><br />
+                                    <h6>בחר/י תחומי עניין המשתייכים למתנה:</h6><br />
                                     <div class="interest_grid" id="PHinterest_grid">
                                         <!--<div class="interest">
                                             <input type="checkbox" id="music" name="interest" value="music">
@@ -273,11 +273,11 @@
                                             </label>
                                         </div>-->
                                     </div><br />
-                                    <textarea class="review_form_text" name="review_form_text" placeholder="תיאור המתנה" required="required"></textarea><br /><br />
+                                    <textarea class="review_form_text" name="review_form_text" placeholder="תיאור המתנה" required="required"></textarea><br /><br /><br />
                                     <input type="file" id="upload-btn" accept="image/*">
                                     <label for="upload-btn" class="upload-label">העלאת תמונה</label>
                                     <div id="file-name"></div>
-                                    <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div> <br />
+                                    <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div><br /><br />
                                     <button type="submit" class="review_form_button">הוספת רעיון</button>
                                 </form>
                             </div>
@@ -293,7 +293,7 @@
                 <img src="images/idea1_gift.jpg" /><br />
                 <h2>!רעיון חדש התווסף למערכת בהצלחה</h2>
                 <h4>!תודה על התרומה שלך למערכת</h4>
-                <button type="submit" onclick="redirectToHomePage()" class="review_form_button">חזרה לדף הבית</button>
+                <button type="submit" onclick="window.location.href = 'home.html'" class="review_form_button">חזרה לדף הבית</button>
             </div>
         </div>
 
@@ -359,10 +359,6 @@
         function showPopup() {
             document.getElementById('overlay').style.display = 'block';
             document.querySelector('.popup').style.display = 'block';
-        }
-
-        function redirectToHomePage() {
-            window.location.href = 'home.html';
         }
 
     </script>

@@ -106,7 +106,7 @@
                                             <input type="radio" name="gender" value="נקבה" required="required"> נקבה
                                         </div><br />
                                         <select class="review_form_input" required="required">
-                                            <option value="" disabled selected>בחר סוג קרבה</option>
+                                            <option value="" disabled selected>בחירת סוג קרבה</option>
                                             <option value="family">בן משפחה</option>
                                             <option value="partner">בן/ בת זוג</option>
                                             <option value="friend">חבר/ה</option>
@@ -118,13 +118,13 @@
                                         <input type="date" class="review_form_input" required="required" placeholder="תאריך לידה"><br />
                                         <h6>מידת קרבה:</h6><br />
                                         <div class="slidecontainer">
-                                            <input type="range" min="1" max="10" value="5" class="slider" id="myRange">
+                                            <input type="range" min="1" max="10" value="5" class="slider" id="myRange" required>
                                             <p id="demo"></p>
                                         </div><br /><br /><br /><br /><br />
                                         <input type="file" id="upload-btn" accept="image/*">
                                         <label for="upload-btn" class="upload-label">העלאת תמונה</label>
                                         <div id="file-name"></div>
-                                        <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div> <br />
+                                        <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div><br /><br />
                                         <button type="submit" class="review_form_button">הוספת הנמען</button>
                                     </form>
                                 </div>
@@ -142,7 +142,7 @@
             <div class="popup">
                 <img src="images/gift recipient.png" /><br />
                 <h3>!נמען חדש התווסף למערכת בהצלחה</h3>
-                <button type="submit" onclick="redirectToHomePage()" class="review_form_button">להמשך מציאת מתנה</button>
+                <button type="submit" onclick="window.location.href = 'find gift.html'" class="review_form_button">להמשך מציאת מתנה</button>
             </div>
         </div>
 
@@ -204,10 +204,6 @@
         function showPopup() {
             document.getElementById('overlay').style.display = 'block';
             document.querySelector('.popup').style.display = 'block';
-        }
-
-        function redirectToHomePage() {
-            window.location.href = 'home.html';
         }
 
         var slider = document.getElementById("myRange");
