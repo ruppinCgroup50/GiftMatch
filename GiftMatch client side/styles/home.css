@@ -51,6 +51,22 @@
     }
 }
 
+@media screen and (min-width: 768px) {
+    .extra_promo {
+        width: calc((100% - 30px) / 2);
+        height: 616px;
+        float: left;
+    }
+
+    .extra_promo_1 {
+        margin-right: 30px;
+        padding-top: 43px;
+        padding-left: 45px;
+        padding-bottom: 46px;
+        padding-right: 45px;
+    }
+}
+
 /*********************************
 2. Body and some general stuff
 *********************************/
@@ -892,12 +908,6 @@ section {
     padding-right: 62px;
 }
 
-.extra_promo {
-    width: calc((100% - 30px) / 2);
-    height: 616px;
-    float: left;
-}
-
 .extra_promo_image {
     position: absolute;
     top: 0;
@@ -907,14 +917,6 @@ section {
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
-}
-
-.extra_promo_1 {
-    margin-right: 30px;
-    padding-top: 43px;
-    padding-left: 45px;
-    padding-bottom: 46px;
-    padding-right: 45px;
 }
 
 .extra_1_content {

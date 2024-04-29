@@ -142,7 +142,7 @@
             <div class="popup">
                 <img src="images/gift recipient.png" /><br />
                 <h3>!נמען חדש התווסף למערכת בהצלחה</h3>
-                <button type="submit" onclick="window.location.href = 'find gift.html'" class="review_form_button">להמשך מציאת מתנה</button>
+                <button type="submit" onclick="navigateToPage()" class="review_form_button">להמשך מציאת מתנה</button>
             </div>
         </div>
 
@@ -213,6 +213,16 @@
         // Update the current slider value (each time you drag the slider handle)
         slider.oninput = function () {
             output.innerHTML = this.value;
+        }
+
+        function navigateToPage() {
+            var sliderValue = document.getElementById("myRange").value;
+            if (sliderValue > 5) {
+                window.location.href = "big five.html";
+            }
+            else {
+                window.location.href = "find gift.html";
+            }
         }
 
     </script>

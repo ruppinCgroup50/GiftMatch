@@ -41,21 +41,33 @@
     src: url('../fonts/beyond_the_mountains.otf') format('opentype'), url('../fonts/beyond_the_mountains.ttf') format('truetype');
 }
 
-@media screen and (max-width: 767px) {
-    .LoginBTN {
-        display: none;
-    }
-}
-
 @media screen and (min-width: 768px) {
     .interest_grid {
         grid-template-columns: repeat(5, 1fr);
     }
+    .home_title {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 36px;
+        color: #FFFFFF;
+        line-height: 0.75;
+        left: 1000px;
+    }
 }
 
 @media screen and (max-width: 767px) {
+    .LoginBTN {
+        display: none;
+    }
     .interest_grid {
         grid-template-columns: repeat(auto-fill, minmax(calc(33.333% - 20px), 1fr));
+    }
+    .home_title {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 36px;
+        color: #FFFFFF;
+        line-height: 0.75;
+        bottom: 170px;
+        left: 100px;
     }
 }
 
@@ -549,14 +561,6 @@ section {
     position: absolute;
     left: 0;
     top: 62.4%;
-}
-
-.home_title {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 36px;
-    color: #FFFFFF;
-    line-height: 0.75;
-    left: 1000px;
 }
 
 /*********************************
