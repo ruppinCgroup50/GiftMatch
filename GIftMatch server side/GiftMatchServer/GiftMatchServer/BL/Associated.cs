@@ -2,12 +2,12 @@
 {
     public class Associated
     {
-        public int Id { get; set; }
+        public int IntrestId { get; set; }
         public string GiftName { get; set; }
 
-        public Associated(int id, string giftName)
+        public Associated(int intrestId, string giftName)
         {
-            Id = id;
+            IntrestId = intrestId;
             GiftName = giftName;
         }
     }

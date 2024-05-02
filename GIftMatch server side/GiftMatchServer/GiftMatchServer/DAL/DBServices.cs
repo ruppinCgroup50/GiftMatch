@@ -7,7 +7,7 @@ using System.Data;
 using System.Text;
 using System.Xml.Linq;
 using GiftMatchServer.BL;
-
+using System.Text.Json;
 
 public class DBservices
 {
@@ -200,6 +200,45 @@ public class DBservices
         }
 
         cmd = CreateUserInsertCommandWithStoredProcedure("sp_PostNewRecipient", con, recipient);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+      public int InsertGiftIdea(JsonElement data)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = giftideaInsertCommandWithStoredProcedure("sp_PostNewGiftIdea", con, data);             // create the command
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
@@ -790,6 +829,29 @@ public class DBservices
         cmd.Parameters.AddWithValue("@lastName", user.LastName);
         cmd.Parameters.AddWithValue("@password", user.Password);
         return cmd;
+    }  
+    private SqlCommand giftideaInsertCommandWithStoredProcedure(String spName, SqlConnection con, JsonElement data)
+    {
+        string GiftName = data.GetProperty("giftName").GetString();
+        string Description = data.GetProperty("description").GetString();
+        int Price = Convert.ToInt32(data.GetProperty("price").GetString());
+        string Image = data.GetProperty("image").GetString();
+        string UserName = data.GetProperty("userEmail").GetString();
+        string Intrests = data.GetProperty("intrests").GetString();
+        
+        
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@GiftName", GiftName);
+        cmd.Parameters.AddWithValue("@Description", Description);
+        cmd.Parameters.AddWithValue("@Price", Price);
+        cmd.Parameters.AddWithValue("@Image", Image);
+        cmd.Parameters.AddWithValue("@UserEmail", UserName);
+        cmd.Parameters.AddWithValue("@Intrests", Intrests);
+        return cmd;
     }
     private SqlCommand CreateUserInsertCommandWithStoredProcedure(String spName, SqlConnection con, Recipient recipient)
     {
@@ -798,7 +860,7 @@ public class DBservices
         cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
         cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-        cmd.Parameters.AddWithValue("@Id", recipient.Id);
+        cmd.Parameters.AddWithValue("@id", recipient.Id);
         cmd.Parameters.AddWithValue("@name", recipient.Name);
         cmd.Parameters.AddWithValue("@gender", recipient.Gender);
         cmd.Parameters.AddWithValue("@relationType", recipient.RelationType);

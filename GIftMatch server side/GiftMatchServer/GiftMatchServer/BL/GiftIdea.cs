@@ -4,15 +4,15 @@
     {
         public string GiftName { get; set; }
         public string Description { get; set; }
-        public int Budget { get; set; }
-        public int Image { get; set; }
+        public int Price { get; set; }
+        public string Image { get; set; }
         public string UserName { get; set; }
 
-        public GiftIdea(string giftName, string description, int budget, int image, string userName)
+        public GiftIdea(string giftName, string description, int price, string image, string userName)
         {
             GiftName = giftName;
             Description = description;
-            Budget = budget;
+            Price = price;
             Image = image;
             UserName = userName;
         }
