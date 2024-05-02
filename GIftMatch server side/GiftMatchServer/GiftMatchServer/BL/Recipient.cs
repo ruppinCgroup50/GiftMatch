@@ -1,18 +1,20 @@
-﻿namespace GiftMatchServer.BL
+﻿using System.Security.Cryptography.Xml;
+
+namespace GiftMatchServer.BL
 {
-    public class GiftRecipient
+    public class Recipient
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
         public string RelationType { get; set; }
-        public int Birthday { get; set; }
+        public DateTime Birthday { get; set; }
         public int RelationshipScore { get; set; }
         public string Image { get; set; }
-        public string UserName { get; set; }
+        public string UserEmail { get; set; }
         public int IdBasket { get; set; }
 
-        public GiftRecipient(int id, string name, string gender, string relationType, int birthday, int relationshipScore, string image, string userName, int idBasket)
+        public Recipient(int id, string name, string gender, string relationType, DateTime birthday, int relationshipScore, string image, string userEmail, int idBasket)
         {
             Id = id;
             Name = name;
@@ -21,7 +23,7 @@
             Birthday = birthday;
             RelationshipScore = relationshipScore;
             Image = image;
-            UserName = userName;
+            UserEmail = userEmail;
             IdBasket = idBasket;
         }
     }

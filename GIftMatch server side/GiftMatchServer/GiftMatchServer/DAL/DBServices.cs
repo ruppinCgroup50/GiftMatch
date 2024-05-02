@@ -183,6 +183,47 @@ public class DBservices
 
     }
 
+    public int InsertRecipient(Recipient recipient)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateUserInsertCommandWithStoredProcedure("sp_PostNewRecipient", con, recipient);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    
+
     ////--------------------------------------------------------------------------------------------------
     //// This method Inserts a flat to the flat table 
     ////--------------------------------------------------------------------------------------------------
@@ -749,7 +790,25 @@ public class DBservices
         cmd.Parameters.AddWithValue("@lastName", user.LastName);
         cmd.Parameters.AddWithValue("@password", user.Password);
         return cmd;
-    }  
+    }
+    private SqlCommand CreateUserInsertCommandWithStoredProcedure(String spName, SqlConnection con, Recipient recipient)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@Id", recipient.Id);
+        cmd.Parameters.AddWithValue("@name", recipient.Name);
+        cmd.Parameters.AddWithValue("@gender", recipient.Gender);
+        cmd.Parameters.AddWithValue("@relationType", recipient.RelationType);
+        cmd.Parameters.AddWithValue("@relationshipScore", recipient.RelationshipScore);
+        cmd.Parameters.AddWithValue("@image", recipient.Image);
+        cmd.Parameters.AddWithValue("@userEmail", recipient.UserEmail);
+        cmd.Parameters.AddWithValue("@idBasket", recipient.IdBasket);
+        cmd.Parameters.AddWithValue("@birthday", recipient.Birthday);
+        return cmd;
+    }
     private SqlCommand ConnectUserCommandWithStoredProcedure(String spName, SqlConnection con, string email,string password )
     {
         SqlCommand cmd = new SqlCommand(); // create the command object

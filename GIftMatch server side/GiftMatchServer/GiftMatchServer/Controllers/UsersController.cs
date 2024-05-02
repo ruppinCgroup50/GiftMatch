@@ -20,7 +20,7 @@ namespace GiftMatchServer.Controllers
                 int res = dbs.InsertUser(user);
                 if (res == 1)
                 {
-                    return Ok(user.Email);
+                    return Ok(user);
                 }
                 return NotFound();
             }

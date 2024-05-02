@@ -156,7 +156,8 @@
                             <div class="review_form_content">
                                 <form action="#" id="review_form" class="review_form">
                                     <input type="text" class="review_form_input" placeholder="שם המתנה" required="required"> <br />
-                                    <select class="review_form_input" required="required">
+                                    <input type="number" class="review_form_input" placeholder="מחיר המתנה" required="required"> <br />
+                                    <!--<select class="review_form_input" required="required">
                                         <option value="" disabled selected>מה עלות המתנה?</option>
                                         <option value="200">עד ₪200</option>
                                         <option value="400">₪200-400</option>
@@ -164,114 +165,114 @@
                                         <option value="800">₪600-800</option>
                                         <option value="1000">₪800-1000</option>
                                         <option value="10000">מעל ₪1000</option>
-                                    </select><br />
+                                    </select><br />-->
                                     <h6>בחר/י תחומי עניין המשתייכים למתנה:</h6><br />
                                     <div class="interest_grid" id="PHinterest_grid">
                                         <!--<div class="interest">
-                                            <input type="checkbox" id="music" name="interest" value="music">
-                                            <label for="music">
-                                                <img src="images/interest_1.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">מוזיקה</span><br />
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="sport" name="interest" value="sport">
-                                            <label for="sport">
-                                                <img src="images/interest_2.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">ספורט ואקסטרים</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="fashion" name="interest" value="fashion">
-                                            <label for="fashion">
-                                                <img src="images/interest_3.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">אופנה וטקסטיל</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="technology" name="interest" value="technology">
-                                            <label for="technology">
-                                                <img src="images/interest_4.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">טכנולוגיה ומדע</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="food" name="interest" value="food">
-                                            <label for="food">
-                                                <img src="images/interest_5.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">אוכל</span><br />
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="vacation" name="interest" value="vacation">
-                                            <label for="vacation">
-                                                <img src="images/interest_6.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">תיירות ונופש</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="consumption" name="interest" value="consumption">
-                                            <label for="consumption">
-                                                <img src="images/interest_7.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">צרכנות</span><br />
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="art" name="interest" value="art">
-                                            <label for="art">
-                                                <img src="images/interest_8.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">אומנות ויצירה</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="entertainment" name="interest" value="entertainment">
-                                            <label for="entertainment">
-                                                <img src="images/interest_9.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">בילוי ופנאי</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="photography" name="interest" value="photography">
-                                            <label for="photography">
-                                                <img src="images/interest_10.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">צילום</span><br />
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="gardening" name="interest" value="gardening">
-                                            <label for="gardening">
-                                                <img src="images/interest_11.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">גינון וצמחים</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="beauty" name="interest" value="beauty">
-                                            <label for="beauty">
-                                                <img src="images/interest_12.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">יופי וטיפוח</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="gaming" name="interest" value="gaming">
-                                            <label for="gaming">
-                                                <img src="images/interest_13.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">משחקים</span><br />
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="cultural" name="interest" value="cultural">
-                                            <label for="cultural">
-                                                <img src="images/interest_14.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">תרבות והעשרה</span>
-                                            </label>
-                                        </div>
-                                        <div class="interest">
-                                            <input type="checkbox" id="alternativeMedicine" name="interest" value="alternativeMedicine">
-                                            <label for="alternativeMedicine">
-                                                <img src="images/interest_15.png" alt="icon" class="interest_icon">
-                                                <span class="interest_title">רפואה משלימה</span>
-                                            </label>
-                                        </div>-->
+            <input type="checkbox" id="music" name="interest" value="music">
+            <label for="music">
+                <img src="images/interest_1.png" alt="icon" class="interest_icon">
+                <span class="interest_title">מוזיקה</span><br />
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="sport" name="interest" value="sport">
+            <label for="sport">
+                <img src="images/interest_2.png" alt="icon" class="interest_icon">
+                <span class="interest_title">ספורט ואקסטרים</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="fashion" name="interest" value="fashion">
+            <label for="fashion">
+                <img src="images/interest_3.png" alt="icon" class="interest_icon">
+                <span class="interest_title">אופנה וטקסטיל</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="technology" name="interest" value="technology">
+            <label for="technology">
+                <img src="images/interest_4.png" alt="icon" class="interest_icon">
+                <span class="interest_title">טכנולוגיה ומדע</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="food" name="interest" value="food">
+            <label for="food">
+                <img src="images/interest_5.png" alt="icon" class="interest_icon">
+                <span class="interest_title">אוכל</span><br />
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="vacation" name="interest" value="vacation">
+            <label for="vacation">
+                <img src="images/interest_6.png" alt="icon" class="interest_icon">
+                <span class="interest_title">תיירות ונופש</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="consumption" name="interest" value="consumption">
+            <label for="consumption">
+                <img src="images/interest_7.png" alt="icon" class="interest_icon">
+                <span class="interest_title">צרכנות</span><br />
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="art" name="interest" value="art">
+            <label for="art">
+                <img src="images/interest_8.png" alt="icon" class="interest_icon">
+                <span class="interest_title">אומנות ויצירה</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="entertainment" name="interest" value="entertainment">
+            <label for="entertainment">
+                <img src="images/interest_9.png" alt="icon" class="interest_icon">
+                <span class="interest_title">בילוי ופנאי</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="photography" name="interest" value="photography">
+            <label for="photography">
+                <img src="images/interest_10.png" alt="icon" class="interest_icon">
+                <span class="interest_title">צילום</span><br />
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="gardening" name="interest" value="gardening">
+            <label for="gardening">
+                <img src="images/interest_11.png" alt="icon" class="interest_icon">
+                <span class="interest_title">גינון וצמחים</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="beauty" name="interest" value="beauty">
+            <label for="beauty">
+                <img src="images/interest_12.png" alt="icon" class="interest_icon">
+                <span class="interest_title">יופי וטיפוח</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="gaming" name="interest" value="gaming">
+            <label for="gaming">
+                <img src="images/interest_13.png" alt="icon" class="interest_icon">
+                <span class="interest_title">משחקים</span><br />
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="cultural" name="interest" value="cultural">
+            <label for="cultural">
+                <img src="images/interest_14.png" alt="icon" class="interest_icon">
+                <span class="interest_title">תרבות והעשרה</span>
+            </label>
+        </div>
+        <div class="interest">
+            <input type="checkbox" id="alternativeMedicine" name="interest" value="alternativeMedicine">
+            <label for="alternativeMedicine">
+                <img src="images/interest_15.png" alt="icon" class="interest_icon">
+                <span class="interest_title">רפואה משלימה</span>
+            </label>
+        </div>-->
                                     </div><br />
                                     <textarea class="review_form_text" name="review_form_text" placeholder="תיאור המתנה" required="required"></textarea><br /><br /><br />
                                     <input type="file" id="upload-btn" accept="image/*">
