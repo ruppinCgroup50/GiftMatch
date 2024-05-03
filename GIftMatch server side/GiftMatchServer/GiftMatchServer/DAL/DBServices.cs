@@ -87,6 +87,56 @@ public class DBservices
             }
         }
 
+    } 
+    public List<Big5Q> GetQuestion()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureNoParams("sp_GetBig5Q", con);             // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<Big5Q> list = new List<Big5Q>();
+            while (dataReader.Read())
+            {
+                Big5Q q = new Big5Q();
+                q.Id = Convert.ToInt32(dataReader["id"].ToString());
+                q.Qname = dataReader["Qname"].ToString();
+                
+                list.Add(q);
+                
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
     }
 
 
