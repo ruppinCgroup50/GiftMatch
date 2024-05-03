@@ -28,7 +28,73 @@
             else {
 
             }
+            ajaxCall("GET", api + 'Big5qs', '', successCB, errorCB)
+            currentQuestion = 0;
+            answeredQuestions = 0;
         });
+        function successCB(data) {
+            globalData = data;
+            let username="הודיה"//עד שניקח מהלוקל סטורג
+            var questionContainer = document.getElementById('questionContainer');
+            questionContainer.innerHTML = '';
+            for (var i = currentQuestion; i < currentQuestion + 5 && i < data.length; i++) {
+                var questionDiv = document.createElement('div');
+                questionDiv.innerHTML = `<label for="rating' + i + '">האם ${username} ` + data[i].qname + '</label>' +
+                    '<div class="star-rating">' +
+                    '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" />' +
+                    '<label for="rating' + i + '-5">&#9733;</label>' +
+                    '<input type="radio" id="rating' + i + '-4" name="rating' + i + '" value="4" />' +
+                    '<label for="rating' + i + '-4">&#9733;</label>' +
+                    '<input type="radio" id="rating' + i + '-3" name="rating' + i + '" value="3" />' +
+                    '<label for="rating' + i + '-3">&#9733;</label>' +
+                    '<input type="radio" id="rating' + i + '-2" name="rating' + i + '" value="2" />' +
+                    '<label for="rating' + i + '-2">&#9733;</label>' +
+                    '<input type="radio" id="rating' + i + '-1" name="rating' + i + '" value="1" />' +
+                    '<label for="rating' + i + '-1">&#9733;</label>' +
+                    '</div><br />';
+                questionContainer.appendChild(questionDiv);
+            }
+        }
+
+        function errorCB(err) {
+            console.log(err);
+        }
+
+        function nextQuestions() {
+            console.log("Checking if all questions are rated...");
+            if (!allQuestionsRated()) {
+                alert("יש לדרג את כל השאלות לפני שנמשיך");
+                return;
+            }
+
+            console.log("All questions are rated.");
+            currentQuestion += 5;
+            answeredQuestions += 5;
+
+            if (answeredQuestions >= 15) {
+                window.location.href = "find gift.html";
+            } else {
+                successCB(globalData);
+            }
+        }
+
+        function allQuestionsRated() {
+            var questionCount = Math.min(5, globalData.length - currentQuestion);
+            for (var i = currentQuestion; i < currentQuestion + questionCount; i++) {
+                var ratings = document.getElementsByName("rating" + i);
+                var rated = false;
+                for (var j = 0; j < ratings.length; j++) {
+                    if (ratings[j].checked) {
+                        rated = true;
+                        break;
+                    }
+                }
+                if (!rated) {
+                    return false;
+                }
+            }
+            return true;
+        }
 
     </script>
 </head>
@@ -118,7 +184,8 @@
                                 <h6>לפנייך משפטי תיאור המאפיינים אנשים שונים.</h6>
                                 <h6>עלייך לדרג את השאלות הבאות לפי סולם ערכים 1-5 בהתאם לנמען שלך</h6>
                                 <h6>(1- מסכים ברמה נמוכה, 5- מסכים במידה רבה).</h6><br /><br />
-                                <form id="surveyForm" action="#"><br />
+                                <form id="surveyForm" action="#">
+                                    <br />
                                     <div id="questionContainer">
                                         <!-- כאן יופיעו השאלות -->
                                     </div><br />
@@ -166,86 +233,86 @@
             window.location.href = "index.html";
         }
 
-        var questions = [
-            "האם _____  מצליח/ה להיות חלק מקבוצה ומרגיש/ה בנוח בסביבה חברתית?",
-            "האם _____  נהנה/ת מפעילויות חברתיות כמו: מסיבות, מסעדות, או אירועים ציבוריים?",
-            "האם _____ מעדיף/ה לשוחח עם אנשים בסביבה חברתית או שהוא/היא נהנה/ית מתקופות בודדות?",
-            "האם _____   נוטה/ת להיות נחמד/ה ולעזור לאחרים כשהם זקוקים לעזרתו?",
-            "האם _____  מעדיף/ה לפתור מחלוקות בצורה מסודרת או להימנע מהן בכלל?",
-            "האם _____ נכנס/ת בקלות לקשרים חברתיים חדשים ומתרגש/ת להכיר אנשים חדשים?",
-            "האם _____   משקיע/ה מאמץ רב בעבודה ומתמקד/ת בה לפרטים הקטנים?",
-            "האם _____   נוטה/ת להתעסק במטלות שצריך/ה להשלים לפני המועד המיועד?",
-            "האם _____ מסודר/ת בסביבת העבודה והחיים?",
-            "האם _____   נוטה/ת להיות פתוח/ה לחוויות חדשות ולהתנסות בדברים חדשים?",
-            "האם _____   מעריך/ה יותר דברים שהם מקוריים ומצחיקים?",
-            "האם _____ מתעניין/ת בתרבות, אמנות, או רעיונות חדשים?",
-            "האם _____   נוטה/ת להתרגש בקלות ולהיות רגיש/ה לשינויים בסביבה?",
-            "האם _____   מרגיש/ה לחץ בקלות ומתמקד/ת בדברים שליליים שקורים בחייו?",
-            "האם _____ מסוגל/ת להתמודד/ת ביעילות עם מצבי לחץ ואתגרים רגשיים?"
-        ];
+        //var questions = [
+        //    "האם _____  מצליח/ה להיות חלק מקבוצה ומרגיש/ה בנוח בסביבה חברתית?",
+        //    "האם _____  נהנה/ת מפעילויות חברתיות כמו: מסיבות, מסעדות, או אירועים ציבוריים?",
+        //    "האם _____ מעדיף/ה לשוחח עם אנשים בסביבה חברתית או שהוא/היא נהנה/ית מתקופות בודדות?",
+        //    "האם _____   נוטה/ת להיות נחמד/ה ולעזור לאחרים כשהם זקוקים לעזרתו?",
+        //    "האם _____  מעדיף/ה לפתור מחלוקות בצורה מסודרת או להימנע מהן בכלל?",
+        //    "האם _____ נכנס/ת בקלות לקשרים חברתיים חדשים ומתרגש/ת להכיר אנשים חדשים?",
+        //    "האם _____   משקיע/ה מאמץ רב בעבודה ומתמקד/ת בה לפרטים הקטנים?",
+        //    "האם _____   נוטה/ת להתעסק במטלות שצריך/ה להשלים לפני המועד המיועד?",
+        //    "האם _____ מסודר/ת בסביבת העבודה והחיים?",
+        //    "האם _____   נוטה/ת להיות פתוח/ה לחוויות חדשות ולהתנסות בדברים חדשים?",
+        //    "האם _____   מעריך/ה יותר דברים שהם מקוריים ומצחיקים?",
+        //    "האם _____ מתעניין/ת בתרבות, אמנות, או רעיונות חדשים?",
+        //    "האם _____   נוטה/ת להתרגש בקלות ולהיות רגיש/ה לשינויים בסביבה?",
+        //    "האם _____   מרגיש/ה לחץ בקלות ומתמקד/ת בדברים שליליים שקורים בחייו?",
+        //    "האם _____ מסוגל/ת להתמודד/ת ביעילות עם מצבי לחץ ואתגרים רגשיים?"
+        //];
 
-        var currentQuestion = 0;
-        var answeredQuestions = 0;
+        //var currentQuestion = 0;
+        //var answeredQuestions = 0;
 
-        function displayQuestions() {
-            var questionContainer = document.getElementById('questionContainer');
-            questionContainer.innerHTML = '';
-            for (var i = currentQuestion; i < currentQuestion + 5 && i < questions.length; i++) {
-                var questionDiv = document.createElement('div');
-                questionDiv.innerHTML = '<label for="rating' + i + '">' + questions[i] + '</label>' +
-                    '<div class="star-rating">' +
-                    '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" />' +
-                    '<label for="rating' + i + '-5">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-4" name="rating' + i + '" value="4" />' +
-                    '<label for="rating' + i + '-4">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-3" name="rating' + i + '" value="3" />' +
-                    '<label for="rating' + i + '-3">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-2" name="rating' + i + '" value="2" />' +
-                    '<label for="rating' + i + '-2">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-1" name="rating' + i + '" value="1" />' +
-                    '<label for="rating' + i + '-1">&#9733;</label>' +
-                    '</div><br />';
-                questionContainer.appendChild(questionDiv);
-            }
-        }
+        //function displayQuestions() {
+        //    var questionContainer = document.getElementById('questionContainer');
+        //    questionContainer.innerHTML = '';
+        //    for (var i = currentQuestion; i < currentQuestion + 5 && i < questions.length; i++) {
+        //        var questionDiv = document.createElement('div');
+        //        questionDiv.innerHTML = '<label for="rating' + i + '">' + questions[i] + '</label>' +
+        //            '<div class="star-rating">' +
+        //            '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" />' +
+        //            '<label for="rating' + i + '-5">&#9733;</label>' +
+        //            '<input type="radio" id="rating' + i + '-4" name="rating' + i + '" value="4" />' +
+        //            '<label for="rating' + i + '-4">&#9733;</label>' +
+        //            '<input type="radio" id="rating' + i + '-3" name="rating' + i + '" value="3" />' +
+        //            '<label for="rating' + i + '-3">&#9733;</label>' +
+        //            '<input type="radio" id="rating' + i + '-2" name="rating' + i + '" value="2" />' +
+        //            '<label for="rating' + i + '-2">&#9733;</label>' +
+        //            '<input type="radio" id="rating' + i + '-1" name="rating' + i + '" value="1" />' +
+        //            '<label for="rating' + i + '-1">&#9733;</label>' +
+        //            '</div><br />';
+        //        questionContainer.appendChild(questionDiv);
+        //    }
+        //}
 
-        function nextQuestions() {
-            console.log("Checking if all questions are rated...");
-            if (!allQuestionsRated()) {
-                alert("יש לדרג את כל השאלות לפני שנמשיך");
-                return;
-            }
+        //function nextQuestions() {
+        //    console.log("Checking if all questions are rated...");
+        //    if (!allQuestionsRated()) {
+        //        alert("יש לדרג את כל השאלות לפני שנמשיך");
+        //        return;
+        //    }
 
-            console.log("All questions are rated.");
-            currentQuestion += 5;
-            answeredQuestions += 5;
+        //    console.log("All questions are rated.");
+        //    currentQuestion += 5;
+        //    answeredQuestions += 5;
 
-            if (answeredQuestions >= 15) {
-                window.location.href = "find gift.html";
-            } else {
-                displayQuestions();
-            }
-        }
+        //    if (answeredQuestions >= 15) {
+        //        window.location.href = "find gift.html";
+        //    } else {
+        //        displayQuestions();
+        //    }
+        //}
 
-        function allQuestionsRated() {
-            var questionCount = Math.min(5, questions.length - currentQuestion); 
-            for (var i = currentQuestion; i < currentQuestion + questionCount; i++) {
-                var ratings = document.getElementsByName("rating" + i);
-                var rated = false;
-                for (var j = 0; j < ratings.length; j++) {
-                    if (ratings[j].checked) {
-                        rated = true;
-                        break;
-                    }
-                }
-                if (!rated) {
-                    return false;
-                }
-            }
-            return true;
-        }
+        //function allQuestionsRated() {
+        //    var questionCount = Math.min(5, questions.length - currentQuestion);
+        //    for (var i = currentQuestion; i < currentQuestion + questionCount; i++) {
+        //        var ratings = document.getElementsByName("rating" + i);
+        //        var rated = false;
+        //        for (var j = 0; j < ratings.length; j++) {
+        //            if (ratings[j].checked) {
+        //                rated = true;
+        //                break;
+        //            }
+        //        }
+        //        if (!rated) {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
 
-        displayQuestions();
+        ////displayQuestions();
 
     </script>
 </body>
