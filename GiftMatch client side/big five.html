@@ -34,7 +34,7 @@
         });
         function successCB(data) {
             globalData = data;
-            let username="הודיה"//עד שניקח מהלוקל סטורג
+            let username = "הודיה"//עד שניקח מהלוקל סטורג
             var questionContainer = document.getElementById('questionContainer');
             questionContainer.innerHTML = '';
             for (var i = currentQuestion; i < currentQuestion + 5 && i < data.length; i++) {
@@ -63,7 +63,7 @@
         function nextQuestions() {
             console.log("Checking if all questions are rated...");
             if (!allQuestionsRated()) {
-                alert("יש לדרג את כל השאלות לפני שנמשיך");
+                 alert("יש לדרג את כל השאלות לפני שנמשיך");
                 return;
             }
 
@@ -101,7 +101,7 @@
 <body>
 
     <div class="super_container">
-
+       
         <!-- Header -->
 
         <header class="header">
