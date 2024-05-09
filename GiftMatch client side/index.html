@@ -16,6 +16,7 @@
 	<link rel="stylesheet" type="text/css" href="styles/responsive.css">
 	<link href="styles/main_styles.css" rel="stylesheet" />
 	<link href="styles/registration_login.css" rel="stylesheet" />
+	<script src="js/ajaxCalls.js"></script>
 
 </head>
 <body>
@@ -65,10 +66,14 @@
 		<div id="RegisterPopup" class="popup">
 			<div class="popup-content">
 				<h2 class="popup-title">הרשמה</h2>
-				<form action="#" method="post" onsubmit="return validatePassword()">
+				<form action="#" id="RegisterForm" method="post" onsubmit="return validatePassword()">
 					<div class="popup-text">
-						<label for="username">שם משתמש:</label>
-						<input type="text" id="username" name="username" autocomplete="username" required>
+						<label for="firstname">שם פרטי:</label>
+						<input type="text" id="firstname" name="username" autocomplete="username" required>
+					</div>
+					<div class="popup-text">
+						<label for="lastname">שם פרטי:</label>
+						<input type="text" id="lastname" name="username" autocomplete="username" required>
 					</div>
 					<div class="popup-text">
 						<label for="email">מייל:</label>
@@ -94,7 +99,7 @@
 		<div id="loginPopup" class="popup">
 			<div class="popup-content">
 				<h2 class="popup-title">התחברות</h2>
-				<form action="#" method="post">
+				<form action="#" id="loginForm" method="post">
 					<div class="popup-text">
 						<label for="loginUsername">שם משתמש:</label>
 						<input type="text" id="loginUsername" name="loginUsername" autocomplete="username" required>
@@ -114,8 +119,75 @@
 		<!-- לפתיחה וסגירה של חלון קופץ -->
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script>
-			var passwordValidated = false; // הוסף משתנה שיציין אם הסיסמה והאימות סיסמה תקינים
 
+
+			var passwordValidated = false; // הוסף משתנה שיציין אם הסיסמה והאימות סיסמה תקינים
+			$(document).ready(function () {
+                if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                    api = "https://localhost:7284/api/Users/";
+
+                }
+                else {
+
+                }
+
+                $("#RegisterForm").submit(Register);
+                $("#loginForm").submit(login);
+			})
+            
+			function Register() {
+				RegisterOnServer();
+				return false;
+			}
+			function RegisterOnServer() {
+				if (validatePassword()) {
+                    
+                    var email = document.getElementById("email").value;
+                    var firstname = document.getElementById("firstname").value;
+					var lastname = document.getElementById("lastname").value;
+                    var password = document.getElementById("password").value;
+
+					let newuser = {
+                        email: email,
+                        firstName: firstname,
+                        lastName: lastname,
+                        password: password
+					}
+                    ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, error)
+
+					
+				}
+			}
+			function successReg(data) {
+				sessionStorage["connectedUser"] = JSON.stringify(data);
+				window.location.href = 'home.html';
+				
+			}
+            function error(err) {
+                showAlert(err.responseText)
+				console.log(err);
+			}
+			function login() {
+				loginOnServer();
+				return false;
+			}
+			function loginOnServer() {
+
+                var email = document.getElementById("loginUsername").value;
+                var password = document.getElementById("loginPassword").value;
+
+				let obj = {
+					email: email,
+					password: password
+				}
+
+                ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, error)
+			}
+			function successLogin(data) {
+                sessionStorage["connectedUser"] = JSON.stringify(data);
+                window.location.href = 'home.html';
+
+			}
 			function openActionPopup() {
 				if (!$('.popup:visible').length) { // בדוק אם יש כבר פופאפ פתוח
 					$("#actionPopup").fadeIn(300);

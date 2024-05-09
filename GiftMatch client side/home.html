@@ -14,10 +14,18 @@
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     <link href="styles/home.css" rel="stylesheet" />
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script>
-        function Logout()
-        {
+        $(document).ready(function () {
+            if (sessionStorage["connectedUser"] != undefined) {
+                connectedUser = JSON.parse(sessionStorage["connectedUser"]);
+                document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
+            }
+
+
+        });
+        function Logout() {
             window.location.href = "index.html";
         }
     </script>
@@ -29,40 +37,48 @@
 
         <!-- Header -->
 
-        <header class="header">
-            <div class="header_inner d-flex flex-row align-items-center justify-content-start">
+        <header class="header ">
+            
+            <div class="header_inner d-flex justify-content-between flex-wrap ">
+                <div class="d-flex align-content-center flex-wrap g15" >
+                    <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                    <div class="shopping">
+                        <!-- Avatar -->
+                        <a href="#">
+                            <div class="avatar">
+                                <img src="images/avatar.svg" alt="">
+                            </div>
+                        </a>
+                    </div>
 
-                <div class="shopping">
-                    <!-- Avatar -->
+                    <!-- Cart -->
                     <a href="#">
-                        <div class="avatar">
-                            <img src="images/avatar.svg" alt="">
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Cart -->
-                <a href="#">
-                    <div class="cart">
-                        <img src="images/shopping-bag.svg" alt="">
-                        <div class="cart_num_container">
-                            <div class="cart_num_inner">
-                                <div class="cart_num">0</div>
+                        <div class="cart">
+                            <img src="images/shopping-bag.svg" alt="">
+                            <div class="cart_num_container">
+                                <div class="cart_num_inner">
+                                    <div class="cart_num">0</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <nav class="main_nav">
-                    <ul>
-                        <li><a href="home.html">דף הבית</a></li>
-                        <li><a href="about.html">אודות</a></li>
-                    </ul>
-                </nav>
+                    <nav class="main_nav">
+                        <ul>
+                            <li><a href="home.html">דף הבית</a></li>
+                            <li><a href="about.html">אודות</a></li>
+                        </ul>
+                    </nav>
+                </div>
                 <div id="Logo"><a href="home.html"><img src="images/logo.jpg" /></a></div>
-                <input type="submit" class="LoginBTN" value="התנתקות" onclick="Logout()"/>
+                <div class="d-flex align-content-center flex-wrap">
+                     <div id="phUserName"></div>
+                   
 
-                <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                   
+                </div>
+
+                
             </div>
         </header>
 

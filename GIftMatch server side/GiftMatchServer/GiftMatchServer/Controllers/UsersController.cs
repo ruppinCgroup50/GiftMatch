@@ -22,10 +22,12 @@ namespace GiftMatchServer.Controllers
                 {
                     return Ok(user);
                 }
-                return NotFound();
+                return NotFound("שגיאת שרת- נסו שוב");
             }
             catch (Exception ex)
             {
+                if(ex.Message.Contains("PRIMARY"))
+                    return BadRequest("אימייל זה כבר נמצא במערכת");
                 return BadRequest(ex.Message);
             }
         }
@@ -43,7 +45,7 @@ namespace GiftMatchServer.Controllers
                 {
                     return Ok(res);
                 }
-                return NotFound();
+                return NotFound("אימייל/סיסמא אינם נכונים אנא נסו שנית");
             }
             catch (Exception ex)
             {
