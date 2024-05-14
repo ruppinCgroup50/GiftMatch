@@ -115,6 +115,7 @@ public class DBservices
                 Big5Q q = new Big5Q();
                 q.Id = Convert.ToInt32(dataReader["id"].ToString());
                 q.Qname = dataReader["Qname"].ToString();
+                q.AttId = Convert.ToInt32(dataReader["attId"].ToString());
                 
                 list.Add(q);
                 
