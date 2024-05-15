@@ -73,7 +73,7 @@
                 idBasket: ""
             }
 
-            api = server + "api/Recipient/AddNewRecipient";
+            api += "Recipient/AddNewRecipient";
             ajaxCall("POST", api, JSON.stringify(recipient), postSCB, postECB);
 
             return false;
