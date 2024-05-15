@@ -14,6 +14,88 @@
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     <link href="styles/new recipient.css" rel="stylesheet" />
+
+    <script src="js/ajaxCalls.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+            crossorigin="anonymous">
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                api = "https://localhost:7284/api/";
+
+            }
+            else {
+
+            }
+            ajaxCall("GET", api + 'Recipient', '', getSCB, getECB);
+
+            $("#review_form").submit(f1);
+        });
+
+        function getSCB(res) {
+            console.log(res);
+        }
+
+        function getECB(err) {
+            console.log(err);
+        }
+
+        function f1() {
+            const connectedUserString = sessionStorage.getItem('connectedUser');
+            const connectedUser = JSON.parse(connectedUserString);
+            const userEmail = connectedUser.email;
+
+            const gender = $("input[name='gender']:checked").val();
+
+            const imageFile = document.getElementById('upload-btn').files[0];
+            let image = "";
+            if (imageFile) {
+                image = imageFile.name;
+            }
+            else {
+                alert("יש להעלות תמונה של המתנה");
+                return false;
+            }
+
+            recipient = {
+                id: "",
+                name: $("#name").val(),
+                gender: gender,
+                relationType: $("#relationType").val(),
+                birthday: new Date($("#birthday").val()),
+                relationshipScore: $("#myRange").val(),
+                image: image,
+                userEmail: userEmail,
+                idBasket: ""
+            }
+
+            api = server + "api/Recipient/AddNewRecipient";
+            ajaxCall("POST", api, JSON.stringify(recipient), postSCB, postECB);
+
+            return false;
+        }
+
+        function postSCB(res) {
+            showPopup();
+        }
+
+        function postECB(err) {
+            alert("הייתה בעיה בהוספת הנמען");
+            console.log(err);
+        }
+
+    </script>
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="styles/bootstrap4/popper.js"></script>
+    <script src="styles/bootstrap4/bootstrap.min.js"></script>
+    <script src="plugins/easing/easing.js"></script>
+    <script src="plugins/parallax-js-master/parallax.min.js"></script>
+
 </head>
 <body>
 
@@ -100,12 +182,12 @@
                             <div class="col-lg-6">
                                 <div class="review_form_content">
                                     <form action="#" id="review_form" class="review_form">
-                                        <input type="text" class="review_form_input" placeholder="שם הנמען" required="required"> <br />
+                                        <input type="text" id="name" class="review_form_input" placeholder="שם הנמען" required="required"> <br />
                                         <div class="gender-container">
                                             <input type="radio" name="gender" value="male" required="required"> זכר &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                             <input type="radio" name="gender" value="נקבה" required="required"> נקבה
                                         </div><br />
-                                        <select class="review_form_input" required="required">
+                                        <select id="relationType" class="review_form_input" required="required">
                                             <option value="" disabled selected>בחירת סוג קרבה</option>
                                             <option value="family">בן משפחה</option>
                                             <option value="partner">בן/ בת זוג</option>
@@ -115,7 +197,7 @@
                                             <option value="other">אחר</option>
                                         </select><br />
                                         <h6>תאריך לידה:</h6>
-                                        <input type="date" class="review_form_input" required="required" placeholder="תאריך לידה"><br />
+                                        <input type="date" id="birthday" class="review_form_input" required="required" placeholder="תאריך לידה"><br />
                                         <h6>מידת קרבה:</h6><br />
                                         <div class="slidecontainer">
                                             <input type="range" min="1" max="10" value="5" class="slider" id="myRange" required>
@@ -170,13 +252,6 @@
             </div>
         </footer>
     </div>
-
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="styles/bootstrap4/popper.js"></script>
-    <script src="styles/bootstrap4/bootstrap.min.js"></script>
-    <script src="plugins/easing/easing.js"></script>
-    <script src="plugins/parallax-js-master/parallax.min.js"></script>
-
     <script>
         function Logout() {
             window.location.href = "index.html";
@@ -188,18 +263,18 @@
                 document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
             });
         }
-        document.getElementById("review_form").addEventListener("submit", function (event) {
-            var fileInput = document.getElementById('upload-btn');
+        //document.getElementById("review_form").addEventListener("submit", function (event) {
+        //    var fileInput = document.getElementById('upload-btn');
 
-            if (!fileInput.value) {
-                event.preventDefault();
-                alert("יש להעלות תמונה של המתנה");
-            }
-            else {
-                showPopup();
-                event.preventDefault();
-            }
-        });
+        //    if (!fileInput.value) {
+        //        event.preventDefault();
+        //        alert("יש להעלות תמונה של המתנה");
+        //    }
+        //    else {
+        //        showPopup();
+        //        event.preventDefault();
+        //    }
+        //});
 
         function showPopup() {
             document.getElementById('overlay').style.display = 'block';
@@ -224,7 +299,6 @@
                 window.location.href = "find gift.html";
             }
         }
-
     </script>
 </body>
 </html>

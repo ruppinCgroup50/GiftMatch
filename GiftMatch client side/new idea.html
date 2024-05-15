@@ -53,7 +53,6 @@
 
         function changeCheckbox(checkboxId) {
             var checkbox = document.getElementById(checkboxId);
-            checkbox.checked = !checkbox.checked;
             changeColor(checkboxId);
         }
 
@@ -61,11 +60,11 @@
             var checkbox = document.getElementById(interestId);
             var label = document.querySelector(`label[for="${interestId}"]`);
             if (checkbox.checked) {
-                label.style.backgroundColor = '#937c6f';
-                label.style.color = '#fff';
-            } else {
                 label.style.backgroundColor = 'initial';
                 label.style.color = '#2f2f2f';
+            } else {
+                label.style.backgroundColor = '#937c6f';
+                label.style.color = '#fff';
             }
         }
 
@@ -168,7 +167,7 @@
                                     </select><br />-->
                                     <h6>בחר/י תחומי עניין המשתייכים למתנה:</h6><br />
                                     <div class="interest_grid" id="PHinterest_grid">
-                                        <!--<div class="interest">
+        <!--<div class="interest">
             <input type="checkbox" id="music" name="interest" value="music">
             <label for="music">
                 <img src="images/interest_1.png" alt="icon" class="interest_icon">
@@ -279,7 +278,7 @@
                                     <label for="upload-btn" class="upload-label">העלאת תמונה</label>
                                     <div id="file-name"></div>
                                     <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div><br /><br />
-                                    <button type="submit" class="review_form_button">הוספת רעיון</button>
+                                    <button type="submit" id="" class="review_form_button">הוספת רעיון</button>
                                 </form>
                             </div>
                         </div>
@@ -339,6 +338,7 @@
                 document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
             });
         }
+
         document.getElementById("review_form").addEventListener("submit", function (event) {
             var interests = document.querySelectorAll('input[name="interest"]:checked');
             var fileInput = document.getElementById('upload-btn');
