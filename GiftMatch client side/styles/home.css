@@ -383,7 +383,7 @@ section {
 *********************************/
 
 #Logo {
-    padding-right: 90px;
+    margin-right: 30px;
 }
 
 .logo a {
@@ -1170,6 +1170,22 @@ section {
     font-size: 12px;
     color: #232323;
 }
+
 .g15 {
     gap: 15px;
+}
+
+@media only screen and (max-width: 575px) {
+    .header {
+        height: 70px;
+        padding:10px;
+    }
+
+    #Logo img {
+        height: 50px;
+        width: 50px;
+    }
+    #Logo{
+        margin-right:10px;
+    }
 }

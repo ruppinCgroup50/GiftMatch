@@ -31,6 +31,7 @@
             ajaxCall("GET", api + 'Big5qs', '', successCB, errorCB)
             currentQuestion = 0;
             answeredQuestions = 0;
+            ansArr=[]//מערך שאליו יכנסו כל התוצאות של התשבות לפי מיקום שאלה, שאלה ראשונה תא 0 וכו
         });
         function successCB(data) {
             globalData = data;
@@ -41,15 +42,15 @@
                 var questionDiv = document.createElement('div');
                 questionDiv.innerHTML = `<label for="rating' + i + '">האם ${username} ` + data[i].qname + '</label>' +
                     '<div class="star-rating">' +
-                    '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" />' +
+                    '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" class="att'+data[i].attId+'" />' +
                     '<label for="rating' + i + '-5">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-4" name="rating' + i + '" value="4" />' +
+                    '<input type="radio" id="rating' + i + '-4" name="rating' + i + '" value="4" class="att' + data[i].attId +'" />' +
                     '<label for="rating' + i + '-4">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-3" name="rating' + i + '" value="3" />' +
+                    '<input type="radio" id="rating' + i + '-3" name="rating' + i + '" value="3" class="att' + data[i].attId +'" />' +
                     '<label for="rating' + i + '-3">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-2" name="rating' + i + '" value="2" />' +
+                    '<input type="radio" id="rating' + i + '-2" name="rating' + i + '" value="2" class="att' + data[i].attId +'" />' +
                     '<label for="rating' + i + '-2">&#9733;</label>' +
-                    '<input type="radio" id="rating' + i + '-1" name="rating' + i + '" value="1" />' +
+                    '<input type="radio" id="rating' + i + '-1" name="rating' + i + '" value="1" class="att' + data[i].attId +'" />' +
                     '<label for="rating' + i + '-1">&#9733;</label>' +
                     '</div><br />';
                 questionContainer.appendChild(questionDiv);
@@ -59,20 +60,46 @@
         function errorCB(err) {
             console.log(err);
         }
-
+        //פונקציה שבודקת האם ניתן לעבור לדף השאלות הבא כלומר האם כל השאלות נענו
         function nextQuestions() {
             console.log("Checking if all questions are rated...");
             if (!allQuestionsRated()) {
                  alert("יש לדרג את כל השאלות לפני שנמשיך");
                 return;
             }
-
+           
             console.log("All questions are rated.");
             currentQuestion += 5;
             answeredQuestions += 5;
 
             if (answeredQuestions >= 15) {
-                window.location.href = "find gift.html";
+                let avgArr = [];//מערך של ממוצעי שאלות לפי תכונות
+
+                //לולאה שעושה ממוצע לכל 3 תאים ומכניסה את התוצאה למערך הממוצעים
+                for (let i = 0; i < ansArr.length; i += 3) {
+                    let group = ansArr.slice(i, i + 3);
+                    let sum = group.reduce((acc, val) => acc + parseFloat(val), 0);//המרה לעשרוני
+                    let average = sum / group.length;
+                    avgArr.push(average.toFixed(2));//הכנסה למערך ממוצעים
+                }
+
+                console.log(avgArr); 
+
+                let avgJsonArr = avgArr.map((value, index) => ({
+                    value,
+                    attId: index+1
+                }));
+
+                // Sort the indexed array based on values in descending order
+                avgJsonArr.sort((a, b) => b.value - a.value);
+
+                // Get the first two elements (which are the two largest values)
+                let maxValues = avgJsonArr.slice(0, 2);
+
+                console.log(maxValues);
+                alert("end");
+
+                //window.location.href = "find gift.html";
             } else {
                 successCB(globalData);
             }
@@ -81,15 +108,20 @@
         function allQuestionsRated() {
             var questionCount = Math.min(5, globalData.length - currentQuestion);
             for (var i = currentQuestion; i < currentQuestion + questionCount; i++) {
-                var ratings = document.getElementsByName("rating" + i);
+                var ratings = document.getElementsByName("rating" + i);//מכניס שאלה לתוך משתנה
                 var rated = false;
-                for (var j = 0; j < ratings.length; j++) {
-                    if (ratings[j].checked) {
+                for (var j = 0; j < ratings.length; j++) {//עובר על 5 הכובים של השאלה ובודק האם אחד מהם מסומן
+                    if (ratings[j].checked) {//אם נמצא אחד מסומן
                         rated = true;
+                        ansArr.push(ratings[j].value);//נכניס את הערך של הכוכב למערך תשובות
+                        console.log(ansArr);
                         break;
                     }
                 }
-                if (!rated) {
+                if (!rated) {//אם יש שאלה שלא נענתה
+                    let startIndex = currentQuestion;//מאיזה אינדקס להתחיל למחוק
+                    let deleteCount = ansArr.length - currentQuestion;//כמה למחוק כדי לא ליצור כפילויות
+                    ansArr.splice(startIndex, deleteCount);//מוחק כדי לא ליצור כפילויות
                     return false;
                 }
             }
