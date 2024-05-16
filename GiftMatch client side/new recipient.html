@@ -38,7 +38,7 @@
                 document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
             }
 
-            ajaxCall("GET", api + 'Recipient', '', getSCB, getECB);
+            //ajaxCall("GET", api + 'Recipient', '', getSCB, getECB);
 
             $("#review_form").submit(f1);
         });
@@ -69,19 +69,20 @@
             }
 
             recipient = {
-                id: "",
-                name: $("#name").val(),
-                gender: gender,
-                relationType: $("#relationType").val(),
-                birthday: new Date($("#birthday").val()),
-                relationshipScore: $("#myRange").val(),
-                image: image,
-                userEmail: userEmail,
-                idBasket: ""
+                Id: 1,
+                Name: $("#name").val(),
+                Gender: gender,
+                RelationType: $("#relationType").val(),
+                Birthday: new Date($("#birthday").val()),
+                RelationshipScore: $("#myRange").val(),
+                Image: image,
+                UserEmail: userEmail,
+                IdBasket: 1
+        
             }
 
-            api += "Recipient/AddNewRecipient";
-            ajaxCall("POST", api, JSON.stringify(recipient), postSCB, postECB);
+            
+            ajaxCall("POST", api + "Recipient/AddNewRecipient", JSON.stringify(recipient), postSCB, postECB);
 
             return false;
         }
