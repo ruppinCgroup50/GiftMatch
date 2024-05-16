@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>מציאת רעיון למתנה</title>
+    <title>אודות</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Wish shop project">
@@ -13,88 +13,22 @@
     <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
-    <link href="styles/find gift.css" rel="stylesheet" />
+    <link href="styles/about.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="js/ajaxCalls.js"></script>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-            crossorigin="anonymous"></script>
     <script>
-        var clickCount = 0; // קביעת משתנה גלובלי למספר הלחיצות
-
         $(document).ready(function () {
-            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                api = "https://localhost:7284/api/";
-
-            }
-            else {
-
-            }
-
             if (sessionStorage["connectedUser"] != undefined) {
                 connectedUser = JSON.parse(sessionStorage["connectedUser"]);
                 document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
             }
-
-            ajaxCall("GET", api + "Interests", "", successInt, errFunction)
         });
-
-        function successInt(data) {
-            let str = '';
-            for (var i = 0; i < data.length; i++) {
-                str += `<div class="interest">
-                    <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}" onchange="updateClickCount('${data[i].id}')">`;
-                if (data[i].interestName.length > 6) {
-                    str += `<label for="${data[i].id}" onclick="updateClickCount('${data[i].id}')">`;
-                }
-                else {
-                    str += `<label for="${data[i].id}" onclick="updateClickCount('${data[i].id}')"><br/>`;
-                }
-                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
-                    <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
-            }
-            document.getElementById("PHinterest_grid").innerHTML = str;
-        }
-
-        function errFunction(err) {
-            console.log(err);
-        }
-
-        function updateClickCount(checkboxId) {
-            var checkbox = document.getElementById(checkboxId);
-            changeCardAppearance(checkboxId, checkbox.checked);
-        }
-
-        function changeCardAppearance(interestId, checked) {
-            var checkbox = document.getElementById(interestId);
-            var label = document.querySelector(`label[for="${interestId}"]`);
-            var clickCounter = label.querySelector('.click-counter');
-
-            if (checked) {
-                if (!clickCounter) {
-                    label.style.backgroundColor = '#937c6f';
-                    label.style.color = '#fff';
-                    clickCounter = document.createElement('span');
-                    clickCounter.className = 'click-counter';
-                    label.appendChild(clickCounter);
-                }
-                clickCounter.innerText = ++clickCount;
-            }
-            else {
-                if (clickCounter) {
-                    label.style.backgroundColor = 'initial';
-                    label.style.color = '#2f2f2f';
-                    clickCounter.remove();
-                    clickCount -= 2;
-                }
-            }
-        }
 
         function Logout() {
             window.location.href = "index.html";
         }
     </script>
+
 </head>
 <body>
 
@@ -167,7 +101,7 @@
                     <div class="col">
                         <div class="home_container">
                             <div class="home_content">
-                                <div class="home_title">מציאת רעיון למתנה</div>
+                                <div class="home_title">אודות</div>
                             </div>
                         </div>
                     </div>
@@ -175,42 +109,23 @@
             </div>
         </div>
 
-        <!-- Find Gift Form -->
+        <!-- About -->
 
-        <div class="gift">
+        <div class="about">
             <div class="container">
                 <div class="row">
                     <div class="col">
                         <div class="review_form_container">
-                            <div class="review_form_title">עוד צעד קטן בדרך למתנה המושלמת!</div>
-                            <div class="review_form_content">
-                                <form action="#" id="review_form" class="review_form">
-                                    <select class="review_form_input" required="required">
-                                        <option value="" disabled selected>בחירת מאורע</option>
-                                        <option value="birthday">יום הולדת</option>
-                                        <option value="anniversary">יום נישואין</option>
-                                        <option value="valentine's day'">יום האהבה</option>
-                                        <option value="bar mitzvah">בר/ בת מצווה</option>
-                                        <option value="enlistment">גיוס לצבא</option>
-                                        <option value="housewarming">חנוכת בית</option>
-                                        <option value="circumcision">ברית/ה</option>
-                                        <option value="marriage">חתונה</option>
-                                        <option value="other">אחר</option>
-                                    </select><br />
-                                    <select class="review_form_input" required="required">
-                                        <option value="" disabled selected>מה תקציב המתנה?</option>
-                                        <option value="200">עד ₪200</option>
-                                        <option value="400">₪200-400</option>
-                                        <option value="600">₪400-600</option>
-                                        <option value="800">₪600-800</option>
-                                        <option value="1000">₪800-1000</option>
-                                        <option value="10000">מעל ₪1000</option>
-                                    </select><br /><br />
-                                    <h6>בחר/י תחומי עניין המשתייכים לנמען שלך (לסדר הבחירה יש חשיבות):</h6><br />
-                                    <div class="interest_grid" id="PHinterest_grid">
-                                    </div><br /><br /><br />
-                                    <button type="submit" class="review_form_button">תמצאו לי רעיון למתנה</button>
-                                </form>
+                            <div class="about_title">הסיפור שלנו</div>
+                            <div class="about_content">
+                                GiftMatch היא פלטפורמה חדשנית המציעה פתרון לבעיה נפוצה כיום בשוק- מציאת מתנה המותאמת בדיוק לאדם שמקבל אותה.<br />
+                                הפלטפורמה שלנו נועדה על מנת לקשר בין אנשים לבין רעיונות למציאת מתנות.<br />
+                                על מנת להשיג זאת, נדרש מאיתנו לאסוף מידע על תכונות האופי, תחומי העניין והתחביבים של מקבל המתנה,<br />
+                                לפתח מנגנון המאפשר אופטימיזציה של מציאת רעיון למתנה המושלמת לפי מאפייניו של המקבל.<br />
+                                הפלטפורמה תציג מגוון רחב של רעיונות למתנות- מוחשיות קנויות, חוויתיות ובהכנה ביתית.<br />
+                                הפלטפורמה משתמשת בלמידת מכונה וב- ChatGPT כדי להציג את תצוגת הרעיונות בסדר המתאים ביותר.<br />
+                                יחד עם זאת, הפלטפורמה מאפשרת הוספת רעיונות חדשים על ידי המשתמשים, כך שהמערכת תהיה דינאמית המתעדכנת<br />
+                                בכל עת ותוכל להתאים את המתנה בצורה מדויקת למקבל המתנה בכל פעם.<br />
                             </div>
                         </div>
                     </div>
@@ -228,7 +143,7 @@
                         <nav class="footer_nav">
                             <ul>
                                 <li><a href="about connected.html">אודות</a></li>
-                                <li><a href="index.html">דף הבית</a></li>
+                                <li><a href="home.html">דף הבית</a></li>
                             </ul>
                         </nav>
                         <div class="copyright">
@@ -251,17 +166,5 @@
     <script src="plugins/parallax-js-master/parallax.min.js"></script>
     <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
     <script src="js/custom.js"></script>
-    <script>
-        document.getElementById("review_form").addEventListener("submit", function (event) {
-            var interests = document.querySelectorAll('input[name="interest"]:checked');
-            var fileInput = document.getElementById('upload-btn');
-
-            if (interests.length === 0) {
-                event.preventDefault();
-                alert("יש לבחור לפחות תחום עניין אחד");
-            }
-        });
-
-    </script>
 </body>
 </html>
