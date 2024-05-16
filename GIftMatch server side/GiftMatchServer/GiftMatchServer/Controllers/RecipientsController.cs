@@ -10,8 +10,7 @@ namespace GiftMatchServer.Controllers
     [ApiController]
     public class RecipientController : ControllerBase
     {
-        // GET: api/<RecipientController>
-        [HttpGet]
+      
         [HttpPost("AddNewRecipient")]
         public IActionResult InsertRecipient([FromBody] Recipient recipient)
         {
