@@ -27,6 +27,7 @@
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
                 api = "https://localhost:7284/api/";
+                apiImage ='https://localhost:7284/api/Upload'
 
             }
             else {
@@ -68,8 +69,11 @@
                 return false;
             }
 
+
+
+
             recipient = {
-                Id: 1,//חייב להיות מספר שלם לא משנה איזה כי הבסיס נצונים ישנה גם ככה
+                Id: 1,//חייב להיות מספר שלם לא משנה איזה כי הבסיס נתונים ישנה גם ככה
                 Name: $("#name").val(),
                 Gender: gender,
                 RelationType: $("#relationType").val(),
@@ -88,9 +92,31 @@
         }
 
         function postSCB(res) {
+            var data = new FormData();
+            var files = $("#upload-btn").get(0).files;
+
+            // Add the uploaded file to the form data collection  
+            if (files.length > 0) {
+                for (f = 0; f < files.length; f++) {
+                    data.append("files", files[f]);
+                }
+            }
+
+            // Ajax upload  
+            $.ajax({
+                type: "POST",
+                url: apiImage,
+                contentType: false,
+                processData: false,
+                data: data,
+                success: successImage,
+                error: postECB
+            });
+           
+        }
+        function successImage() {
             showPopup();
         }
-
         function postECB(err) {
             alert("הייתה בעיה בהוספת הנמען");
             console.log(err);
