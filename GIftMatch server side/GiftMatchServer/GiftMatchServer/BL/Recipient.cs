@@ -13,7 +13,10 @@ namespace GiftMatchServer.BL
         public string Image { get; set; }
         public string UserEmail { get; set; }
         public int IdBasket { get; set; }
-
+        public Recipient()
+        {
+           
+        }
         public Recipient(int id, string name, string gender, string relationType, DateTime birthday, int relationshipScore, string image, string userEmail, int idBasket)
         {
             Id = id;

@@ -29,6 +29,16 @@ namespace GiftMatchServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        
+
+        [HttpGet("GetRecipient/{email}")]
+        public IActionResult GetRecipient(string email)
+        {
+            DBservices dbs = new DBservices();
+            List<Recipient> res = dbs.GetRecipient(email);
+            if (res.Count > 0)
+                return Ok(res);
+            return NotFound();
+        }
+
     }
 }

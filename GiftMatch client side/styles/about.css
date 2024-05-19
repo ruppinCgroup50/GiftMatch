@@ -1,6 +1,5 @@
-﻿@charset "utf-8";
+﻿﻿@charset "utf-8";
 /* CSS Document */
-
 /******************************
 
 [Table of Contents]
@@ -21,7 +20,6 @@
 /***********
 1. Fonts
 ***********/
-
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
 
 @font-face {
@@ -44,6 +42,21 @@
     .LoginBTN {
         display: none;
     }
+}
+
+@media screen and (max-width: 359px) {
+    .avatar {
+        display: none;
+    }
+
+    .cart {
+        display: none;
+    }
+
+    #phUserName {
+        display: none;
+    }
+}
 
 /*********************************
 2. Body and some general stuff
@@ -424,8 +437,6 @@ section {
 
 .shopping {
     display: inline-block;
-    margin-left: 10px;
-    padding-right: 10px;
     -webkit-transform: translateY(-2px);
     -moz-transform: translateY(-2px);
     -ms-transform: translateY(-2px);
