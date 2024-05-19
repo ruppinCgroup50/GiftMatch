@@ -39,7 +39,7 @@
 
             ajaxCall("GET", api + "Interests", "", successInt, errFunction)
         });
-
+        //פונקציה שמביאה את תחומי העניין מהשרת
         function successInt(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
@@ -65,7 +65,7 @@
             var checkbox = document.getElementById(checkboxId);
             changeCardAppearance(checkboxId, checkbox.checked);
         }
-
+        
         function changeCardAppearance(interestId, checked) {
             var checkbox = document.getElementById(interestId);
             var label = document.querySelector(`label[for="${interestId}"]`);

@@ -42,12 +42,12 @@
         });
         function successCB(data) {
             globalData = data;
-            let username = "הודיה"//עד שניקח מהלוקל סטורג
+            let username = "הודיה"
             var questionContainer = document.getElementById('questionContainer');
             questionContainer.innerHTML = '';
             for (var i = currentQuestion; i < currentQuestion + 5 && i < data.length; i++) {
                 var questionDiv = document.createElement('div');
-                questionDiv.innerHTML = `<label for="rating' + i + '">האם ${username} ` + data[i].qname + '</label>' +
+                questionDiv.innerHTML = `<label for="rating' + i + '">האם ${connectedUser.firstName} ` + data[i].qname + '</label>' +
                     '<div class="star-rating">' +
                     '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" class="att' + data[i].attId + '" />' +
                     '<label for="rating' + i + '-5">&#9733;</label>' +
@@ -61,6 +61,8 @@
                     '<label for="rating' + i + '-1">&#9733;</label>' +
                     '</div><br />';
                 questionContainer.appendChild(questionDiv);
+                //questionDiv השורה הזו תוסיף את
+                //questionContainer לתוך
             }
         }
 
@@ -91,22 +93,22 @@
                 }
 
                 console.log(avgArr);
-
+                //הכנסה לג'ייסון את הממוצע והמספר של התכונה
                 let avgJsonArr = avgArr.map((value, index) => ({
                     value,
                     attId: index + 1
                 }));
 
-                // Sort the indexed array based on values in descending order
+                // מיון מערך ממוצעים
                 avgJsonArr.sort((a, b) => b.value - a.value);
 
-                // Get the first two elements (which are the two largest values)
+                // מקבלים את ה2 ממוצעים הגבוהים ביותר
                 let maxValues = avgJsonArr.slice(0, 2);
 
-                console.log(maxValues);
-                alert("end");
+                //console.log(maxValues);
+                //alert("end");
 
-                //window.location.href = "find gift.html";
+               window.location.href = "find gift.html";
             } else {
                 successCB(globalData);
             }

@@ -54,7 +54,7 @@ public class DBservices
             throw (ex);
         }
 
-        cmd = CreateCommandWithStoredProcedureNoParams("sp_GetAllInterests", con);             // create the command
+        cmd = CreateCommandWithStoredProcedureNoParams("sp_GetAllInterests", con);   // create the command
 
         try
         {

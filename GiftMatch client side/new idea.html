@@ -37,7 +37,7 @@
 
             ajaxCall("GET", api + "Interests", "", successInt, errFunction)
         });
-
+        //פונקציה שמביאה את התחומי עניין מהשרת במידה והשרת הצליח
         function successInt(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
@@ -57,7 +57,7 @@
         function errFunction(err) {
             console.log(err);
         }
-
+        //משנה את הצבע של התחומי עניין במידה ונלחץ
         function changeCheckbox(checkboxId) {
             var checkbox = document.getElementById(checkboxId);
             changeColor(checkboxId);
