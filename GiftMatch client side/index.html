@@ -160,12 +160,13 @@
 			return true;
 		}
 
-			function resetRegisterForm() {
-				document.getElementById("username").value = "";
-				document.getElementById("email").value = "";
-				document.getElementById("password").value = "";
-				document.getElementById("confirmPassword").value = "";
-			}
+		function resetRegisterForm() {
+			document.getElementById("firstname").value = "";
+			document.getElementById("lastname").value = "";
+			document.getElementById("email").value = "";
+			document.getElementById("password").value = "";
+			document.getElementById("confirmPassword").value = "";
+		}
 
 		function resetForms() {
 			$("form")[0].reset(); // איפוס הטופס הראשון
@@ -204,25 +205,111 @@
 				}]
 			};
 
-				// שליחת הבקשה ל-API של SendGrid
-				fetch('https://api.sendgrid.com/v3/mail/send', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer YOUR_SENDGRID_API_KEY' // הוסף את המפתח שלך כאן
-					},
-					body: JSON.stringify(data)
+			// שליחת הבקשה ל-API של SendGrid
+			fetch('https://api.sendgrid.com/v3/mail/send', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer YOUR_SENDGRID_API_KEY' // הוסף כאן המפתח
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					alert("בקשת איפוס סיסמה נשלחה למייל שלך.");
 				})
-					.then(response => response.json())
-					.then(data => {
-						console.log(data);
-						alert("בקשת איפוס סיסמה נשלחה למייל שלך.");
-					})
-					.catch((error) => {
-						console.error('Error:', error);
-						alert("ארעה שגיאה בעת שליחת האימייל. נסה שנית מאוחר יותר.");
-					});
-			}
+				.catch((error) => {
+					console.error('Error:', error);
+					alert("ארעה שגיאה בעת שליחת האימייל. נסה שנית מאוחר יותר.");
+				});
+		}
+	</script>
+
+</head>
+<body>
+
+	<div class="super_container">
+
+		<!-- Header -->
+
+		<header class="header">
+
+			<div class="header_inner d-flex justify-content-between flex-wrap ">
+				<div class="d-flex align-content-center flex-wrap g15">
+					<div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+
+					<nav class="main_nav">
+						<ul>
+							<li><a href="home.html">דף הבית</a></li>
+							<li><a href="about.html">אודות</a></li>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="d-flex align-content-center flex-wrap align-items-center">
+					<input type="submit" class="LoginBTN" value="התחברות / הרשמה" onclick="openActionPopup()" />
+					<div id="Logo"><a href="index.html"><img src="images/logo.jpg" /></a></div>
+				</div>
+
+			</div>
+		</header>
+
+		<!-- Menu -->
+
+		<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+			<div class="menu_close_container"><div class="menu_close"><div></div><div></div></div></div>
+			<div class="logo menu_mm"><a href="index.html">GiftMatch</a></div>
+			<nav class="menu_nav">
+				<ul class="menu_mm">
+					<li class="menu_mm"><input type="submit" class="menu_login" value="התחברות / הרשמה" onclick="openActionPopup()" /></li>
+					<li><a href="index.html">דף הבית</a></li>
+					<li><a href="about.html">אודות</a></li>
+				</ul>
+			</nav>
+		</div>
+
+		<!-- הוספת חלון קופץ לטופס ההרשמה -->
+		<div id="actionPopup" class="popup1">
+			<div class="popup-content1">
+				<h2 class="popup-title">היי, טוב לראות אותך :)</h2>
+				<button class="Register_but" onclick="openRegisterPopup()">הרשמה</button>
+				<button class="Login_but" onclick="openLoginPopup()">התחברות</button>
+			</div>
+		</div>
+
+		<!-- חלון ההרשמה -->
+		<div id="RegisterPopup" class="popup">
+			<div class="popup-content">
+				<h2 class="popup-title">הרשמה</h2>
+				<form action="#" id="RegisterForm" method="post" onsubmit="return validatePassword()">
+					<div class="popup-text">
+						<label for="firstname">שם פרטי:</label>
+						<input type="text" id="firstname" name="username" autocomplete="username" required>
+					</div>
+					<div class="popup-text">
+						<label for="lastname">שם משפחה:</label>
+						<input type="text" id="lastname" name="username" autocomplete="username" required>
+					</div>
+					<div class="popup-text">
+						<label for="email">מייל:</label>
+						<input type="email" id="email" name="email" autocomplete="email" required>
+					</div>
+					<div class="popup-text">
+						<label for="password">סיסמה:</label>
+						<input type="password" id="password" name="password" autocomplete="new-password" required>
+						<img src="images/eye.png" alt="Toggle Password Visibility" onclick="togglePasswordVisibility(this)" />
+					</div>
+					<div class="popup-text">
+						<label for="confirmPassword">אימות סיסמה:</label>
+						<input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+						<img src="images/eye.png" alt="Toggle Password Visibility" onclick="togglePasswordVisibility(this)" />
+					</div>
+					<button type="submit" class="open_but">הרשמה</button>
+				</form>
+				<button class="close_but" onclick="closeRegisterPopup()">סגירה</button>
+			</div>
+		</div>
 
 		<div id="loginPopup" class="popup">
 			<div class="popup-content">

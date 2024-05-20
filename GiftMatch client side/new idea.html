@@ -49,7 +49,7 @@
                         else {
                     str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br />`;
                     }
-                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
+                                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
                                     <span class="interest_title">${data[i].interestName}</span><br /></label></div>`;
                 }
                 document.getElementById("PHinterest_grid").innerHTML = str;
@@ -395,6 +395,7 @@
                         .then(function (response) {
                             return response.json();
                         })
+                });
 
                 function showPopup() {
                     document.getElementById('overlay').style.display = 'block';
