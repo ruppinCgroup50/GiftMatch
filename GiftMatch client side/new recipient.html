@@ -58,7 +58,7 @@
             const userEmail = connectedUser.email;
 
             const gender = $("input[name='gender']:checked").val();
-
+            const name = $("#name").val();
             const imageFile = document.getElementById('upload-btn').files[0];
             let image = "";
             if (imageFile) {
@@ -71,7 +71,7 @@
 
             recipient = {
                 Id: 1,//חייב להיות מספר שלם לא משנה איזה כי הבסיס נתונים ישנה גם ככה
-                Name: $("#name").val(),
+                Name: name,
                 Gender: gender,
                 RelationType: $("#relationType").val(),
                 Birthday: new Date($("#birthday").val()),
@@ -81,7 +81,7 @@
                 IdBasket: 1//נותנים ערך אמיתי בהמשך חייב להיות מספר שלם
         
             }
-            
+            sessionStorage["recepientName"] = name;
             ajaxCall("POST", api + "Recipient/AddNewRecipient", JSON.stringify(recipient), postSCB, postECB);
 
             return false;

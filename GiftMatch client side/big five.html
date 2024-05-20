@@ -42,12 +42,16 @@
         });
         function successCB(data) {
             globalData = data;
+            let name='משתמש';
+            if (sessionStorage["recepientName"] != undefined) {
+                name = sessionStorage["recepientName"];
+            }
             
             var questionContainer = document.getElementById('questionContainer');
             questionContainer.innerHTML = '';
             for (var i = currentQuestion; i < currentQuestion + 5 && i < data.length; i++) {
                 var questionDiv = document.createElement('div');
-                questionDiv.innerHTML = `<label for="rating' + i + '">האם ${connectedUser.firstName} ` + data[i].qname + '</label>' +
+                questionDiv.innerHTML = `<label for="rating' + i + '">האם ${name} ` + data[i].qname + '</label>' +
                     '<div class="star-rating">' +
                     '<input type="radio" id="rating' + i + '-5" name="rating' + i + '" value="5" class="att' + data[i].attId + '" />' +
                     '<label for="rating' + i + '-5">&#9733;</label>' +
