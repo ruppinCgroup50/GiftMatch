@@ -335,7 +335,7 @@ public class DBservices
         }
 
     }
-      public int InsertGiftIdea(JsonElement data)
+      public int InsertGiftAttr(string  giftName, string attrString)
     {
 
         SqlConnection con;
@@ -351,7 +351,86 @@ public class DBservices
             throw (ex);
         }
 
-        cmd = giftideaInsertCommandWithStoredProcedure("sp_PostNewGiftIdea", con, data);             // create the command
+        cmd = InsertGiftAttrCommandWithStoredProcedure("sp_insertGiftAttr", con, giftName, attrString);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }   
+          public int InsertGiftInterest(string  giftName, string InterestsString)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = InsertGiftInterestCommandWithStoredProcedure("sp_insertGiftInterest", con, giftName, InterestsString);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }   
+    
+    public int InsertGiftIdea(GiftIdea gift)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = giftideaInsertCommandWithStoredProcedure("sp_PostNewGiftIdea", con, gift);             // create the command
         try
         {
             int numEffected = cmd.ExecuteNonQuery(); // execute the command
@@ -375,543 +454,6 @@ public class DBservices
 
     }
     
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method Inserts a flat to the flat table 
-    ////--------------------------------------------------------------------------------------------------
-    //public int InsertFlat(Flat flat)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateInsertFlatCommandWithStoredProcedure("sp_InsertFlat1", con, flat);             // create the command
-
-    //    try
-    //    {
-    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method Inserts a vacation to the vacation table 
-    ////--------------------------------------------------------------------------------------------------
-    //public int InsertVacation(Vacation vacation)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateInsertVacationCommandWithStoredProcedure("sp_InsertVacation1", con, vacation);             // create the command
-
-    //    try
-    //    {
-    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method updates a user from the user table 
-    ////--------------------------------------------------------------------------------------------------
-    //public int UpdateUser(User user, String email)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateUpdateUserCommandWithStoredProcedure("sp_UpdateUser1", con, user, email);             // create the command
-
-    //    try
-    //    {
-    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method read avg price per night for spesicif city and month 
-    ////--------------------------------------------------------------------------------------------------
-    //public List<Object> ReadAvgPricePerNight(int month)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    List<Object> AvgPricePerNightList = new List<Object>();
-
-    //    cmd = BuildReadAvgPricePerNightStoredProcedureCommand(con, "sp_CalculateAveragePricePerNight1", month);
-
-    //    SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-    //    while (dataReader.Read())//run untill the table end
-    //    {
-    //        AvgPricePerNightList.Add(new
-    //        {
-    //            city = dataReader["city"].ToString(),
-    //            averagePricePerNight = Convert.ToDouble(dataReader["averagePricePerNight"])
-    //        });
-
-    //    }
-
-    //    if (con != null)
-    //    {
-    //        // close the db connection
-    //        con.Close();
-    //    }
-
-    //    return AvgPricePerNightList;
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method reads users from the user table
-    ////--------------------------------------------------------------------------------------------------
-    //public List<User> ReadUsers()
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-    //    List<User> UsersList = new List<User>();
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateReadUsersCommandWithStoredProcedureWithoutParameters("sp_ReadUsers1", con);             // create the command
-
-    //    try
-    //    {
-    //        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-    //        while (dataReader.Read())
-    //        {
-    //            User user = new User();
-    //            user.Email = dataReader["email"].ToString();
-    //            user.FirstName= dataReader["firstName"].ToString();
-    //            user.FamilyName = dataReader["familyName"].ToString();
-    //            user.Password = dataReader["password"].ToString();
-    //            user.IsActive = Convert.ToBoolean(dataReader["isActive"]);
-    //            user.IsAdmin = Convert.ToBoolean(dataReader["isAdmin"]);
-
-    //            UsersList.Add(user);
-    //        }
-
-    //        return UsersList;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method reads falts from the flat table
-    ////--------------------------------------------------------------------------------------------------
-    //public List<Flat> ReadFlats()
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-    //    List<Flat> FlatsList = new List<Flat>();
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateReadFlatsCommandWithStoredProcedureWithoutParameters("sp_ReadFlats1", con);             // create the command
-
-    //    try
-    //    {
-    //        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-    //        while (dataReader.Read())
-    //        {
-    //            Flat flat = new Flat();
-    //            flat.Id = Convert.ToInt32(dataReader["id"]);
-    //            flat.City = dataReader["city"].ToString();
-    //            flat.Address = dataReader["address"].ToString();
-    //            flat.Price = Convert.ToDouble(dataReader["price"]);
-    //            flat.Numberofroom = Convert.ToInt32(dataReader["numberofroom"]);
-
-    //            FlatsList.Add(flat);
-    //        }
-    //        return FlatsList;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method reads vacations from the vacation table
-    ////--------------------------------------------------------------------------------------------------
-    //public List<Vacation> ReadVacations()
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-    //    List<Vacation> vacationList = new List<Vacation>();
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateReadVacationsCommandWithStoredProcedureWithoutParameters("sp_ReadVacations1", con);             // create the command
-
-    //    try
-    //    {
-    //        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-    //        while (dataReader.Read())
-    //        {
-    //            Vacation vacation = new Vacation();
-    //            vacation.Id = Convert.ToInt32(dataReader["id"]);
-    //            vacation.UserId =dataReader["userId"].ToString();
-    //            vacation.FlatId = Convert.ToInt32(dataReader["flatId"]);
-    //            vacation.StartDate = Convert.ToDateTime(dataReader["startDate"]);
-    //            vacation.EndDate = Convert.ToDateTime(dataReader["endDate"]);
-
-    //            vacationList.Add(vacation);
-    //        }
-    //        return vacationList;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method reads vacations of specific user from the database (read with parameters)
-    ////--------------------------------------------------------------------------------------------------
-    //public List<Vacation> GetVacationByEmail(string email)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-    //    List<Vacation> vacationList = new List<Vacation>();
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateReadVacationsByEmailCommandWithStoredProcedureWithoutParameters("sp_ReadVacationsByEmail1", con, email);  // create the command
-
-
-    //    try
-    //    {
-    //        SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-    //        while (dataReader.Read())
-    //        {
-    //            Vacation vacation = new Vacation();
-    //            vacation.Id = Convert.ToInt32(dataReader["id"]);
-    //            vacation.UserId = dataReader["userId"].ToString();
-    //            vacation.FlatId = Convert.ToInt32(dataReader["flatId"]);
-    //            vacation.StartDate = Convert.ToDateTime(dataReader["startDate"]);
-    //            vacation.EndDate = Convert.ToDateTime(dataReader["endDate"]);
-
-    //            vacationList.Add(vacation);
-    //        }
-    //        return vacationList;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-    //}
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method deletes a user from the user table 
-    ////--------------------------------------------------------------------------------------------------
-    //public int DeleteUser(string email)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateDeleteUserCommandWithStoredProcedure("sp_DeleteUsers1", con, email);             // create the command
-
-    //    try
-    //    {
-    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method deletes a flat from the flat table 
-    ////--------------------------------------------------------------------------------------------------
-    //public int DeleteFlat(int id)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateDeleteFlatCommandWithStoredProcedure("sp_DeleteFlats1", con, id);             // create the command
-
-    //    try
-    //    {
-    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
-
-    ////--------------------------------------------------------------------------------------------------
-    //// This method deletes a vacation from the vacation table 
-    ////--------------------------------------------------------------------------------------------------
-    //public int DeleteVacation(int id)
-    //{
-
-    //    SqlConnection con;
-    //    SqlCommand cmd;
-
-    //    try
-    //    {
-    //        con = connect("myProjDB"); // create the connection
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    cmd = CreateDeleteVacationCommandWithStoredProcedure("sp_DeleteVacations1", con, id);             // create the command
-
-    //    try
-    //    {
-    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
-    //        return numEffected;
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        // write to log
-    //        throw (ex);
-    //    }
-
-    //    finally
-    //    {
-    //        if (con != null)
-    //        {
-    //            // close the db connection
-    //            con.Close();
-    //        }
-    //    }
-
-    //}
-
 
     ////---------------------------------------------------------------------------------
     //// Create the SqlCommand login user using a stored procedure
@@ -943,27 +485,43 @@ public class DBservices
         cmd.Parameters.AddWithValue("@password", user.Password);
         return cmd;
     }  
-    private SqlCommand giftideaInsertCommandWithStoredProcedure(String spName, SqlConnection con, JsonElement data)
+    private SqlCommand InsertGiftInterestCommandWithStoredProcedure(String spName, SqlConnection con, string giftName, string InterestsString)
     {
-        string GiftName = data.GetProperty("giftName").GetString();
-        string Description = data.GetProperty("description").GetString();
-        int Price = Convert.ToInt32(data.GetProperty("price").GetString());
-        string Image = data.GetProperty("image").GetString();
-        string UserName = data.GetProperty("userEmail").GetString();
-        string Intrests = data.GetProperty("intrests").GetString();
-        
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@giftIdeaString", InterestsString);
+        cmd.Parameters.AddWithValue("@giftName", giftName);
+
+        return cmd;
+    }     private SqlCommand InsertGiftAttrCommandWithStoredProcedure(String spName, SqlConnection con, string giftName,string attrString)
+    {
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@giftAttrString", attrString);
+        cmd.Parameters.AddWithValue("@giftName", giftName);
+
+        return cmd;
+    }  
+    private SqlCommand giftideaInsertCommandWithStoredProcedure(String spName, SqlConnection con, GiftIdea gift)
+    {
         
         SqlCommand cmd = new SqlCommand(); // create the command object
         cmd.Connection = con;              // assign the connection to the command object
         cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
         cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-        cmd.Parameters.AddWithValue("@GiftName", GiftName);
-        cmd.Parameters.AddWithValue("@Description", Description);
-        cmd.Parameters.AddWithValue("@Price", Price);
-        cmd.Parameters.AddWithValue("@Image", Image);
-        cmd.Parameters.AddWithValue("@UserEmail", UserName);
-        cmd.Parameters.AddWithValue("@Intrests", Intrests);
+        cmd.Parameters.AddWithValue("@GiftName", gift.GiftName);
+        cmd.Parameters.AddWithValue("@Description", gift.Description);
+        cmd.Parameters.AddWithValue("@Price", gift.Price);
+        cmd.Parameters.AddWithValue("@Image", gift.Image);
+        cmd.Parameters.AddWithValue("@UserEmail", gift.UserName);
+       
         return cmd;
     }   
     private SqlCommand CreateCommandWithStoredProcedureGetMyRecipient(String spName, SqlConnection con, string email)

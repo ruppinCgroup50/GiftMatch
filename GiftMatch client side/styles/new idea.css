@@ -956,6 +956,7 @@ input[type="file"] {
         margin-top: 51px;
     }
 
+
         .footer_social ul li {
             display: inline-block;
             margin-right: 36px;
@@ -990,7 +991,10 @@ input[type="file"] {
 .g15 {
     gap: 15px;
 }
-
+#loadingImg{
+    max-height:250px;
+    max-width:250px;
+}
 @media only screen and (max-width: 575px) {
     .header {
         height: 70px;

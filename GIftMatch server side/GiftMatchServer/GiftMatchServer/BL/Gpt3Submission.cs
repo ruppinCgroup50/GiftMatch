@@ -11,7 +11,7 @@ namespace GiftMatchServer.BL
     public class Gpt3Submission
     {
         public string GiftName { get; set; } 
-        public List<string> Interests { get; set; } 
+        public List<string> Interests { get; set; }
 
         private readonly List<string> BIG5 = new List<string>
         {
@@ -21,6 +21,7 @@ namespace GiftMatchServer.BL
             "Neuroticism", 
             "Openness" 
         };
+
 
         // פונקציה שבודקת את התאמה של תחומי העניין למתנה
         public async Task<(List<string> compatibleInterests, List<string> compatibleBIG5)> CheckInterestsCompatibility()

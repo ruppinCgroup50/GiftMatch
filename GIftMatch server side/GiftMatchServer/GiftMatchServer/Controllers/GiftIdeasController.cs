@@ -19,28 +19,28 @@ namespace GiftMatchServer.Controllers
 
        
 
-        // POST api/<GiftIdeasController>
-        [HttpPost]
-        public IActionResult Post([FromBody] JsonElement data)
-        {
-            try
-            {
+        //// POST api/<GiftIdeasController>
+        //[HttpPost]
+        //public IActionResult Post([FromBody] JsonElement data)
+        //{
+        //    try
+        //    {
 
 
-                DBservices dbs = new DBservices();
-                int res = dbs.InsertGiftIdea(data);
-                if (res > 0)
-                {
-                    return Ok(res);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+        //        DBservices dbs = new DBservices();
+        //        int res = dbs.InsertGiftIdea(data);
+        //        if (res > 0)
+        //        {
+        //            return Ok(res);
+        //        }
+        //        return NotFound();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest(ex.Message);
+        //    }
 
-        }
+        //}
     
     }
 }

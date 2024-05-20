@@ -7,7 +7,10 @@
         public int Price { get; set; }
         public string Image { get; set; }
         public string UserName { get; set; }
+        public GiftIdea()
+        {
 
+        }
         public GiftIdea(string giftName, string description, int price, string image, string userName)
         {
             GiftName = giftName;
