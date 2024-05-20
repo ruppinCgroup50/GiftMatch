@@ -24,7 +24,11 @@
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
                 api = "https://localhost:7284/api/";
+<<<<<<< Updated upstream
 
+=======
+                imageFolder = "https://localhost:7284/images/";
+>>>>>>> Stashed changes
             }
             else {
 
@@ -32,7 +36,11 @@
 
             if (sessionStorage["connectedUser"] != undefined) {
                 connectedUser = JSON.parse(sessionStorage["connectedUser"]);
+<<<<<<< Updated upstream
                 document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
+=======
+                document.getElementById("phUserName").innerHTML = `שלום, ${ connectedUser.firstName } ${ connectedUser.lastName }| <a href="index.html">התנתקות</a>`;
+>>>>>>> Stashed changes
             }
 
             ajaxCall("GET", api + "Interests", "", successInt, errFunction)
@@ -46,8 +54,31 @@
                 if (data[i].interestName.length > 6) {
                     str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')">`;
                 }
+<<<<<<< Updated upstream
                 else {
                     str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br/>`;
+=======
+                document.getElementById("PHinterest_grid").innerHTML = str;
+            }
+            function errFunction(err) {
+                console.log(err);
+            }
+            //משנה את הצבע של התחומי עניין במידה ונלחץ
+            function changeCheckbox(checkboxId) {
+                var checkbox = document.getElementById(checkboxId);
+                changeColor(checkboxId);
+            }
+
+            function changeColor(interestId) {
+                var checkbox = document.getElementById(interestId);
+                var label = document.querySelector(`label[for="${interestId}"]`);
+                if (checkbox.checked) {
+                    label.style.backgroundColor = 'initial';
+                    label.style.color = '#2f2f2f';
+                } else {
+                    label.style.backgroundColor = '#937c6f';
+                    label.style.color = '#fff';
+>>>>>>> Stashed changes
                 }
                 str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
                                 <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
