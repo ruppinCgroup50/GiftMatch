@@ -14,6 +14,7 @@
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     <link href="styles/new recipient.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="js/ajaxCalls.js"></script>
 
@@ -26,12 +27,19 @@
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
                 api = "https://localhost:7284/api/";
+                apiImage ='https://localhost:7284/api/Upload'
 
             }
             else {
 
             }
-            ajaxCall("GET", api + 'Recipient', '', getSCB, getECB);
+
+            if (sessionStorage["connectedUser"] != undefined) {
+                connectedUser = JSON.parse(sessionStorage["connectedUser"]);
+                document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
+            }
+
+            //ajaxCall("GET", api + 'Recipient', '', getSCB, getECB);
 
             $("#review_form").submit(f1);
         });
@@ -50,51 +58,74 @@
             const userEmail = connectedUser.email;
 
             const gender = $("input[name='gender']:checked").val();
-
+            const name = $("#name").val();
             const imageFile = document.getElementById('upload-btn').files[0];
             let image = "";
             if (imageFile) {
                 image = imageFile.name;
             }
             else {
-                alert("יש להעלות תמונה של המתנה");
+                alert("יש להעלות תמונה של הנמען");
                 return false;
             }
 
             recipient = {
-                id: "",
-                name: $("#name").val(),
-                gender: gender,
-                relationType: $("#relationType").val(),
-                birthday: new Date($("#birthday").val()),
-                relationshipScore: $("#myRange").val(),
-                image: image,
-                userEmail: userEmail,
-                idBasket: ""
+                Id: 1,//חייב להיות מספר שלם לא משנה איזה כי הבסיס נתונים ישנה גם ככה
+                Name: name,
+                Gender: gender,
+                RelationType: $("#relationType").val(),
+                Birthday: new Date($("#birthday").val()),
+                RelationshipScore: $("#myRange").val(),
+                Image: image,
+                UserEmail: userEmail,
+                IdBasket: 1//נותנים ערך אמיתי בהמשך חייב להיות מספר שלם
+        
             }
-
-            api += "Recipient/AddNewRecipient";
-            ajaxCall("POST", api, JSON.stringify(recipient), postSCB, postECB);
+            sessionStorage["recepientName"] = name;
+            ajaxCall("POST", api + "Recipient/AddNewRecipient", JSON.stringify(recipient), postSCB, postECB);
 
             return false;
         }
 
         function postSCB(res) {
+            var data = new FormData();
+            var files = $("#upload-btn").get(0).files;
+
+            // Add the uploaded file to the form data collection  
+            if (files.length > 0) {
+                for (f = 0; f < files.length; f++) {
+                    data.append("files", files[f]);
+                }
+            }
+
+            // Ajax upload  
+            $.ajax({
+                type: "POST",
+                url: apiImage,
+                contentType: false,
+                processData: false,
+                data: data,
+                success: successImage,
+                error: postECB
+            });
+           
+        }
+        function successImage() {
             showPopup();
         }
-
         function postECB(err) {
             alert("הייתה בעיה בהוספת הנמען");
             console.log(err);
         }
 
-    </script>
+        function enter_basket() {
+            window.location.href = "basket ideas.html";
+        }
 
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="styles/bootstrap4/popper.js"></script>
-    <script src="styles/bootstrap4/bootstrap.min.js"></script>
-    <script src="plugins/easing/easing.js"></script>
-    <script src="plugins/parallax-js-master/parallax.min.js"></script>
+        function Logout() {
+            window.location.href = "index.html";
+        }
+    </script>
 
 </head>
 <body>
@@ -103,40 +134,45 @@
 
         <!-- Header -->
 
-        <header class="header">
-            <div class="header_inner d-flex flex-row align-items-center justify-content-start">
+        <header class="header ">
 
-                <div class="shopping">
-                    <!-- Avatar -->
+            <div class="header_inner d-flex justify-content-between flex-wrap ">
+                <div class="d-flex align-content-center flex-wrap g15">
+                    <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                    <div class="shopping">
+                        <!-- Avatar -->
+                        <a href="#">
+                            <div class="avatar">
+                                <img src="images/avatar.svg" alt="">
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Cart -->
                     <a href="#">
-                        <div class="avatar">
-                            <img src="images/avatar.svg" alt="">
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Cart -->
-                <a href="#">
-                    <div class="cart">
-                        <img src="images/shopping-bag.svg" alt="">
-                        <div class="cart_num_container">
-                            <div class="cart_num_inner">
-                                <div class="cart_num">0</div>
+                        <div class="cart" onclick="enter_basket()">
+                            <img src="images/shopping-bag.svg" alt="">
+                            <div class="cart_num_container">
+                                <div class="cart_num_inner">
+                                    <div class="cart_num">0</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <nav class="main_nav">
-                    <ul>
-                        <li><a href="home.html">דף הבית</a></li>
-                        <li><a href="about.html">אודות</a></li>
-                    </ul>
-                </nav>
-                <div id="Logo"><a href="home.html"><img src="images/logo.jpg" /></a></div>
-                <input type="submit" class="LoginBTN" value="התנתקות" onclick="Logout()" />
+                    <nav class="main_nav">
+                        <ul>
+                            <li><a href="home.html">דף הבית</a></li>
+                            <li><a href="about connected.html">אודות</a></li>
+                        </ul>
+                    </nav>
+                </div>
 
-                <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                <div class="d-flex align-content-center flex-wrap align-items-center">
+                    <div id="phUserName"></div>
+                    <div id="Logo"><a href="home.html"><img src="images/logo.jpg" /></a></div>
+                </div>
+
             </div>
         </header>
 
@@ -149,7 +185,8 @@
                 <ul class="menu_mm">
                     <li class="menu_mm"><input type="submit" class="menu_login" value="התנתקות" onclick="Logout()" /></li>
                     <li><a href="home.html">דף הבית</a></li>
-                    <li><a href="about.html">אודות</a></li>
+                    <li><a href="about connected.html">אודות</a></li>
+                    <li><a href="basket ideas.html">סל הרעיונות</a></li>
                 </ul>
             </nav>
         </div>
@@ -179,41 +216,41 @@
                     <div class="review_form_title">בדרך למציאת המתנה המושלמת</div><br />
                     <div class="review_form_title">בואו נכיר את הנמען שלך!</div>
                     <div class="row">
-                            <div class="col-lg-6">
-                                <div class="review_form_content">
-                                    <form action="#" id="review_form" class="review_form">
-                                        <input type="text" id="name" class="review_form_input" placeholder="שם הנמען" required="required"> <br />
-                                        <div class="gender-container">
-                                            <input type="radio" name="gender" value="male" required="required"> זכר &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            <input type="radio" name="gender" value="נקבה" required="required"> נקבה
-                                        </div><br />
-                                        <select id="relationType" class="review_form_input" required="required">
-                                            <option value="" disabled selected>בחירת סוג קרבה</option>
-                                            <option value="family">בן משפחה</option>
-                                            <option value="partner">בן/ בת זוג</option>
-                                            <option value="friend">חבר/ה</option>
-                                            <option value="colleague">עמית לעבודה</option>
-                                            <option value="neighbor">שכנ/ה</option>
-                                            <option value="other">אחר</option>
-                                        </select><br />
-                                        <h6>תאריך לידה:</h6>
-                                        <input type="date" id="birthday" class="review_form_input" required="required" placeholder="תאריך לידה"><br />
-                                        <h6>מידת קרבה:</h6><br />
-                                        <div class="slidecontainer">
-                                            <input type="range" min="1" max="10" value="5" class="slider" id="myRange" required>
-                                            <p id="demo"></p>
-                                        </div><br /><br /><br /><br /><br />
-                                        <input type="file" id="upload-btn" accept="image/*">
-                                        <label for="upload-btn" class="upload-label">העלאת תמונה</label>
-                                        <div id="file-name"></div>
-                                        <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div><br /><br />
-                                        <button type="submit" class="review_form_button">הוספת הנמען</button>
-                                    </form>
-                                </div>
+                        <div class="col-lg-6">
+                            <div class="review_form_content">
+                                <form action="#" id="review_form" class="review_form">
+                                    <input type="text" id="name" class="review_form_input" placeholder="שם הנמען" required="required"> <br />
+                                    <div class="gender-container">
+                                        <input type="radio" name="gender" value="male" required="required"> זכר &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <input type="radio" name="gender" value="נקבה" required="required"> נקבה
+                                    </div><br />
+                                    <select id="relationType" class="review_form_input" required="required">
+                                        <option value="" disabled selected>בחירת סוג קרבה</option>
+                                        <option value="בן משפחה">בן משפחה</option>
+                                        <option value="בן/ בת זוג">בן/ בת זוג</option>
+                                        <option value="חבר/ה">חבר/ה</option>
+                                        <option value="עמית לעבודה">עמית לעבודה</option>
+                                        <option value="שכנ/ה">שכנ/ה</option>
+                                        <option value="אחר">אחר</option>
+                                    </select><br />
+                                    <h6>תאריך לידה:</h6>
+                                    <input type="date" id="birthday" class="review_form_input" required="required" placeholder="תאריך לידה"><br />
+                                    <h6>מידת קרבה:</h6><br />
+                                    <div class="slidecontainer">
+                                        <input type="range" min="1" max="10" value="5" class="slider" id="myRange" required>
+                                        <p id="demo"></p>
+                                    </div><br /><br /><br /><br /><br />
+                                    <input type="file" id="upload-btn" accept="image/*">
+                                    <label for="upload-btn" class="upload-label">העלאת תמונה</label>
+                                    <div id="file-name"></div>
+                                    <div class="file_info">ניתן להעלות תמונות בלבד (קבצי jpg, jpeg, png)</div><br /><br />
+                                    <button type="submit" class="review_form_button">הוספת הנמען</button>
+                                </form>
                             </div>
-                            <div class="col-lg-6">
-                                <img src="images/gift recipient.png" class="gift-image" />
-                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <img src="images/gift recipient.png" class="gift-image" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -237,8 +274,9 @@
                         <div class="logo"><a href="index.html">GiftMatch</a></div>
                         <nav class="footer_nav">
                             <ul>
-                                <li><a href="about.html">אודות</a></li>
-                                <li><a href="index.html">דף הבית</a></li>
+                                <li><a href="about connected.html">אודות</a></li>
+                                <li><a href="home.html">דף הבית</a></li>
+                                <li><a href="basket ideas.html">סל הרעיונות</a></li>
                             </ul>
                         </nav>
                         <div class="copyright">
@@ -252,29 +290,22 @@
             </div>
         </footer>
     </div>
-    <script>
-        function Logout() {
-            window.location.href = "index.html";
-        }
 
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="styles/bootstrap4/popper.js"></script>
+    <script src="styles/bootstrap4/bootstrap.min.js"></script>
+    <script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+    <script src="plugins/easing/easing.js"></script>
+    <script src="plugins/parallax-js-master/parallax.min.js"></script>
+    <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
+    <script src="js/custom.js"></script>
+    <script>
         window.onload = function () {
             document.getElementById('upload-btn').addEventListener('change', function () {
                 var fileName = this.files[0].name;
                 document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
             });
         }
-        //document.getElementById("review_form").addEventListener("submit", function (event) {
-        //    var fileInput = document.getElementById('upload-btn');
-
-        //    if (!fileInput.value) {
-        //        event.preventDefault();
-        //        alert("יש להעלות תמונה של המתנה");
-        //    }
-        //    else {
-        //        showPopup();
-        //        event.preventDefault();
-        //    }
-        //});
 
         function showPopup() {
             document.getElementById('overlay').style.display = 'block';
