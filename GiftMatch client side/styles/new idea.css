@@ -908,13 +908,20 @@ input[type="file"] {
         height:300px;
         width:300px;
     }
-
+.popuploading img {
+    height: 50px;
+    width: 50px;
+    margin:50px
+}
+.popuploading h4 {
+   direction:rtl;
+}
 /*********************************
 7. Footer
 *********************************/
-    .footer {
-        padding-top: 80px;
-    }
+.footer {
+    padding-top: 80px;
+}
 
     .footer_logo a {
         font-family: 'Open Sans', sans-serif;
