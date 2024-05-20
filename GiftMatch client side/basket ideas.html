@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>הוספת רעיון חדש</title>
+    <title>סל הרעיונות</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Wish shop project">
@@ -13,10 +13,9 @@
     <link rel="stylesheet" type="text/css" href="plugins/OwlCarousel2-2.2.1/animate.css">
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
-    <link href="styles/new idea.css" rel="stylesheet" />
+    <link href="styles/basket ideas.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/ajaxCalls.js"></script>
-    <link href="styles/categories.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
@@ -39,24 +38,18 @@
             ajaxCall("GET", api + connectedUser.email, "", success, errFunction)
         });
 
-
-
-
-        //פונקציה שמביאה את התחומי עניין מהשרת במידה והשרת הצליח
+        //פונקציה שמביאה את הנמענים שלי מהשרת במידה והשרת הצליח
         function success(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
-                str += `<div class="col-3">
-                <div class="product_image"><img src="${imageFolder}${data[i].image}" alt=""></div>
-                    <div class="product_content clearfix">
-                        <div class="product_info">
-                         
-                            <div class="product_price">${data[i].name}</div>
-                               <div class="product_name">${data[i].relationType}</div>
+                str += `<div class="col-6 col-md-3">
+                    <div class="product_image"><img src="${imageFolder}${data[i].image}" alt=""></div>
+                        <div class="product_content clearfix">
+                                <div class="product_name">${data[i].name}</div>
+                                <div class="product_relationType">${data[i].relationType}</div>
                         </div>
                     </div>
-                </div>
-            `
+                `
             }
             document.getElementById("phCard").innerHTML = str;
         }
@@ -64,8 +57,9 @@
             console.log(err);
         }
 
-
-
+        function enter_basket() {
+            window.location.href = "basket ideas.html";
+        }
 
         function Logout() {
             window.location.href = "index.html";
@@ -94,7 +88,7 @@
 
                     <!-- Cart -->
                     <a href="#">
-                        <div class="cart">
+                        <div class="cart" onclick="enter_basket()">
                             <img src="images/shopping-bag.svg" alt="">
                             <div class="cart_num_container">
                                 <div class="cart_num_inner">
@@ -130,8 +124,7 @@
                     <li class="menu_mm"><input type="submit" class="menu_login" value="התנתקות" onclick="Logout()" /></li>
                     <li><a href="home.html">דף הבית</a></li>
                     <li><a href="about connected.html">אודות</a></li>
-                    <li><a href="MyRecepient.html ">הנמענים שלי</a></li>
-
+                    <li><a href="basket ideas.html">סל הרעיונות</a></li>
                 </ul>
             </nav>
         </div>
@@ -145,7 +138,7 @@
                     <div class="col">
                         <div class="home_container">
                             <div class="home_content">
-                                <div class="home_title">הנמענים שלי</div>
+                                <div class="home_title">סל הרעיונות</div>
                             </div>
                         </div>
                     </div>
@@ -153,30 +146,19 @@
             </div>
         </div>
 
-        <!-- Add New Idea Form -->
+        <!-- Add Basket Ideas Form -->
 
-        <div class="idea">
+        <div class="basket_idea">
             <div class="container">
                 <div class="row">
                     <div class="col">
                         <div class="review_form_container">
                             <div class="review_form_title">הנמענים שלי</div>
                             <div class="review_form_content product row" id="phCard">
-
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- חלון קופץ -->
-        <div class="overlay" id="overlay" style="display:none">
-            <div class="popup">
-                <img src="images/idea1_gift.jpg" /><br />
-                <h2>!רעיון חדש התווסף למערכת בהצלחה</h2>
-                <h4>!תודה על התרומה שלך למערכת</h4>
-                <button type="submit" onclick="window.location.href = 'home.html'" class="review_form_button">חזרה לדף הבית</button>
             </div>
         </div>
 
@@ -189,6 +171,7 @@
                         <div class="logo"><a href="index.html">GiftMatch</a></div>
                         <nav class="footer_nav">
                             <ul>
+                                <li><a href="basket ideas.html">סל הרעיונות</a></li>
                                 <li><a href="about connected.html">אודות</a></li>
                                 <li><a href="home.html">דף הבית</a></li>
                             </ul>

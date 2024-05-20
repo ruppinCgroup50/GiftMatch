@@ -137,6 +137,10 @@
             return true;
         }
 
+        function enter_basket() {
+            window.location.href = "basket ideas.html";
+        }
+
         function Logout() {
             window.location.href = "index.html";
         }
@@ -164,7 +168,7 @@
 
                     <!-- Cart -->
                     <a href="#">
-                        <div class="cart">
+                        <div class="cart" onclick="enter_basket()">
                             <img src="images/shopping-bag.svg" alt="">
                             <div class="cart_num_container">
                                 <div class="cart_num_inner">
@@ -178,8 +182,6 @@
                         <ul>
                             <li><a href="home.html">דף הבית</a></li>
                             <li><a href="about connected.html">אודות</a></li>
-                            <li><a href="MyRecepient.html ">הנמענים שלי</a></li>
-
                         </ul>
                     </nav>
                 </div>
@@ -202,8 +204,7 @@
                     <li class="menu_mm"><input type="submit" class="menu_login" value="התנתקות" onclick="Logout()" /></li>
                     <li><a href="home.html">דף הבית</a></li>
                     <li><a href="about connected.html">אודות</a></li>
-                    <li><a href="MyRecepient.html ">הנמענים שלי</a></li>
-
+                    <li><a href="basket ideas.html">סל הרעיונות</a></li>
                 </ul>
             </nav>
         </div>
@@ -260,6 +261,7 @@
                         <div class="logo"><a href="index.html">GiftMatch</a></div>
                         <nav class="footer_nav">
                             <ul>
+                                <li><a href="basket ideas.html">סל הרעיונות</a></li>
                                 <li><a href="about connected.html">אודות</a></li>
                                 <li><a href="home.html">דף הבית</a></li>
                             </ul>
