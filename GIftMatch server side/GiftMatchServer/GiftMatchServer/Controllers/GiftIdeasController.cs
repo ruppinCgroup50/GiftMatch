@@ -17,16 +17,12 @@ namespace GiftMatchServer.Controllers
             return new string[] { "value1", "value2" };
         }
 
-       
-
         // POST api/<GiftIdeasController>
         [HttpPost]
-        public IActionResult Post([FromBody] JsonElement data)
+        public IActionResult Post([FromBody] GiftIdea data)
         {
             try
             {
-
-
                 DBservices dbs = new DBservices();
                 int res = dbs.InsertGiftIdea(data);
                 if (res > 0)

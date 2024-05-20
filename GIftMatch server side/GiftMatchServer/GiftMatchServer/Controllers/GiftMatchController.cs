@@ -15,7 +15,6 @@ namespace GiftMatchServer.Controllers
         {
             try
             {
-
                 string gName = data.GetProperty("giftName").GetString();
                 GiftIdea gift = new GiftIdea();
                 gift.GiftName = gName;
@@ -44,11 +43,11 @@ namespace GiftMatchServer.Controllers
                     compatibleInterests = compatibleInterests,
                     compatibleBIG5 = compatibleBIG5
                 };
+
                 if (response.compatibleInterests.Count == 0 || response.compatibleBIG5.Count == 0)
                     return NotFound("שם המתנה לא מתאים לתחומים שנבחרו");
 
                 DBservices dBservices = new DBservices();
-
 
                 string InterestsString = "";
                 foreach (var item in response.compatibleInterests)
@@ -72,14 +71,11 @@ namespace GiftMatchServer.Controllers
                 else
                     return NotFound("שגיאה בעת שיוך רעיונות/תכונות למתנה");
             }
+
             catch (Exception ex)
             {
-
                 return BadRequest(ex.Message);
             }
-
-
-
         }
     }
 }

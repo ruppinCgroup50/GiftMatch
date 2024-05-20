@@ -17,7 +17,9 @@
             UserName = userName;
         }
 
-
+        public GiftIdea()
+        {
+        }
 
     }
 }
