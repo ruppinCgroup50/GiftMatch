@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -10,23 +11,24 @@ namespace GiftMatchServer.BL
 {
     public class Gpt3Submission
     {
-        public string GiftName { get; set; } 
-        public List<string> Interests { get; set; } 
+        public string GiftName { get; set; }
+        public List<string> Interests { get; set; }
 
         private readonly List<string> BIG5 = new List<string>
         {
-            "Extraversion", 
-            "Agreeableness", 
+            "Extraversion",
+            "Agreeableness",
             "Conscientiousness",
-            "Neuroticism", 
-            "Openness" 
+            "Neuroticism",
+            "Openness"
         };
+
 
         // פונקציה שבודקת את התאמה של תחומי העניין למתנה
         public async Task<(List<string> compatibleInterests, List<string> compatibleBIG5)> CheckInterestsCompatibility()
         {
-            List<string> compatibleInterests = new List<string>(); 
-            List<string> compatibleBIG5 = new List<string>(); 
+            List<string> compatibleInterests = new List<string>();
+            List<string> compatibleBIG5 = new List<string>();
 
             try
             {
@@ -38,7 +40,7 @@ namespace GiftMatchServer.BL
 
                     foreach (string interest in Interests) // לולאה שתרוץ על כל תחומי העניין
                     {
-                        string prompt = $"האם מתאים לקנות למישהו מתנה של {GiftName} כשתחום העניין המרכזי שלו הוא {interest}? תענה בבקשה רק בכן או לא"; 
+                        string prompt = $"האם מתאים לקנות למישהו מתנה של {GiftName} כשתחום העניין המרכזי שלו הוא {interest}? תענה בבקשה רק בכן או לא";
                         var requestData = new
                         {
                             model = "gpt-3.5-turbo", // המודל שבו משתמשים
@@ -60,12 +62,12 @@ namespace GiftMatchServer.BL
 
                             if (answer == "כן")
                             {
-                                compatibleInterests.Add(interest); 
+                                compatibleInterests.Add(interest);
                             }
                         }
                         else
                         {
-                            Console.WriteLine($"Error: {response.StatusCode}"); 
+                            Console.WriteLine($"Error: {response.StatusCode}");
                             string errorContent = await response.Content.ReadAsStringAsync();
                             Console.WriteLine($"Error content: {errorContent}");
                         }
@@ -73,7 +75,7 @@ namespace GiftMatchServer.BL
 
                     foreach (string trait in BIG5) // לולאה שתרוץ על כל תכונות האישיות במודל BIG5
                     {
-                        string prompt = $" האם מתאים לתת למישהו מתנה של {GiftName} כאשר לפי מודל הBIG5 תחום האישיות שמתאים לו הוא {trait}? תענה בבקשה רק בלא או כן"; 
+                        string prompt = $" האם מתאים לתת למישהו מתנה של {GiftName} כאשר לפי מודל הBIG5 תחום האישיות שמתאים לו הוא {trait}? תענה בבקשה רק בלא או כן";
                         var requestData = new
                         {
                             model = "gpt-3.5-turbo", // המודל שבו משתמשים
@@ -87,7 +89,7 @@ namespace GiftMatchServer.BL
                         var content = JsonContent.Create(requestData); // יצירת תוכן JSON לבקשה
                         var response = await httpClient.PostAsync("https://api.openai.com/v1/chat/completions", content); // שליחת הבקשה ל-OpenAI
 
-                        if (response.IsSuccessStatusCode) 
+                        if (response.IsSuccessStatusCode)
                         {
                             string responseBody = await response.Content.ReadAsStringAsync(); // קריאת תוכן התשובה
                             var jsonResponse = JObject.Parse(responseBody); // המרה ל-JSON
@@ -95,12 +97,12 @@ namespace GiftMatchServer.BL
 
                             if (answer == "כן")
                             {
-                                compatibleBIG5.Add(trait); 
+                                compatibleBIG5.Add(trait);
                             }
                         }
                         else
                         {
-                            Console.WriteLine($"Error: {response.StatusCode}"); 
+                            Console.WriteLine($"Error: {response.StatusCode}");
                             string errorContent = await response.Content.ReadAsStringAsync();
                             Console.WriteLine($"Error content: {errorContent}");
                         }
@@ -110,10 +112,10 @@ namespace GiftMatchServer.BL
             // הדפסת הודעת שגיאה במקרה של חריגה
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}"); 
+                Console.WriteLine($"An error occurred: {ex.Message}");
             }
 
-            return (compatibleInterests, compatibleBIG5); 
+            return (compatibleInterests, compatibleBIG5);
         }
     }
 }
