@@ -32,7 +32,7 @@
 
             if (sessionStorage["connectedUser"] != undefined) {
                 connectedUser = JSON.parse(sessionStorage["connectedUser"]);
-                document.getElementById("phUserName").innerHTML = שלום, ${ connectedUser.firstName } ${ connectedUser.lastName }| <a href="index.html">התנתקות</a>;
+                document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
             }
 
             ajaxCall("GET", api + "Interests", "", successInt, errFunction)
@@ -45,43 +45,43 @@
                                 <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
                 if (data[i].interestName.length > 6) {
                     str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')">`;
-                    }
-                        else {
-                    str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br />`;
-                    }
-                                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
-                                    <span class="interest_title">${data[i].interestName}</span><br /></label></div>`;
                 }
-                document.getElementById("PHinterest_grid").innerHTML = str;
-            }
-            function errFunction(err) {
-                console.log(err);
-            }
-            //משנה את הצבע של התחומי עניין במידה ונלחץ
-            function changeCheckbox(checkboxId) {
-                var checkbox = document.getElementById(checkboxId);
-                changeColor(checkboxId);
-            }
-
-            function changeColor(interestId) {
-                var checkbox = document.getElementById(interestId);
-                var label = document.querySelector(label[for="${interestId}"]);
-                if (checkbox.checked) {
-                    label.style.backgroundColor = 'initial';
-                    label.style.color = '#2f2f2f';
-                } else {
-                    label.style.backgroundColor = '#937c6f';
-                    label.style.color = '#fff';
+                else {
+                    str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br/>`;
                 }
+                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
+                                <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
             }
+            document.getElementById("PHinterest_grid").innerHTML = str;
+        }
+        function errFunction(err) {
+            console.log(err);
+        }
+        //משנה את הצבע של התחומי עניין במידה ונלחץ
+        function changeCheckbox(checkboxId) {
+            var checkbox = document.getElementById(checkboxId);
+            changeColor(checkboxId);
+        }
 
-            function enter_basket() {
-                window.location.href = "basket ideas.html";
+        function changeColor(interestId) {
+            var checkbox = document.getElementById(interestId);
+            var label = document.querySelector(`label[for="${interestId}"]`);
+            if (checkbox.checked) {
+                label.style.backgroundColor = 'initial';
+                label.style.color = '#2f2f2f';
+            } else {
+                label.style.backgroundColor = '#937c6f';
+                label.style.color = '#fff';
             }
+        }
 
-            function Logout() {
-                window.location.href = "index.html";
-            }
+        function enter_basket() {
+            window.location.href = "basket ideas.html";
+        }
+
+        function Logout() {
+            window.location.href = "index.html";
+        }
     </script>
 </head>
 <body>
@@ -352,55 +352,55 @@
     <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
     <script src="js/custom.js"></script>
     <script>
-                window.onload = function () {
-                    document.getElementById('upload-btn').addEventListener('change', function () {
-                        var fileName = this.files[0].name;
-                        document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
-                    });
-                }
+        window.onload = function () {
+            document.getElementById('upload-btn').addEventListener('change', function () {
+                var fileName = this.files[0].name;
+                document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
+            });
+        }
 
-                document.getElementById("review_form").addEventListener("submit", function (event) {
-                    var interests = document.querySelectorAll('input[name="interest"]:checked');
-                    var fileInput = document.getElementById('upload-btn');
+        document.getElementById("review_form").addEventListener("submit", function (event) {
+            var interests = document.querySelectorAll('input[name="interest"]:checked');
+            var fileInput = document.getElementById('upload-btn');
 
-                    if (interests.length === 0) {
-                        event.preventDefault();
-                        alert("יש לבחור לפחות תחום עניין אחד");
-                    }
-                    else if (!fileInput.value) {
-                        event.preventDefault();
-                        alert("יש להעלות תמונה של המתנה");
-                    }
-                    else {
-                        showPopup();
-                        event.preventDefault();
-                    }
-                    // אסוף את נתוני הטופס
-                    var giftName = document.querySelector('.review_form_input[placeholder="שם המתנה"]').value;
-                    var interests = Array.from(document.querySelectorAll('.interest input:checked')).map(function (checkbox) {
-                        return checkbox.value;
-                    });
+            if (interests.length === 0) {
+                event.preventDefault();
+                alert("יש לבחור לפחות תחום עניין אחד");
+            }
+            else if (!fileInput.value) {
+                event.preventDefault();
+                alert("יש להעלות תמונה של המתנה");
+            }
+            else {
+                showPopup();
+                event.preventDefault();
+            }
+            // אסוף את נתוני הטופס
+            var giftName = document.querySelector('.review_form_input[placeholder="שם המתנה"]').value;
+            var interests = Array.from(document.querySelectorAll('.interest input:checked')).map(function (checkbox) {
+                return checkbox.value;
+            });
 
-                    // שליחת הנתונים לצד השרת
-                    fetch('https://localhost:7284/GiftMatch/SubmitIdea', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            giftName: giftName,
-                            interests: interests
-                        })
-                    })
-                        .then(function (response) {
-                            return response.json();
-                        })
-                });
+            // שליחת הנתונים לצד השרת
+            fetch('https://localhost:7284/GiftMatch/SubmitIdea', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    giftName: giftName,
+                    interests: interests
+                })
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+        });
 
-                function showPopup() {
-                    document.getElementById('overlay').style.display = 'block';
-                    document.querySelector('.popup').style.display = 'block';
-                }
+        function showPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.querySelector('.popup').style.display = 'block';
+        }
     </script>
 </body>
 </html>
