@@ -18,6 +18,214 @@
 	<link href="styles/registration_login.css" rel="stylesheet" />
 	<script src="js/ajaxCalls.js"></script>
 
+	<!-- לפתיחה וסגירה של חלון קופץ -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script>
+		var passwordValidated = false; // הוסף משתנה שיציין אם הסיסמה והאימות סיסמה תקינים
+		$(document).ready(function () {
+			if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+				api = "https://localhost:7284/api/Users/";
+
+			}
+			else {
+
+			}
+
+			$("#RegisterForm").submit(Register);
+			$("#loginForm").submit(login);
+		})
+
+		function Register() {
+			RegisterOnServer();
+			return false;
+		}
+		function RegisterOnServer() {
+			if (validatePassword()) {
+				var email = document.getElementById("email").value;
+				var firstname = document.getElementById("firstname").value;
+				var lastname = document.getElementById("lastname").value;
+				var password = document.getElementById("password").value;
+
+				let newuser = {
+					email: email,
+					firstName: firstname,
+					lastName: lastname,
+					password: password
+				}
+				ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, error)
+			}
+		}
+		function successReg(data) {
+			sessionStorage["connectedUser"] = JSON.stringify(data);
+			window.location.href = 'home.html';
+		}
+
+		function error(err) {
+			showAlert(err.responseText)
+			console.log(err);
+		}
+
+		function login() {
+			loginOnServer();
+			return false;
+		}
+
+		function loginOnServer() {
+
+			var email = document.getElementById("loginUsername").value;
+			var password = document.getElementById("loginPassword").value;
+
+			let obj = {
+				email: email,
+				password: password
+			}
+
+			ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, error)
+		}
+
+		function successLogin(data) {
+			sessionStorage["connectedUser"] = JSON.stringify(data);
+			window.location.href = 'home.html';
+
+		}
+
+		function openActionPopup() {
+			if (!$('.popup:visible').length) { // בדוק אם יש כבר פופאפ פתוח
+				$("#actionPopup").fadeIn(300);
+				$(".popup-background").fadeIn(300);
+				$("body").addClass("popup-open");
+			}
+		}
+
+		function openRegisterPopup() {
+			closeActionPopup();
+			$("#RegisterPopup").fadeIn(300);
+			$(".popup-background").fadeIn(300);
+			$("body").addClass("popup-open");
+		}
+
+		function openLoginPopup() {
+			closeActionPopup();
+			$("#loginPopup").fadeIn(300);
+			$(".popup-background").fadeIn(300);
+			$("body").addClass("popup-open");
+		}
+
+		function closeLoginPopup() {
+			resetForms(); // איפוס הטופס
+			$("#loginPopup").fadeOut(300);
+			$(".popup-background").fadeOut(300);
+			$("body").removeClass("popup-open");
+		}
+
+		function closeRegisterPopup() {
+			if (!passwordValidated) { // בדוק אם הסיסמה והאימות סיסמה לא תקינים
+				resetRegisterForm(); // איפוס הטופס
+				$("#RegisterPopup").fadeOut(300);
+				$(".popup-background").fadeOut(300);
+				$("body").removeClass("popup-open");
+			} else {
+				resetRegisterForm(); // איפוס הטופס
+				$("#RegisterPopup").fadeOut(300);
+				$(".popup-background").fadeOut(300);
+				$("body").removeClass("popup-open");
+				passwordValidated = false; // איפוס המשתנה לטובה הבאה
+			}
+		}
+
+		function closeActionPopup() {
+			$("#actionPopup").fadeOut(300);
+		}
+
+		function togglePasswordVisibility(imgElement) {
+			var passwordInput = imgElement.previousElementSibling;
+			if (passwordInput.type === "password") {
+				passwordInput.type = "text";
+			} else {
+				passwordInput.type = "password";
+			}
+		}
+
+		function validatePassword() {
+			var password = document.getElementById("password").value;
+			var confirmPassword = document.getElementById("confirmPassword").value;
+
+			if (password !== confirmPassword) {
+				alert("הסיסמאות אינן זהות, נא לוודא ולנסות שנית.");
+				passwordValidated = false; // איפוס המשתנה
+				return false;
+			}
+			passwordValidated = true; // סיסמה ואימות סיסמה תקינים
+			return true;
+		}
+
+		function resetRegisterForm() {
+			document.getElementById("firstname").value = "";
+			document.getElementById("lastname").value = "";
+			document.getElementById("email").value = "";
+			document.getElementById("password").value = "";
+			document.getElementById("confirmPassword").value = "";
+		}
+
+		function resetForms() {
+			$("form")[0].reset(); // איפוס הטופס הראשון
+			$("form")[1].reset(); // איפוס הטופס השני
+		}
+
+		function closeAlerts() {
+			$(".alert").fadeOut(300);
+		}
+
+		function showAlert(message) {
+			var alertDiv = $('<div class="alert"></div>').text(message);
+			$("body").append(alertDiv);
+			setTimeout(function () {
+				$(".alert").fadeOut(300);
+			}, 3000); // הסתרת ההודעה אחרי 3 שניות
+		}
+
+		function forgotPassword() {
+			var email = document.getElementById("loginUsername").value; // הנחה ששם המשתמש הוא גם האימייל
+
+			// הגדר את הפרטים של השליחה
+			var data = {
+				"personalizations": [{
+					"to": [{
+						"email": email
+					}],
+					"subject": "איפוס סיסמה"
+				}],
+				"from": {
+					"email": "your_email@example.com" // כתובת האימייל שבה תרצה לשלוח ממנה
+				},
+				"content": [{
+					"type": "text/plain",
+					"value": "לחץ על הקישור הבא לאיפוס סיסמה: https://yourwebsite.com/reset-password"
+				}]
+			};
+
+			// שליחת הבקשה ל-API של SendGrid
+			fetch('https://api.sendgrid.com/v3/mail/send', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': 'Bearer YOUR_SENDGRID_API_KEY' // הוסף כאן המפתח
+				},
+				body: JSON.stringify(data)
+			})
+				.then(response => response.json())
+				.then(data => {
+					console.log(data);
+					alert("בקשת איפוס סיסמה נשלחה למייל שלך.");
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					alert("ארעה שגיאה בעת שליחת האימייל. נסה שנית מאוחר יותר.");
+				});
+		}
+	</script>
+
 </head>
 <body>
 
@@ -26,16 +234,24 @@
 		<!-- Header -->
 
 		<header class="header">
-			<div class="header_inner d-flex flex-row align-items-center justify-content-start">
-				<nav class="main_nav">
-					<ul>
-						<li><a href="index.html">דף הבית</a></li>
-						<li><a href="about.html">אודות</a></li>
-					</ul>
-				</nav>
-				<div id="Logo"><a href="index.html"><img src="images/logo.jpg" /></a></div>
-				<input type="submit" class="LoginBTN" value="התחברות / הרשמה" onclick="openActionPopup()" />
-				<div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+
+			<div class="header_inner d-flex justify-content-between flex-wrap ">
+				<div class="d-flex align-content-center flex-wrap g15">
+					<div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+
+					<nav class="main_nav">
+						<ul>
+							<li><a href="home.html">דף הבית</a></li>
+							<li><a href="about.html">אודות</a></li>
+						</ul>
+					</nav>
+				</div>
+
+				<div class="d-flex align-content-center flex-wrap align-items-center">
+					<input type="submit" class="LoginBTN" value="התחברות / הרשמה" onclick="openActionPopup()" />
+					<div id="Logo"><a href="index.html"><img src="images/logo.jpg" /></a></div>
+				</div>
+
 			</div>
 		</header>
 
@@ -72,7 +288,7 @@
 						<input type="text" id="firstname" name="username" autocomplete="username" required>
 					</div>
 					<div class="popup-text">
-						<label for="lastname">שם פרטי:</label>
+						<label for="lastname">שם משפחה:</label>
 						<input type="text" id="lastname" name="username" autocomplete="username" required>
 					</div>
 					<div class="popup-text">
@@ -95,7 +311,6 @@
 			</div>
 		</div>
 
-
 		<div id="loginPopup" class="popup">
 			<div class="popup-content">
 				<h2 class="popup-title">התחברות</h2>
@@ -110,220 +325,11 @@
 						<img src="images/eye.png" alt="Toggle Password Visibility" onclick="togglePasswordVisibility(this)" />
 					</div>
 					<button type="submit" class="open_but">התחברות</button>
-					<a href="#" onclick="forgotPassword()" id="forgotPass_but">שכחת סיסמא?</a> <!-- הוסף קישור עבור שכחת סיסמא -->
+					<!--<a href="#" onclick="forgotPassword()" id="forgotPass_but">שכחת סיסמא?</a>--> <!-- הוסף קישור עבור שכחת סיסמא -->
 				</form>
 				<button class="close_but" onclick="closeLoginPopup()">סגירה</button>
 			</div>
 		</div>
-
-		<!-- לפתיחה וסגירה של חלון קופץ -->
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script>
-
-
-			var passwordValidated = false; // הוסף משתנה שיציין אם הסיסמה והאימות סיסמה תקינים
-			$(document).ready(function () {
-                if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                    api = "https://localhost:7284/api/Users/";
-
-                }
-                else {
-
-                }
-
-                $("#RegisterForm").submit(Register);
-                $("#loginForm").submit(login);
-			})
-            
-			function Register() {
-				RegisterOnServer();
-				return false;
-			}
-			function RegisterOnServer() {
-				if (validatePassword()) {
-                    
-                    var email = document.getElementById("email").value;
-                    var firstname = document.getElementById("firstname").value;
-					var lastname = document.getElementById("lastname").value;
-                    var password = document.getElementById("password").value;
-
-					let newuser = {
-                        email: email,
-                        firstName: firstname,
-                        lastName: lastname,
-                        password: password
-					}
-                    ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, error)
-
-					
-				}
-			}
-			function successReg(data) {
-				sessionStorage["connectedUser"] = JSON.stringify(data);
-				window.location.href = 'home.html';
-				
-			}
-            function error(err) {
-                showAlert(err.responseText)
-				console.log(err);
-			}
-			function login() {
-				loginOnServer();
-				return false;
-			}
-			function loginOnServer() {
-
-                var email = document.getElementById("loginUsername").value;
-                var password = document.getElementById("loginPassword").value;
-
-				let obj = {
-					email: email,
-					password: password
-				}
-
-                ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, error)
-			}
-			function successLogin(data) {
-                sessionStorage["connectedUser"] = JSON.stringify(data);
-                window.location.href = 'home.html';
-
-			}
-			function openActionPopup() {
-				if (!$('.popup:visible').length) { // בדוק אם יש כבר פופאפ פתוח
-					$("#actionPopup").fadeIn(300);
-					$(".popup-background").fadeIn(300);
-					$("body").addClass("popup-open");
-				}
-			}
-
-
-			function openRegisterPopup() {
-				closeActionPopup();
-				$("#RegisterPopup").fadeIn(300);
-				$(".popup-background").fadeIn(300);
-				$("body").addClass("popup-open");
-			}
-
-			function openLoginPopup() {
-				closeActionPopup();
-				$("#loginPopup").fadeIn(300);
-				$(".popup-background").fadeIn(300);
-				$("body").addClass("popup-open");
-			}
-
-			function closeLoginPopup() {
-				resetForms(); // איפוס הטופס
-				$("#loginPopup").fadeOut(300);
-				$(".popup-background").fadeOut(300);
-				$("body").removeClass("popup-open");
-			}
-
-			function closeRegisterPopup() {
-				if (!passwordValidated) { // בדוק אם הסיסמה והאימות סיסמה לא תקינים
-					resetRegisterForm(); // איפוס הטופס
-					$("#RegisterPopup").fadeOut(300);
-					$(".popup-background").fadeOut(300);
-					$("body").removeClass("popup-open");
-				} else {
-					resetRegisterForm(); // איפוס הטופס
-					$("#RegisterPopup").fadeOut(300);
-					$(".popup-background").fadeOut(300);
-					$("body").removeClass("popup-open");
-					passwordValidated = false; // איפוס המשתנה לטובה הבאה
-				}
-			}
-
-			function closeActionPopup() {
-				$("#actionPopup").fadeOut(300);
-			}
-
-			function togglePasswordVisibility(imgElement) {
-				var passwordInput = imgElement.previousElementSibling;
-				if (passwordInput.type === "password") {
-					passwordInput.type = "text";
-				} else {
-					passwordInput.type = "password";
-				}
-			}
-
-			function validatePassword() {
-				var password = document.getElementById("password").value;
-				var confirmPassword = document.getElementById("confirmPassword").value;
-
-				if (password !== confirmPassword) {
-					alert("הסיסמאות אינן זהות, נא לוודא ולנסות שנית.");
-					passwordValidated = false; // איפוס המשתנה
-					return false;
-				}
-				passwordValidated = true; // סיסמה ואימות סיסמה תקינים
-				return true;
-			}
-
-			function resetRegisterForm() {
-				document.getElementById("username").value = "";
-				document.getElementById("email").value = "";
-				document.getElementById("password").value = "";
-				document.getElementById("confirmPassword").value = "";
-			}
-
-			function resetForms() {
-				$("form")[0].reset(); // איפוס הטופס הראשון
-				$("form")[1].reset(); // איפוס הטופס השני
-			}
-
-			function closeAlerts() {
-				$(".alert").fadeOut(300);
-			}
-
-			function showAlert(message) {
-				var alertDiv = $('<div class="alert"></div>').text(message);
-				$("body").append(alertDiv);
-				setTimeout(function () {
-					$(".alert").fadeOut(300);
-				}, 3000); // הסתרת ההודעה אחרי 3 שניות
-			}
-
-			function forgotPassword() {
-				var email = document.getElementById("loginUsername").value; // הנחה ששם המשתמש הוא גם האימייל
-
-				// הגדר את הפרטים של השליחה
-				var data = {
-					"personalizations": [{
-						"to": [{
-							"email": email
-						}],
-						"subject": "איפוס סיסמה"
-					}],
-					"from": {
-						"email": "your_email@example.com" // כתובת האימייל שבה תרצה לשלוח ממנה
-					},
-					"content": [{
-						"type": "text/plain",
-						"value": "לחץ על הקישור הבא לאיפוס סיסמה: https://yourwebsite.com/reset-password"
-					}]
-				};
-
-				// שליחת הבקשה ל-API של SendGrid
-				fetch('https://api.sendgrid.com/v3/mail/send', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': 'Bearer YOUR_SENDGRID_API_KEY' // הוסף את המפתח שלך כאן
-					},
-					body: JSON.stringify(data)
-				})
-					.then(response => response.json())
-					.then(data => {
-						console.log(data);
-						alert("בקשת איפוס סיסמה נשלחה למייל שלך.");
-					})
-					.catch((error) => {
-						console.error('Error:', error);
-						alert("ארעה שגיאה בעת שליחת האימייל. נסה שנית מאוחר יותר.");
-					});
-			}
-
-		</script>
 
 		<!-- Home -->
 
@@ -537,14 +543,14 @@
 							</ul>
 						</nav>
 						<!--<div class="footer_social">
-						<ul>
-							<li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
-							<li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
-							<li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
-							<li><a href="#"><i class="fa fa-reddit-alien" aria-hidden="true"></i></a></li>
-							<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
-						</ul>
-					</div>-->
+							<ul>
+								<li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+								<li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+								<li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+								<li><a href="#"><i class="fa fa-reddit-alien" aria-hidden="true"></i></a></li>
+								<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+							</ul>
+						</div>-->
 						<div class="copyright">
 							<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 							Copyright &copy;
@@ -557,13 +563,13 @@
 		</footer>
 	</div>
 
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="styles/bootstrap4/popper.js"></script>
-<script src="styles/bootstrap4/bootstrap.min.js"></script>
-<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
-<script src="plugins/easing/easing.js"></script>
-<script src="plugins/parallax-js-master/parallax.min.js"></script>
-<script src="plugins/colorbox/jquery.colorbox-min.js"></script>
-<script src="js/custom.js"></script>
+	<script src="js/jquery-3.2.1.min.js"></script>
+	<script src="styles/bootstrap4/popper.js"></script>
+	<script src="styles/bootstrap4/bootstrap.min.js"></script>
+	<script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
+	<script src="plugins/easing/easing.js"></script>
+	<script src="plugins/parallax-js-master/parallax.min.js"></script>
+	<script src="plugins/colorbox/jquery.colorbox-min.js"></script>
+	<script src="js/custom.js"></script>
 </body>
 </html>

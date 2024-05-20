@@ -14,8 +14,9 @@
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     <link href="styles/new idea.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/ajaxCalls.js"></script>
-    
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
@@ -23,51 +24,64 @@
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
                 api = "https://localhost:7284/api/";
-                
+
             }
             else {
 
             }
-            ajaxCall("GET", api +"Interests","",successInt,errFunction)
-        });
 
+            if (sessionStorage["connectedUser"] != undefined) {
+                connectedUser = JSON.parse(sessionStorage["connectedUser"]);
+                document.getElementById("phUserName").innerHTML = שלום, ${ connectedUser.firstName } ${ connectedUser.lastName }| <a href="index.html">התנתקות</a>;
+            }
+
+            ajaxCall("GET", api + "Interests", "", successInt, errFunction)
+        });
+        //פונקציה שמביאה את התחומי עניין מהשרת במידה והשרת הצליח
         function successInt(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
                 str += `<div class="interest">
-                        <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
+                                <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
                 if (data[i].interestName.length > 6) {
-                    str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')">`;
+                    str += <label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')">;
+                    }
+                        else {
+                            str += <label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br />;
+                    }
+                                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
+                                    <span class="interest_title">${data[i].interestName}</span><br /></label></div>`;
                 }
-                else {
-                    str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br/>`;
+                document.getElementById("PHinterest_grid").innerHTML = str;
+            }
+            function errFunction(err) {
+                console.log(err);
+            }
+            //משנה את הצבע של התחומי עניין במידה ונלחץ
+            function changeCheckbox(checkboxId) {
+                var checkbox = document.getElementById(checkboxId);
+                changeColor(checkboxId);
+            }
+
+            function changeColor(interestId) {
+                var checkbox = document.getElementById(interestId);
+                var label = document.querySelector(label[for="${interestId}"]);
+                if (checkbox.checked) {
+                    label.style.backgroundColor = 'initial';
+                    label.style.color = '#2f2f2f';
+                } else {
+                    label.style.backgroundColor = '#937c6f';
+                    label.style.color = '#fff';
                 }
-                str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
-                        <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
             }
-            document.getElementById("PHinterest_grid").innerHTML = str;
-        }
-        function errFunction(err) {
-            console.log(err);
-        }
 
-        function changeCheckbox(checkboxId) {
-            var checkbox = document.getElementById(checkboxId);
-            changeColor(checkboxId);
-        }
-
-        function changeColor(interestId) {
-            var checkbox = document.getElementById(interestId);
-            var label = document.querySelector(`label[for="${interestId}"]`);
-            if (checkbox.checked) {
-                label.style.backgroundColor = 'initial';
-                label.style.color = '#2f2f2f';
-            } else {
-                label.style.backgroundColor = '#937c6f';
-                label.style.color = '#fff';
+            function enter_basket() {
+                window.location.href = "basket ideas.html";
             }
-        }
 
+            function Logout() {
+                window.location.href = "index.html";
+            }
     </script>
 </head>
 <body>
@@ -76,40 +90,45 @@
 
         <!-- Header -->
 
-        <header class="header">
-            <div class="header_inner d-flex flex-row align-items-center justify-content-start">
+        <header class="header ">
 
-                <div class="shopping">
-                    <!-- Avatar -->
+            <div class="header_inner d-flex justify-content-between flex-wrap ">
+                <div class="d-flex align-content-center flex-wrap g15">
+                    <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                    <div class="shopping">
+                        <!-- Avatar -->
+                        <a href="#">
+                            <div class="avatar">
+                                <img src="images/avatar.svg" alt="">
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Cart -->
                     <a href="#">
-                        <div class="avatar">
-                            <img src="images/avatar.svg" alt="">
-                        </div>
-                    </a>
-                </div>
-
-                <!-- Cart -->
-                <a href="#">
-                    <div class="cart">
-                        <img src="images/shopping-bag.svg" alt="">
-                        <div class="cart_num_container">
-                            <div class="cart_num_inner">
-                                <div class="cart_num">0</div>
+                        <div class="cart" onclick="enter_basket()">
+                            <img src="images/shopping-bag.svg" alt="">
+                            <div class="cart_num_container">
+                                <div class="cart_num_inner">
+                                    <div class="cart_num">0</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </a>
+                    </a>
 
-                <nav class="main_nav">
-                    <ul>
-                        <li><a href="home.html">דף הבית</a></li>
-                        <li><a href="about.html">אודות</a></li>
-                    </ul>
-                </nav>
-                <div id="Logo"><a href="home.html"><img src="images/logo.jpg" /></a></div>
-                <input type="submit" class="LoginBTN" value="התנתקות" onclick="Logout()" />
+                    <nav class="main_nav">
+                        <ul>
+                            <li><a href="home.html">דף הבית</a></li>
+                            <li><a href="about connected.html">אודות</a></li>
+                        </ul>
+                    </nav>
+                </div>
 
-                <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                <div class="d-flex align-content-center flex-wrap align-items-center">
+                    <div id="phUserName"></div>
+                    <div id="Logo"><a href="home.html"><img src="images/logo.jpg" /></a></div>
+                </div>
+
             </div>
         </header>
 
@@ -122,7 +141,8 @@
                 <ul class="menu_mm">
                     <li class="menu_mm"><input type="submit" class="menu_login" value="התנתקות" onclick="Logout()" /></li>
                     <li><a href="home.html">דף הבית</a></li>
-                    <li><a href="about.html">אודות</a></li>
+                    <li><a href="about connected.html">אודות</a></li>
+                    <li><a href="basket ideas.html">סל הרעיונות</a></li>
                 </ul>
             </nav>
         </div>
@@ -167,111 +187,111 @@
                                     </select><br />-->
                                     <h6>בחר/י תחומי עניין המשתייכים למתנה:</h6><br />
                                     <div class="interest_grid" id="PHinterest_grid">
-        <!--<div class="interest">
-            <input type="checkbox" id="music" name="interest" value="music">
-            <label for="music">
-                <img src="images/interest_1.png" alt="icon" class="interest_icon">
-                <span class="interest_title">מוזיקה</span><br />
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="sport" name="interest" value="sport">
-            <label for="sport">
-                <img src="images/interest_2.png" alt="icon" class="interest_icon">
-                <span class="interest_title">ספורט ואקסטרים</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="fashion" name="interest" value="fashion">
-            <label for="fashion">
-                <img src="images/interest_3.png" alt="icon" class="interest_icon">
-                <span class="interest_title">אופנה וטקסטיל</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="technology" name="interest" value="technology">
-            <label for="technology">
-                <img src="images/interest_4.png" alt="icon" class="interest_icon">
-                <span class="interest_title">טכנולוגיה ומדע</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="food" name="interest" value="food">
-            <label for="food">
-                <img src="images/interest_5.png" alt="icon" class="interest_icon">
-                <span class="interest_title">אוכל</span><br />
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="vacation" name="interest" value="vacation">
-            <label for="vacation">
-                <img src="images/interest_6.png" alt="icon" class="interest_icon">
-                <span class="interest_title">תיירות ונופש</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="consumption" name="interest" value="consumption">
-            <label for="consumption">
-                <img src="images/interest_7.png" alt="icon" class="interest_icon">
-                <span class="interest_title">צרכנות</span><br />
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="art" name="interest" value="art">
-            <label for="art">
-                <img src="images/interest_8.png" alt="icon" class="interest_icon">
-                <span class="interest_title">אומנות ויצירה</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="entertainment" name="interest" value="entertainment">
-            <label for="entertainment">
-                <img src="images/interest_9.png" alt="icon" class="interest_icon">
-                <span class="interest_title">בילוי ופנאי</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="photography" name="interest" value="photography">
-            <label for="photography">
-                <img src="images/interest_10.png" alt="icon" class="interest_icon">
-                <span class="interest_title">צילום</span><br />
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="gardening" name="interest" value="gardening">
-            <label for="gardening">
-                <img src="images/interest_11.png" alt="icon" class="interest_icon">
-                <span class="interest_title">גינון וצמחים</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="beauty" name="interest" value="beauty">
-            <label for="beauty">
-                <img src="images/interest_12.png" alt="icon" class="interest_icon">
-                <span class="interest_title">יופי וטיפוח</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="gaming" name="interest" value="gaming">
-            <label for="gaming">
-                <img src="images/interest_13.png" alt="icon" class="interest_icon">
-                <span class="interest_title">משחקים</span><br />
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="cultural" name="interest" value="cultural">
-            <label for="cultural">
-                <img src="images/interest_14.png" alt="icon" class="interest_icon">
-                <span class="interest_title">תרבות והעשרה</span>
-            </label>
-        </div>
-        <div class="interest">
-            <input type="checkbox" id="alternativeMedicine" name="interest" value="alternativeMedicine">
-            <label for="alternativeMedicine">
-                <img src="images/interest_15.png" alt="icon" class="interest_icon">
-                <span class="interest_title">רפואה משלימה</span>
-            </label>
-        </div>-->
+                                        <!--<div class="interest">
+                                            <input type="checkbox" id="music" name="interest" value="music">
+                                            <label for="music">
+                                                <img src="images/interest_1.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">מוזיקה</span><br />
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="sport" name="interest" value="sport">
+                                            <label for="sport">
+                                                <img src="images/interest_2.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">ספורט ואקסטרים</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="fashion" name="interest" value="fashion">
+                                            <label for="fashion">
+                                                <img src="images/interest_3.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">אופנה וטקסטיל</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="technology" name="interest" value="technology">
+                                            <label for="technology">
+                                                <img src="images/interest_4.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">טכנולוגיה ומדע</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="food" name="interest" value="food">
+                                            <label for="food">
+                                                <img src="images/interest_5.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">אוכל</span><br />
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="vacation" name="interest" value="vacation">
+                                            <label for="vacation">
+                                                <img src="images/interest_6.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">תיירות ונופש</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="consumption" name="interest" value="consumption">
+                                            <label for="consumption">
+                                                <img src="images/interest_7.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">צרכנות</span><br />
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="art" name="interest" value="art">
+                                            <label for="art">
+                                                <img src="images/interest_8.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">אומנות ויצירה</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="entertainment" name="interest" value="entertainment">
+                                            <label for="entertainment">
+                                                <img src="images/interest_9.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">בילוי ופנאי</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="photography" name="interest" value="photography">
+                                            <label for="photography">
+                                                <img src="images/interest_10.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">צילום</span><br />
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="gardening" name="interest" value="gardening">
+                                            <label for="gardening">
+                                                <img src="images/interest_11.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">גינון וצמחים</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="beauty" name="interest" value="beauty">
+                                            <label for="beauty">
+                                                <img src="images/interest_12.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">יופי וטיפוח</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="gaming" name="interest" value="gaming">
+                                            <label for="gaming">
+                                                <img src="images/interest_13.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">משחקים</span><br />
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="cultural" name="interest" value="cultural">
+                                            <label for="cultural">
+                                                <img src="images/interest_14.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">תרבות והעשרה</span>
+                                            </label>
+                                        </div>
+                                        <div class="interest">
+                                            <input type="checkbox" id="alternativeMedicine" name="interest" value="alternativeMedicine">
+                                            <label for="alternativeMedicine">
+                                                <img src="images/interest_15.png" alt="icon" class="interest_icon">
+                                                <span class="interest_title">רפואה משלימה</span>
+                                            </label>
+                                        </div>-->
                                     </div><br />
                                     <textarea class="review_form_text" name="review_form_text" placeholder="תיאור המתנה" required="required"></textarea><br /><br /><br />
                                     <input type="file" id="upload-btn" accept="image/*">
@@ -306,8 +326,9 @@
                         <div class="logo"><a href="index.html">GiftMatch</a></div>
                         <nav class="footer_nav">
                             <ul>
-                                <li><a href="about.html">אודות</a></li>
-                                <li><a href="index.html">דף הבית</a></li>
+                                <li><a href="basket ideas.html">סל הרעיונות</a></li>
+                                <li><a href="about connected.html">אודות</a></li>
+                                <li><a href="home.html">דף הבית</a></li>
                             </ul>
                         </nav>
                         <div class="copyright">
@@ -322,46 +343,61 @@
         </footer>
     </div>
 
-  
+    <script src="js/jquery-3.2.1.min.js"></script>
     <script src="styles/bootstrap4/popper.js"></script>
     <script src="styles/bootstrap4/bootstrap.min.js"></script>
+    <script src="plugins/OwlCarousel2-2.2.1/owl.carousel.js"></script>
     <script src="plugins/easing/easing.js"></script>
     <script src="plugins/parallax-js-master/parallax.min.js"></script>
+    <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
+    <script src="js/custom.js"></script>
     <script>
-        function Logout() {
-            window.location.href = "index.html";
-        }
+                window.onload = function () {
+                    document.getElementById('upload-btn').addEventListener('change', function () {
+                        var fileName = this.files[0].name;
+                        document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
+                    });
+                }
 
-        window.onload = function () {
-            document.getElementById('upload-btn').addEventListener('change', function () {
-                var fileName = this.files[0].name;
-                document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
-            });
-        }
+                document.getElementById("review_form").addEventListener("submit", function (event) {
+                    var interests = document.querySelectorAll('input[name="interest"]:checked');
+                    var fileInput = document.getElementById('upload-btn');
 
-        document.getElementById("review_form").addEventListener("submit", function (event) {
-            var interests = document.querySelectorAll('input[name="interest"]:checked');
-            var fileInput = document.getElementById('upload-btn');
+                    if (interests.length === 0) {
+                        event.preventDefault();
+                        alert("יש לבחור לפחות תחום עניין אחד");
+                    }
+                    else if (!fileInput.value) {
+                        event.preventDefault();
+                        alert("יש להעלות תמונה של המתנה");
+                    }
+                    else {
+                        showPopup();
+                        event.preventDefault();
+                    }
+                    // אסוף את נתוני הטופס
+                    var giftName = document.querySelector('.review_form_input[placeholder="שם המתנה"]').value;
+                    var interests = Array.from(document.querySelectorAll('.interest input:checked')).map(function (checkbox) {
+                    return checkbox.value;
+     });
 
-            if (interests.length === 0) {
-                event.preventDefault();
-                alert("יש לבחור לפחות תחום עניין אחד");
-            }
-            else if (!fileInput.value) {
-                event.preventDefault();
-                alert("יש להעלות תמונה של המתנה");
-            }
-            else {
-                showPopup();
-                event.preventDefault();
-            }
-        });
+     // שליחת הנתונים לצד השרת
+     fetch('https://localhost:7284/GiftMatch/SubmitIdea', {
+         method: 'POST',
+         headers: {
+             'Content-Type': 'application/json'
+         },
+         body: JSON.stringify({
+             giftName: giftName,
+             interests: interests
+         })
 
-        function showPopup() {
-            document.getElementById('overlay').style.display = 'block';
-            document.querySelector('.popup').style.display = 'block';
-        }
+                });
 
+                function showPopup() {
+                    document.getElementById('overlay').style.display = 'block';
+                    document.querySelector('.popup').style.display = 'block';
+                }
     </script>
 </body>
 </html>
