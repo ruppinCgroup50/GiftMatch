@@ -38,32 +38,13 @@
             ajaxCall("GET", api + "Interests", "", successInt, errFunction)
             // $("#review_form").submit(addIdea)
         });
-        //function addIdea() {
-        //    addIdeaToServer();
-        //    return false;
-        //}
-        //function addIdeaToServer() {
-        //    var name = $("#giftname").val();
-        //    var price = $("#price").val();
-        //    var interests = [];
-        //    var checkboxes = document.querySelectorAll('.interest_grid input[type="checkbox"]:checked');
-        //    checkboxes.forEach(function (checkbox) {
-        //        interests.push(checkbox.value);
-        //    });
-        //    var description = $("#description").val();
-        //    var file = document.getElementById('upload-btn').files[0]; // אם קיימת תמונה שהועלתה
 
-        //    console.log(name);
-        //    console.log(checkboxes);
-
-
-        //}
         //פונקציה שמביאה את התחומי עניין מהשרת במידה והשרת הצליח
         function successInt(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
                 str += `<div class="interest">
-                                    <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
+                                        <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}">`;
                 if (data[i].interestName.length > 6) {
                     str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')">`;
                 }
@@ -71,7 +52,7 @@
                     str += `<label for="${data[i].id}" onclick="changeCheckbox('${data[i].id}')"><br />`;
                 }
                 str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
-                                        <span class="interest_title">${data[i].interestName}</span><br /></label></div>`;
+                                            <span class="interest_title">${data[i].interestName}</span><br /></label></div>`;
             }
             document.getElementById("PHinterest_grid").innerHTML = str;
         }
@@ -271,11 +252,12 @@
                 var fileName = this.files[0].name;
                 document.getElementById('file-name').innerHTML = "<span style='color: #937c6f;'>שם התמונה: </span>" + fileName;
             });
-           
+
         }
 
         document.getElementById("review_form").addEventListener("submit", function (event) {
             event.preventDefault();
+            // אסוף את נתוני הטופס
             var interests = document.querySelectorAll('input[name="interest"]:checked');
             var fileInput = document.getElementById('upload-btn');
 
@@ -289,11 +271,9 @@
                 alert("יש להעלות תמונה של המתנה");
                 return;
             }
-            else {
-                showPopuploading();
 
-            }
-            // אסוף את נתוני הטופס
+            showPopuploading();
+
             var giftName = document.querySelector('.review_form_input[placeholder="שם המתנה"]').value;
             var interests = Array.from(document.querySelectorAll('.interest input:checked')).map(function (checkbox) {
                 return checkbox.value;
@@ -318,25 +298,7 @@
             }
             ajaxCall("POST", 'https://localhost:7284/GiftMatch/SubmitIdea', JSON.stringify(obj), successGpt, errFunctionGpt)
             // שליחת הנתונים לצד השרת
-            /*    fetch('https://localhost:7284/GiftMatch/SubmitIdea', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        giftName: giftName,
-                        interests: interests,
-                        price: price,
-                        description: description,
-                        fileName: fileName,
-                        email: connectedUser.email
 
-                    })
-                })
-                    .then(function (response) {
-                        return response.json();
-                    })
-            });*/
             function errFunctionGpt(err) {
                 hidePopuploading();
                 alert(err.responseText);

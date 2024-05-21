@@ -11,10 +11,11 @@ namespace GiftMatchServer.Controllers
     public class GiftMatchController : ControllerBase
     {
         [HttpPost("SubmitIdea")]
-        public async Task<IActionResult> SubmitIdea([FromBody] /*Gpt3Submission submission*/JsonElement data)
+        public async Task<IActionResult> SubmitIdea([FromBody] JsonElement data)
         {
             try
             {
+                // שליפת נתונים מתוך השדות של הגייסון מהקליינט עבור רעיון חדש
                 string gName = data.GetProperty("giftName").GetString();
                 GiftIdea gift = new GiftIdea();
                 gift.GiftName = gName;
@@ -26,6 +27,7 @@ namespace GiftMatchServer.Controllers
                 Gpt3Submission gpt = new Gpt3Submission();
                 gpt.GiftName = gName;
 
+                // שליפת נתונים מתוך השדות של הגייסון מהקליינט עבור רשימת תחומים 
                 if (data.TryGetProperty("interests", out JsonElement interests) && interests.ValueKind == JsonValueKind.Array)
                 {
                     List<string> interestsList = new List<string>();
@@ -48,25 +50,30 @@ namespace GiftMatchServer.Controllers
                     return NotFound("שם המתנה לא מתאים לתחומים שנבחרו");
 
                 DBservices dBservices = new DBservices();
-
+                //יוצרים מחרוזת מופרדת בפסיקים של התחומי עניין לטובת העלאה בס קיו אל לטובת העלאת בעזרת פונקציית ספליט
                 string InterestsString = "";
                 foreach (var item in response.compatibleInterests)
                 {
                     InterestsString += item + ",";
                 }
+                //יוצרים מחרוזת מופרדת בפסיקים של התכונות לטובת העלאה בס קיו אל לטובת העלאת בעזרת פונקציית ספליט
                 string AttrString = "";
                 foreach (var item in response.compatibleBIG5)
                 {
                     AttrString += item + ",";
                 }
+
+                //מעלים רק את הרעיון החדש
                 int res = dBservices.InsertGiftIdea(gift);
-                if (res == 0)
+                if (res == 0)//אם הרעיון לא עלה. רס מייצג שורת שנוספו לטבלה
                 {
                     return NotFound("שגיאה בעת הוספת רעיון");
                 }
+                //מעלים לטבלת רבים לרבים את תחומי העניין
                 int resIntres = dBservices.InsertGiftInterest(gName, InterestsString);
+                //מעלים לטבלת רבים לרבים את התכונות
                 int resAttr = dBservices.InsertGiftAttr(gName, AttrString);
-                if (resIntres > 0 && resAttr > 0)
+                if (resIntres > 0 && resAttr > 0)//אם התכונות והתחומי עניין לפחות שורה אח הוכנסה בכל טבלה
                     return Ok(res);
                 else
                     return NotFound("שגיאה בעת שיוך רעיונות/תכונות למתנה");
