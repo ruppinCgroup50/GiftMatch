@@ -46,7 +46,7 @@ namespace GiftMatchServer.Controllers
                     compatibleBIG5 = compatibleBIG5
                 };
 
-                if (response.compatibleInterests.Count == 0 || response.compatibleBIG5.Count == 0)
+                if (response.compatibleInterests.Count == 0 || response.compatibleBIG5.Count == 0)//אם אחת הרשימות שחזרו מהצ'אט ריקות
                     return NotFound("שם המתנה לא מתאים לתחומים שנבחרו");
 
                 DBservices dBservices = new DBservices();
