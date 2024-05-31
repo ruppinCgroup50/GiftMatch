@@ -86,38 +86,44 @@
             answeredQuestions += 5;
 
             if (answeredQuestions >= 15) {
-                let avgArr = [];//מערך של ממוצעי שאלות לפי תכונות
-
-                //לולאה שעושה ממוצע לכל 3 תאים ומכניסה את התוצאה למערך הממוצעים
-                for (let i = 0; i < ansArr.length; i += 3) {
-                    let group = ansArr.slice(i, i + 3);
-                    let sum = group.reduce((acc, val) => acc + parseFloat(val), 0);//המרה לעשרוני
-                    let average = sum / group.length;
-                    avgArr.push(average.toFixed(2));//הכנסה למערך ממוצעים
+                let obj = {
+                    ansArr: ansArr
                 }
+                ajaxCall("POST", api +"Big5qs/allAnswers",JSON.stringify(obj),successCBAns,errorCB)
+               // let avgArr = [];//מערך של ממוצעי שאלות לפי תכונות
 
-                console.log(avgArr);
-                //הכנסה לג'ייסון את הממוצע והמספר של התכונה
-                let avgJsonArr = avgArr.map((value, index) => ({
-                    value,
-                    attId: index + 1
-                }));
+               // //לולאה שעושה ממוצע לכל 3 תאים ומכניסה את התוצאה למערך הממוצעים
+               // for (let i = 0; i < ansArr.length; i += 3) {
+               //     let group = ansArr.slice(i, i + 3);
+               //     let sum = group.reduce((acc, val) => acc + parseFloat(val), 0);//המרה לעשרוני
+               //     let average = sum / group.length;
+               //     avgArr.push(average.toFixed(2));//הכנסה למערך ממוצעים
+               // }
 
-                // מיון מערך ממוצעים
-                avgJsonArr.sort((a, b) => b.value - a.value);
+               // console.log(avgArr);
+               // //הכנסה לג'ייסון את הממוצע והמספר של התכונה
+               // let avgJsonArr = avgArr.map((value, index) => ({
+               //     value,
+               //     attId: index + 1
+               // }));
 
-                // מקבלים את ה2 ממוצעים הגבוהים ביותר
-                let maxValues = avgJsonArr.slice(0, 2);
+               // // מיון מערך ממוצעים
+               // avgJsonArr.sort((a, b) => b.value - a.value);
 
-                //console.log(maxValues);
-                //alert("end");
+               // // מקבלים את ה2 ממוצעים הגבוהים ביותר
+               // let maxValues = avgJsonArr.slice(0, 2);
 
-               window.location.href = "find gift.html";
+               // //console.log(maxValues);
+               // //alert("end");
+
+               //window.location.href = "find gift.html";
             } else {
                 successCB(globalData);
             }
         }
-
+        function successCBAns(data) {
+            console.log(data);
+        }
         function allQuestionsRated() {
             var questionCount = Math.min(5, globalData.length - currentQuestion);
             for (var i = currentQuestion; i < currentQuestion + questionCount; i++) {
