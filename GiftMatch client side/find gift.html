@@ -22,6 +22,8 @@
             crossorigin="anonymous"></script>
     <script>
         var clickCount = 0; // קביעת משתנה גלובלי למספר הלחיצות
+        var selectedInterests = []; // מערך גלובלי לשמירת תחומי העניין שנבחרו
+
 
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
@@ -80,6 +82,9 @@
                     label.appendChild(clickCounter);
                 }
                 clickCounter.innerText = ++clickCount;
+                //להכניס משתנה ששומר את שם תחום העניין ואת המספור
+                selectedInterests.push({ id: interestId, count: clickCount, name: checkbox.value });
+
             }
             else {
                 if (clickCounter) {
@@ -87,16 +92,12 @@
                     label.style.color = '#2f2f2f';
                     clickCounter.remove();
                     clickCount -= 2;
+                    //להסיר את תחום העניין והמספור שלו
+                    selectedInterests = selectedInterests.filter(function (interest) {
+                        return interest.id !== interestId;
+                    })
                 }
             }
-        }
-
-        function enter_basket() {
-            window.location.href = "basket ideas.html";
-        }
-
-        function Logout() {
-            window.location.href = "index.html";
         }
     </script>
 </head>
@@ -257,17 +258,45 @@
     <script src="plugins/parallax-js-master/parallax.min.js"></script>
     <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
     <script src="js/custom.js"></script>
-    <script>
-        document.getElementById("review_form").addEventListener("submit", function (event) {
-            var interests = document.querySelectorAll('input[name="interest"]:checked');
-            var fileInput = document.getElementById('upload-btn');
 
+     <script>
+            document.getElementById("review_form").addEventListener("submit", function (event) {
+            var interests = document.querySelectorAll('input[name="interest"]:checked');
+
+            // בדיקה אם לא נבחרו תחומי עניין
             if (interests.length === 0) {
                 event.preventDefault();
-                alert("יש לבחור לפחות תחום עניין אחד");
-            }
-        });
+            alert("יש לבחור לפחות תחום עניין אחד");
+            } else {
 
+            // יצירת אובייקט המכיל את הנתונים שיש לשלוח
+            let dataToSend = {
+            selectedInterests: selectedInterests,
+            };
+            // שליחת הנתונים לשרת באמצעות AJAX
+            $.ajax({
+            type: "POST",
+            url: api + "Big5qs/InterestsToGpt", 
+            data: JSON.stringify(dataToSend),
+            contentType: "application/json",
+            success: function(response) {
+                // טיפול בתגובה מהשרת
+                console.log(response);},
+            error: function(error) {
+                // טיפול בשגיאות
+                console.log(error);
+                    }
+                });
+            }
+            });
+
+         function enter_basket() {
+             window.location.href = "basket ideas.html";
+         }
+
+         function Logout() {
+             window.location.href = "index.html";
+         }
     </script>
 </body>
 </html>

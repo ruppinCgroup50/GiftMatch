@@ -11,6 +11,16 @@ namespace GiftMatchServer.Controllers
     [ApiController]
     public class Big5qsController : ControllerBase
     {
+        // רשימת מאפיינים
+        private static readonly List<string> Attributes = new List<string>
+        {
+            "Extraversion",
+            "Agreeableness",
+            "Conscientiousness",
+            "Openness",
+            "Neuroticism"
+        };
+
         // GET: api/<Big5qsController>
         [HttpGet]
         public IActionResult GetQuestion()
@@ -44,7 +54,25 @@ namespace GiftMatchServer.Controllers
                     }
                     Big5Q b5 = new Big5Q();
                     List<AttributeValue> res = b5.Get2BestAtrr(arr);
-                    //מפה זה עדיין לא צריך לחזור לקליינט אל א להמשיך לפונקציה של הgpt 
+
+                    // קוד להחלפת הערכים ברשימת res במשתנים מרשימת Attributes
+                    List<string> resAttributes = new List<string>(); //רשימה עם 2 שמות התכונות מהביג5 שהכי מתאימות
+                    for (int i = 0; i < res.Count; i++)
+                    {
+                        int index =(int) res[i].Value - 1;
+                        if (index >= 0 && index < Attributes.Count)
+                        {
+                            resAttributes.Add(Attributes[index]);
+                        }
+                        else
+                        {
+                            return BadRequest("Invalid index in res.");
+                        }
+
+                        //צריך לקחת מהשרת את רשימת הרעיונות של 2 התכונות הסופיות
+                        //שליחה למחלקה לצורך שליחה לצאט
+                    }
+
                     return Ok(res);//עד שיושלם יש החזרה לטובת בדיקות
                 }
                 return NotFound("ss");
@@ -54,7 +82,21 @@ namespace GiftMatchServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
+       
+        [HttpPost("InterestsToGpt")] 
+        public IActionResult InterestsToGpt([FromBody] JsonElement data)
+        {
+            try
+            {
+                //קבלת המערך מהצד לקוח
+                //צריך לקחת מהשרת את רשימת הרעיונות לתחומי העניין
+                //שליחה למחלקה לצורך שליחה לצאט
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }
