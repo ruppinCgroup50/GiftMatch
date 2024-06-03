@@ -740,6 +740,12 @@ section {
     border: solid 1px #b5b5b5;
     outline: none;
     padding-right: 22px;
+    text-align: right;
+}
+
+.review_form_input::placeholder {
+    text-align: right; 
+    direction: rtl; 
 }
 
 .review_form_text {

@@ -75,6 +75,7 @@
                 Gender: gender,
                 RelationType: $("#relationType").val(),
                 Birthday: new Date($("#birthday").val()),
+                Phone: $("#phone").val(),
                 RelationshipScore: $("#myRange").val(),
                 Image: image,
                 UserEmail: userEmail,
@@ -235,6 +236,7 @@
                                     </select><br />
                                     <h6>תאריך לידה:</h6>
                                     <input type="date" id="birthday" class="review_form_input" required="required" placeholder="תאריך לידה"><br />
+                                    <input type="tel" id="phone" class="review_form_input" placeholder="מספר טלפון" pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}" required="required"><br />
                                     <h6>מידת קרבה:</h6><br />
                                     <div class="slidecontainer">
                                         <input type="range" min="1" max="10" value="5" class="slider" id="myRange" required>

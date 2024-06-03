@@ -705,6 +705,10 @@ section {
     direction: rtl;
 }
 
+.tagname {
+    cursor: pointer;
+}
+
 .review_form_container {
     width: 100%;
 }
