@@ -89,6 +89,108 @@ public class DBservices
 
     }
 
+    public List<GiftList> GetGiftList()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureNoParams("sp_GetGiftList", con);   // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<GiftList> list = new List<GiftList>();
+            while (dataReader.Read())
+            {
+                GiftList i = new GiftList();
+                i.GiftName = dataReader["GiftName"].ToString();
+                i.AttrId = Convert.ToInt32(dataReader["AttrId"].ToString());
+                list.Add(i);
+
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    public List<GiftListInterest> GetGiftListInterest()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureNoParams("sp_GetGiftListInterest", con);   // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<GiftListInterest> list = new List<GiftListInterest>();
+            while (dataReader.Read())
+            {
+                GiftListInterest i = new GiftListInterest();
+                i.GiftName = dataReader["GiftName"].ToString();
+                i.InterestName = dataReader["InterestName"].ToString();
+                list.Add(i);
+
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
+
     public List<Big5Q> GetQuestion()
     {
 

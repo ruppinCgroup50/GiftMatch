@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using System.Collections.Generic;
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Newtonsoft.Json;
 
 namespace GiftMatchServer.Controllers
 {
@@ -21,8 +21,11 @@ namespace GiftMatchServer.Controllers
             "Neuroticism"
         };
 
-        // GET: api/<Big5qsController>
-        [HttpGet]
+        // משתנה סטטי לאחסון הנתונים של giftsByAttributes
+        private static Dictionary<string, List<string>> giftsByAttributes = new Dictionary<string, List<string>>();
+
+        // GET: api/Big5qsController/question
+        [HttpGet("question")]
         public IActionResult GetQuestion()
         {
             DBservices dbs = new DBservices();
@@ -32,7 +35,7 @@ namespace GiftMatchServer.Controllers
             return NotFound();
         }
 
-
+        // POST: api/Big5qsController/allAnswers
         [HttpPost("allAnswers")]
         public IActionResult allAnswers([FromBody] JsonElement data)
         {
@@ -59,7 +62,7 @@ namespace GiftMatchServer.Controllers
                     List<string> resAttributes = new List<string>(); //רשימה עם 2 שמות התכונות מהביג5 שהכי מתאימות
                     for (int i = 0; i < res.Count; i++)
                     {
-                        int index =(int) res[i].Value - 1;
+                        int index = (int)res[i].AttId - 1;
                         if (index >= 0 && index < Attributes.Count)
                         {
                             resAttributes.Add(Attributes[index]);
@@ -68,35 +71,110 @@ namespace GiftMatchServer.Controllers
                         {
                             return BadRequest("Invalid index in res.");
                         }
-
-                        //צריך לקחת מהשרת את רשימת הרעיונות של 2 התכונות הסופיות
-                        //שליחה למחלקה לצורך שליחה לצאט
                     }
 
-                    return Ok(res);//עד שיושלם יש החזרה לטובת בדיקות
+                    // שליפת רשימת מתנות על פי תכונות-קבלת 2 רשימות מהשרת
+                    // במקום ליצור פעולת GET נפרדת.
+                    DBservices dbs = new DBservices();
+                    List<GiftList> results = dbs.GetGiftList();
+                    if (results.Count > 0)
+                    {
+                        // יצירת מילון לאחסון הרשימות עבור 2 המאפיינים
+                        Dictionary<string, List<string>> newGiftsByAttributes = new Dictionary<string, List<string>>();
+                        foreach (var attribute in resAttributes)
+                        {
+                            newGiftsByAttributes[attribute] = new List<string>();
+                        }
+
+                        // מעבר על התוצאות מה-DB והכנסתן לרשימות המתאימות
+                        foreach (var gift in results)
+                        {
+                            int attrIndex = gift.AttrId - 1;
+                            if (attrIndex >= 0 && attrIndex < Attributes.Count)
+                            {
+                                string attributeName = Attributes[attrIndex];
+                                if (newGiftsByAttributes.ContainsKey(attributeName))
+                                {
+                                    newGiftsByAttributes[attributeName].Add(gift.GiftName);
+                                }
+                            }
+                        }
+
+                        // עדכון המשתנה הסטטי
+                        giftsByAttributes = newGiftsByAttributes;
+
+                        //קיבלנו 2 רשימות- כל רשימה בשם של התכונה הדומיננטית. בכל רשימה כל רשימת המתנות השייכת לאותה תכונה. 
+                        //לשלוח לצ'אט את 2 הרשימות
+                        return Ok(giftsByAttributes);
+                    }
+                    return NotFound("No gifts found.");
                 }
-                return NotFound("ss");
+                return BadRequest("Invalid data.");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-       
-        [HttpPost("InterestsToGpt")] 
+
+
+        [HttpPost("InterestsToGpt")]
         public IActionResult InterestsToGpt([FromBody] JsonElement data)
         {
             try
             {
-                //קבלת המערך מהצד לקוח
-                //צריך לקחת מהשרת את רשימת הרעיונות לתחומי העניין
-                //שליחה למחלקה לצורך שליחה לצאט
+                if (data.TryGetProperty("selectedInterests", out JsonElement interestsElement) && interestsElement.ValueKind == JsonValueKind.Array)
+                {
+                    // יצירת מילון לאחסון הרשימות
+                    Dictionary<string, List<string>> interestLists = new Dictionary<string, List<string>>();
+
+                    // מעבר על המערך שנשלח מהצד לקוח
+                    foreach (JsonElement interest in interestsElement.EnumerateArray())
+                    {
+                        if (interest.TryGetProperty("name", out JsonElement nameElement) && nameElement.ValueKind == JsonValueKind.String)
+                        {
+                            string interestName = nameElement.GetString();
+
+                            // יצירת רשימה חדשה לפי שם תחום העניין
+                            if (!interestLists.ContainsKey(interestName))
+                            {
+                                interestLists[interestName] = new List<string>();
+                            }
+                        }
+                        else
+                        {
+                            return BadRequest("Invalid data in selectedInterests.");
+                        }
+                    }
+
+                    // שליפת רשימת המתנות על פי תחומי עניין
+                    DBservices dbs = new DBservices();
+                    List<GiftListInterest> results = dbs.GetGiftListInterest();
+                    if (results.Count > 0)
+                    {
+                        // מעבר על התוצאות מה-DB והכנסה לרשימות המתאימות
+                        foreach (var gift in results)
+                        {
+                            if (interestLists.ContainsKey(gift.InterestName))
+                            {
+                                interestLists[gift.InterestName].Add(gift.GiftName);
+                            }
+                        }
+                    }
+
+                    // קריאה למחלקה Gpt3GiftList עם interestLists ו-giftsByAttributes
+                    Gpt3GiftList gpt3GiftList = new Gpt3GiftList();
+                    gpt3GiftList.ProcessGiftLists(interestLists, giftsByAttributes); 
+
+                    // החזרת הרשימות שנוצרו
+                    return Ok(interestLists);
+                }
+                return BadRequest("Invalid data.");
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-
     }
 }

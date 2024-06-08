@@ -35,7 +35,7 @@
                 document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
             }
 
-            ajaxCall("GET", api + 'Big5qs', '', successCB, errorCB)
+            ajaxCall("GET", api + "Big5qs/question", "", successCB, errorCB)
             currentQuestion = 0;
             answeredQuestions = 0;
             ansArr = []//מערך שאליו יכנסו כל התוצאות של התשבות לפי מיקום שאלה, שאלה ראשונה תא 0 וכו
@@ -120,6 +120,7 @@
             } else {
                 successCB(globalData);
             }
+            
         }
         function successCBAns(data) {
             console.log(data);
@@ -153,6 +154,21 @@
 
         function Logout() {
             window.location.href = "index.html";
+        }
+        function getGiftList(data) {
+            $.ajax({
+                type: "GET",
+                url: api + "Big5qs/giftlist",
+                data: { data: data },
+                contentType: "application/json",
+                success: function (response) {
+                  
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
         }
     </script>
 </head>

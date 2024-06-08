@@ -1016,8 +1016,8 @@ input[type="file"] {
     width: 40%;
 }
 
-.card img{
-    width:100%
+.card img {
+    width: 100% ;
 }
 
 .collapsible:focus {
@@ -1026,5 +1026,13 @@ input[type="file"] {
 
 .cardFrame {
     margin-bottom: 15px;
+    padding-right: 38%;
 }
 
+.heart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height:  10px;
+}

@@ -111,6 +111,24 @@
                             <div class="review_form_title">אנחנו כבר לא יכולים לחכות לדעת מה המתנה המושלמת שתבחר!</div><br />
                             <div class="review_form_title">הנה רשימת המתנות שהכי מתאימות ל__</div> <!--צריך להוסיף את שם הנמען-->
                             <div class="review_form_content">
+                                <div>
+                                  <img src="images/empty-heart.png" class="heart" id="heart" alt="heart" />
+                                    <div class="cardFrame">
+                                        <button type="button" class="collapsible">
+                                            <div class="card">
+                                                <img src="images/about_gift.jpg" alt="Avatar"><br />  <!-- תמונה נלקחת מהSQL-->
+                                                <div class="container">
+                                                    <h4><b>שם המתנה</b></h4><br />  <!--שם תמונה נלקח מה SQL-->
+                                                </div>
+                                            </div>
+                                        </button>
+                                        <div class="content">
+                                            <br />
+                                            <p>מחיר מוצע: 520 ש"ח</p>  <!--מחיר נלקח מה SQL-->
+                                            <p>תיאור: בלה בלה בלה בלה בלה בלה בלה"</p>  <!--תיאור נלקח מה SQL-->
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="cardFrame">
                                     <button type="button" class="collapsible">
                                         <div class="card">
@@ -120,8 +138,9 @@
                                             </div>
                                         </div>
                                     </button>
-                                    <div class="content"><br />
-                                        <p>מחיר: 520 ש"ח</p>  <!--מחיר נלקח מה SQL-->
+                                    <div class="content">
+                                        <br />
+                                        <p>מחיר מוצע: 520 ש"ח</p>  <!--מחיר נלקח מה SQL-->
                                         <p>תיאור: בלה בלה בלה בלה בלה בלה בלה"</p>  <!--תיאור נלקח מה SQL-->
                                     </div>
                                 </div>
@@ -170,6 +189,14 @@
 
 
     <script>
+        document.getElementById('heart').addEventListener('click', function () {
+            if (this.src.includes('empty-heart.png')) {
+                this.src = 'images/filled-heart.png';
+            } else {
+                this.src = 'images/empty-heart.png';
+            }
+        });
+
         //כדוגמה, לא גמור
         $(document).ready(function () {
             // שליחת בקשת AJAX לשרת כדי לקבל את רשימת המתנות
