@@ -270,6 +270,7 @@ public class DBservices
             {
                 Recipient r = new Recipient();
                 r.Id = Convert.ToInt32(dataReader["Id"].ToString());
+                r.Phone = dataReader["phone"].ToString();
                 r.Name = dataReader["Name"].ToString();
                 r.Gender = dataReader["Gender"].ToString();
                 r.RelationType = dataReader["RelationType"].ToString();
@@ -654,6 +655,7 @@ public class DBservices
         cmd.Parameters.AddWithValue("@userEmail", recipient.UserEmail);
         cmd.Parameters.AddWithValue("@idBasket", recipient.IdBasket);
         cmd.Parameters.AddWithValue("@birthday", recipient.Birthday);
+        cmd.Parameters.AddWithValue("@phone", recipient.Phone);
         return cmd;
     }
     private SqlCommand ConnectUserCommandWithStoredProcedure(String spName, SqlConnection con, string email, string password)
