@@ -53,7 +53,7 @@
 					lastName: lastname,
 					password: password
 				}
-				ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, error)
+                ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, errorReg)
 			}
 		}
 		function successReg(data) {
@@ -61,9 +61,9 @@
 			window.location.href = 'home.html';
 		}
 
-		function error(err) {
-			showAlert(err.responseText)
-			console.log(err);
+        function errorReg(err) {
+            alert("משתמש זה כבר קיים במערכת");
+            console.log(err);
 		}
 
 		function login() {
@@ -81,13 +81,18 @@
 				password: password
 			}
 
-			ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, error)
+            ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, errorLogin)
 		}
 
 		function successLogin(data) {
 			sessionStorage["connectedUser"] = JSON.stringify(data);
 			window.location.href = 'home.html';
 
+		}
+
+        function errorLogin(err) {
+            alert("המייל או הסיסמה שהזנת שגויים");
+            console.log(err);
 		}
 
 		function openActionPopup() {
@@ -316,7 +321,7 @@
 				<h2 class="popup-title">התחברות</h2>
 				<form action="#" id="loginForm" method="post">
 					<div class="popup-text">
-						<label for="loginUsername">שם משתמש:</label>
+						<label for="loginUsername">מייל:</label>
 						<input type="text" id="loginUsername" name="loginUsername" autocomplete="username" required>
 					</div>
 					<div class="popup-text">
