@@ -271,7 +271,9 @@
             contentType: "application/json",
             success: function(response) {
                 // טיפול בתגובה מהשרת
-                console.log(response);},
+                    console.log(response);
+                // מעבר לעמוד תצוגת רעיונות
+                window.location.href = "FinalGiftList.html"; },
             error: function(error) {
                 // טיפול בשגיאות
                 console.log(error);
