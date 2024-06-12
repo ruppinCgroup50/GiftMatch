@@ -1,9 +1,10 @@
 ﻿using GiftMatchServer.BL;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
-using System.Text.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Linq;
+using System.Text.Json;
 
 namespace GiftMatchServer.Controllers
 {
@@ -11,7 +12,7 @@ namespace GiftMatchServer.Controllers
     [ApiController]
     public class Big5qsController : ControllerBase
     {
-        // רשימת מאפיינים
+        // רשימת התכונות
         private static readonly List<string> Attributes = new List<string>
         {
             "Extraversion",
@@ -21,7 +22,7 @@ namespace GiftMatchServer.Controllers
             "Neuroticism"
         };
 
-        // משתנה סטטי לאחסון הנתונים של giftsByAttributes
+        // מילון המכיל את רשימות המתנות לפי תכונות
         private static Dictionary<string, List<string>> giftsByAttributes = new Dictionary<string, List<string>>();
 
         // GET: api/Big5qsController/question
@@ -43,6 +44,7 @@ namespace GiftMatchServer.Controllers
             {
                 if (data.TryGetProperty("ansArr", out JsonElement arrElement) && arrElement.ValueKind == JsonValueKind.Array)
                 {
+                    // רשימת התגובות מהלקוח
                     List<int> arr = new List<int>();
                     foreach (JsonElement element in arrElement.EnumerateArray())
                     {
@@ -55,11 +57,13 @@ namespace GiftMatchServer.Controllers
                             return BadRequest("Invalid data in ansArr.");
                         }
                     }
+
+                    // מציאת 2 התכונות הבולטות
                     Big5Q b5 = new Big5Q();
                     List<AttributeValue> res = b5.Get2BestAtrr(arr);
 
-                    // קוד להחלפת הערכים ברשימת res במשתנים מרשימת Attributes
-                    List<string> resAttributes = new List<string>(); //רשימה עם 2 שמות התכונות מהביג5 שהכי מתאימות
+                    // יצירת רשימה עם שמות 2 התכונות הבולטות מהביג5
+                    List<string> resAttributes = new List<string>();
                     for (int i = 0; i < res.Count; i++)
                     {
                         int index = (int)res[i].AttId - 1;
@@ -73,20 +77,19 @@ namespace GiftMatchServer.Controllers
                         }
                     }
 
-                    // שליפת רשימת מתנות על פי תכונות-קבלת 2 רשימות מהשרת
-                    // במקום ליצור פעולת GET נפרדת.
+                    // שליפת רשימת המתנות לפי תכונות
                     DBservices dbs = new DBservices();
                     List<GiftList> results = dbs.GetGiftList();
                     if (results.Count > 0)
                     {
-                        // יצירת מילון לאחסון הרשימות עבור 2 המאפיינים
+                        // מילון חדש לאחסון רשימות המתנות לפי התכונות הבולטות
                         Dictionary<string, List<string>> newGiftsByAttributes = new Dictionary<string, List<string>>();
                         foreach (var attribute in resAttributes)
                         {
                             newGiftsByAttributes[attribute] = new List<string>();
                         }
 
-                        // מעבר על התוצאות מה-DB והכנסתן לרשימות המתאימות
+                        // מילון חדש לאחסון רשימות המתנות
                         foreach (var gift in results)
                         {
                             int attrIndex = gift.AttrId - 1;
@@ -100,11 +103,8 @@ namespace GiftMatchServer.Controllers
                             }
                         }
 
-                        // עדכון המשתנה הסטטי
                         giftsByAttributes = newGiftsByAttributes;
 
-                        //קיבלנו 2 רשימות- כל רשימה בשם של התכונה הדומיננטית. בכל רשימה כל רשימת המתנות השייכת לאותה תכונה. 
-                        //לשלוח לצ'אט את 2 הרשימות
                         return Ok(giftsByAttributes);
                     }
                     return NotFound("No gifts found.");
@@ -117,25 +117,23 @@ namespace GiftMatchServer.Controllers
             }
         }
 
-
+        // POST: api/Big5qsController/InterestsToGpt
         [HttpPost("InterestsToGpt")]
-        public IActionResult InterestsToGpt([FromBody] JsonElement data)
+        public async Task<IActionResult> InterestsToGpt([FromBody] JsonElement data)
         {
             try
             {
                 if (data.TryGetProperty("selectedInterests", out JsonElement interestsElement) && interestsElement.ValueKind == JsonValueKind.Array)
                 {
-                    // יצירת מילון לאחסון הרשימות
+                    // מילון חדש לאחסון רשימות העניינים
                     Dictionary<string, List<string>> interestLists = new Dictionary<string, List<string>>();
 
-                    // מעבר על המערך שנשלח מהצד לקוח
+                    // הוספת תחומי העניין מהבקשה למילון
                     foreach (JsonElement interest in interestsElement.EnumerateArray())
                     {
                         if (interest.TryGetProperty("name", out JsonElement nameElement) && nameElement.ValueKind == JsonValueKind.String)
                         {
                             string interestName = nameElement.GetString();
-
-                            // יצירת רשימה חדשה לפי שם תחום העניין
                             if (!interestLists.ContainsKey(interestName))
                             {
                                 interestLists[interestName] = new List<string>();
@@ -147,12 +145,12 @@ namespace GiftMatchServer.Controllers
                         }
                     }
 
-                    // שליפת רשימת המתנות על פי תחומי עניין
+                    // שליפת רשימת המתנות לפי תחומי העניין
                     DBservices dbs = new DBservices();
                     List<GiftListInterest> results = dbs.GetGiftListInterest();
                     if (results.Count > 0)
                     {
-                        // מעבר על התוצאות מה-DB והכנסה לרשימות המתאימות
+                        // הכנת רשימות המתנות לפי תחומי העניין
                         foreach (var gift in results)
                         {
                             if (interestLists.ContainsKey(gift.InterestName))
@@ -162,19 +160,97 @@ namespace GiftMatchServer.Controllers
                         }
                     }
 
-                    // קריאה למחלקה Gpt3GiftList עם interestLists ו-giftsByAttributes
+                    // קריאה לפונקציה שמעבדת את רשימות המתנות
                     Gpt3GiftList gpt3GiftList = new Gpt3GiftList();
-                    gpt3GiftList.ProcessGiftLists(interestLists, giftsByAttributes); 
+                    var (updatedGiftsByAttributes, updatedInterestLists) = await gpt3GiftList.ProcessGiftLists(interestLists, giftsByAttributes).ConfigureAwait(false);
 
-                    // החזרת הרשימות שנוצרו
-                    return Ok(interestLists);
+                    // חישוב ציוני המתנות והעניינים
+                    Dictionary<string, Dictionary<string, double>> giftsByAttributesScores = CalculateScores(giftsByAttributes);
+                    Dictionary<string, Dictionary<string, double>> interestListsScores = CalculateScores(interestLists);
+
+                    // מיזוג הרשימות ומיון לפי הציונים
+                    List<string> unifiedList = MergeLists(giftsByAttributesScores, interestListsScores);
+
+                    // החזרת הרשימה המאוחדת
+                    return Ok(unifiedList);
                 }
                 return BadRequest("Invalid data.");
             }
             catch (Exception ex)
             {
+                // הדפסת השגיאה במקרה של חריגה
+                Console.WriteLine(ex.ToString());
                 return BadRequest(ex.Message);
             }
+        }
+
+        // חישוב ציוני המתנות לתכונות
+        private Dictionary<string, Dictionary<string, double>> CalculateScores(Dictionary<string, List<string>> dictionary)
+        {
+            Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
+            double dictionaryScore = 50.0;
+
+            double listScore = dictionaryScore / dictionary.Count;
+
+            foreach (var list in dictionary)
+            {
+                Dictionary<string, double> itemScores = new Dictionary<string, double>();
+                for (int i = 0; i < list.Value.Count; i++)
+                {
+                    double itemScore = 100.0 - (i * (100.0 / list.Value.Count));
+                    itemScores[list.Value[i]] = itemScore;
+                }
+                scores[list.Key] = itemScores;
+            }
+
+            foreach (var list in scores)
+            {
+                double listFinalScore = listScore;
+                foreach (var item in list.Value)
+                {
+                    double itemFinalScore = item.Value * listFinalScore / 100;
+                    scores[list.Key][item.Key] = itemFinalScore;
+                }
+            }
+
+            return scores;
+        }
+
+        
+
+
+
+        // מיזוג הרשימות
+        private List<string> MergeLists(Dictionary<string, Dictionary<string, double>> giftsByAttributesScores, Dictionary<string, Dictionary<string, double>> interestListsScores)
+        {
+            Dictionary<string, double> mergedScores = new Dictionary<string, double>();
+
+            // איחוד הרשימות וחיבור הציונים
+            void Merge(Dictionary<string, Dictionary<string, double>> source)
+            {
+                foreach (var list in source)
+                {
+                    foreach (var item in list.Value)
+                    {
+                        if (mergedScores.ContainsKey(item.Key))
+                        {
+                            mergedScores[item.Key] += item.Value;
+                        }
+                        else
+                        {
+                            mergedScores[item.Key] = item.Value;
+                        }
+                    }
+                }
+            }
+
+            Merge(giftsByAttributesScores);
+            Merge(interestListsScores);
+
+            // מיון הרשימות לפי הציונים
+            var sortedList = mergedScores.OrderByDescending(x => x.Value).ThenBy(x => Guid.NewGuid()).Select(x => x.Key).ToList();
+
+            return sortedList;
         }
     }
 }
