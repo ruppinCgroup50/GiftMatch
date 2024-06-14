@@ -993,7 +993,8 @@ input[type="file"] {
 .card {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    width: 70%;
+    width: 600px;
+    margin: 0 auto; /* מרכז את הכרטיס */
 }
 
     .card:hover {
@@ -1002,6 +1003,7 @@ input[type="file"] {
 
 .container {
     padding: 2px 16px;
+    text-align: center; /* מרכז את התוכן */
 }
 
 .collapsible {
@@ -1013,7 +1015,9 @@ input[type="file"] {
 .content {
     padding: 0 18px;
     display: none;
-    width: 70%;
+    width: 600px;
+    width: 100%; /* שומר על הרוחב המלא של הכרטיס */
+    text-align: center; /* מרכז את הטקסט */
 }
 
 #pic {
@@ -1028,14 +1032,14 @@ input[type="file"] {
 
 .cardFrame {
     margin-bottom: 15px;
-    padding-right: 22%;
+    padding-right: 0%;
     position: relative;
 }
 
 .heart {
     position: absolute;
     top: 0px;
-    left: 260px;
+    left: 270px;
     width: 50px;
     height: 50px;
     z-index: 10;

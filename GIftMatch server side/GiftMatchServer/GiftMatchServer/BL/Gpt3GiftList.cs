@@ -18,20 +18,26 @@ namespace GiftMatchServer.BL
             // עבור כל תכונה ברשימת המתנות לפי תכונה, קרא לפונקציה שמסדרת את רשימת המתנות
             foreach (var attribute in giftsByAttributes)
             {
-                var sortedGifts = await GetSortedGifts(attribute.Key, attribute.Value, attributeName: true);
-                if (sortedGifts != null)
+                if (attribute.Value.Count > 0) // לבדוק אם הרשימה אינה ריקה
                 {
-                    giftsByAttributes[attribute.Key] = sortedGifts;
+                    var sortedGifts = await GetSortedGifts(attribute.Key, attribute.Value, attributeName: true);
+                    if (sortedGifts != null)
+                    {
+                         giftsByAttributes[attribute.Key] = sortedGifts;
+                    }
                 }
             }
 
             // עבור כל תחום עניין ברשימת התחומים לפי תחום עניין, קרא לפונקציה שמסדרת את רשימת המתנות
             foreach (var interest in interestLists)
             {
-                var sortedGifts = await GetSortedGifts(interest.Key, interest.Value, attributeName: false);
-                if (sortedGifts != null)
+                if (interest.Value.Count > 0) // לבדוק אם הרשימה אינה ריקה
                 {
-                    interestLists[interest.Key] = sortedGifts;
+                    var sortedGifts = await GetSortedGifts(interest.Key, interest.Value, attributeName: false);
+                    if (sortedGifts != null)
+                    {
+                        interestLists[interest.Key] = sortedGifts;
+                    }
                 }
             }
 
@@ -75,9 +81,12 @@ namespace GiftMatchServer.BL
                         if (!string.IsNullOrEmpty(sortedGiftsText))
                         {
                             sortedGiftsText = sortedGiftsText.Trim('[', ']');
-                            var sortedGifts = sortedGiftsText.Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                            var sortedGifts = sortedGiftsText.Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+                                                             .Select(gift => gift.Trim()) // Trim leading and trailing spaces
+                                                             .ToList();
                             return new List<string>(sortedGifts);
                         }
+
                     }
                     else
                     {

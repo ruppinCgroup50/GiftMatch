@@ -139,6 +139,58 @@ public class DBservices
 
     }
 
+    public List<GiftIdea> GetUnifiedList()
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureNoParams("sp_GetGiftIdea", con);   // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<GiftIdea> list = new List<GiftIdea>();
+            while (dataReader.Read())
+            {
+                GiftIdea i = new GiftIdea();
+                i.GiftName = dataReader["GiftName"].ToString();
+                i.Description = dataReader["Description"].ToString();
+                i.Price = Convert.ToInt32(dataReader["Price"].ToString());
+                i.Image = dataReader["Image"].ToString();
+                list.Add(i);
+
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
     public List<GiftListInterest> GetGiftListInterest()
     {
 

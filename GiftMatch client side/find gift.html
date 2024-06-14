@@ -214,6 +214,13 @@
             </div>
         </div>
 
+        <!-- חלון קופץ -->
+        <div class="overlay" id="loading" style="display:none">
+            <div class="popup popuploading">
+                <img src="images/loading.gif" id="loadingImg" />
+                <h4>הנתונים נבדקים עם CHAT GPT</h4>
+            </div>
+        </div>
         <!-- Footer -->
 
         <footer class="footer">
@@ -258,7 +265,6 @@
                 event.preventDefault();
             alert("יש לבחור לפחות תחום עניין אחד");
             } else {
-
             // יצירת אובייקט המכיל את הנתונים שיש לשלוח
             let dataToSend = {
             selectedInterests: selectedInterests,
@@ -269,9 +275,7 @@
             url: api + "Big5qs/InterestsToGpt", 
             data: JSON.stringify(dataToSend),
             contentType: "application/json",
-            success: function(response) {
-                // טיפול בתגובה מהשרת
-                    console.log(response);
+                success: function (response) {
                 // מעבר לעמוד תצוגת רעיונות
                 window.location.href = "FinalGiftList.html"; },
             error: function(error) {

@@ -25,6 +25,10 @@ namespace GiftMatchServer.Controllers
         // מילון המכיל את רשימות המתנות לפי תכונות
         private static Dictionary<string, List<string>> giftsByAttributes = new Dictionary<string, List<string>>();
 
+        // משתנה סטטי לשמירת unifiedList
+        private static List<string> unifiedList = new List<string>();
+
+
         // GET: api/Big5qsController/question
         [HttpGet("question")]
         public IActionResult GetQuestion()
@@ -165,11 +169,11 @@ namespace GiftMatchServer.Controllers
                     var (updatedGiftsByAttributes, updatedInterestLists) = await gpt3GiftList.ProcessGiftLists(interestLists, giftsByAttributes).ConfigureAwait(false);
 
                     // חישוב ציוני המתנות והעניינים
-                    Dictionary<string, Dictionary<string, double>> giftsByAttributesScores = CalculateScores(giftsByAttributes);
-                    Dictionary<string, Dictionary<string, double>> interestListsScores = CalculateScores(interestLists);
+                    Dictionary<string, Dictionary<string, double>> giftsByAttributesScores = CalculateScoresAtt(giftsByAttributes);
+                    Dictionary<string, Dictionary<string, double>> interestListsScores = CalculateScoresInter(interestLists);
 
                     // מיזוג הרשימות ומיון לפי הציונים
-                    List<string> unifiedList = MergeLists(giftsByAttributesScores, interestListsScores);
+                    unifiedList = MergeLists(giftsByAttributesScores, interestListsScores);
 
                     // החזרת הרשימה המאוחדת
                     return Ok(unifiedList);
@@ -184,8 +188,35 @@ namespace GiftMatchServer.Controllers
             }
         }
 
+        // GET: api/Big5qsController/unifiedList
+        [HttpGet("unifiedList")]
+        public IActionResult GetUnifiedList()
+        {
+            DBservices dbs = new DBservices();
+            List<GiftIdea> res = dbs.GetUnifiedList();
+
+            if (res == null || res.Count == 0)
+                return NotFound("אין רעיונות מתאימים.");
+
+            // סינון הרשימה כך שתכלול רק את הפריטים שנמצאים ב-unifiedList
+            var filteredList = res.Where(g => unifiedList.Contains(g.GiftName)).ToList();
+
+            if (filteredList.Count == 0)
+                return NotFound("אין רעיונות מתאימים.");
+
+            // סדר את הרשימה בהתאם לסדר ב-unifiedList
+            var orderedList = unifiedList
+                              .Where(name => filteredList.Any(g => g.GiftName == name))
+                              .SelectMany(name => filteredList.Where(g => g.GiftName == name))
+                              .ToList();
+
+            return Ok(orderedList);
+        }
+
+
+
         // חישוב ציוני המתנות לתכונות
-        private Dictionary<string, Dictionary<string, double>> CalculateScores(Dictionary<string, List<string>> dictionary)
+        private Dictionary<string, Dictionary<string, double>> CalculateScoresAtt(Dictionary<string, List<string>> dictionary)
         {
             Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
             double dictionaryScore = 50.0;
@@ -215,8 +246,47 @@ namespace GiftMatchServer.Controllers
 
             return scores;
         }
+        // חישוב ציוני המתנות לתחומי עניין
+        private Dictionary<string, Dictionary<string, double>> CalculateScoresInter(Dictionary<string, List<string>> dictionary)
+        {
+            Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
+            double dictionaryScore = 50.0;
 
-        
+            // Compute scores for each list (similar to how item scores are computed)
+            Dictionary<string, double> listScores = new Dictionary<string, double>();
+            var lists = dictionary.Keys.ToList();
+            for (int i = 0; i < lists.Count; i++)
+            {
+                double listScore = 100.0 - (i * (100.0 / lists.Count));
+                listScores[lists[i]] = listScore;
+            }
+
+            foreach (var list in dictionary)
+            {
+                Dictionary<string, double> itemScores = new Dictionary<string, double>();
+                for (int i = 0; i < list.Value.Count; i++)
+                {
+                    double itemScore = 100.0 - (i * (100.0 / list.Value.Count));
+                    itemScores[list.Value[i]] = itemScore;
+                }
+                scores[list.Key] = itemScores;
+            }
+
+            foreach (var list in scores)
+            {
+                double listFinalScore = listScores[list.Key] * dictionaryScore / 100;
+                foreach (var item in list.Value)
+                {
+                    double itemFinalScore = item.Value * listFinalScore / 100;
+                    scores[list.Key][item.Key] = itemFinalScore;
+                }
+            }
+
+            return scores;
+        }
+
+
+
 
 
 
