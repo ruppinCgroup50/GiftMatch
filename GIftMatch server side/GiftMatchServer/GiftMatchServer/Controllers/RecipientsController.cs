@@ -38,6 +38,14 @@ namespace GiftMatchServer.Controllers
             if (res.Count > 0)
                 return Ok(res);
             return NotFound();
+        }    
+        [HttpGet("CheckPhoneNumber/{phone}")]
+        public IActionResult CheckPhoneNumber(string phone)
+        {
+            DBservices dbs = new DBservices();
+            int res = dbs.CheckPhoneNumber(phone);
+                return Ok(res);
+
         }
 
     }
