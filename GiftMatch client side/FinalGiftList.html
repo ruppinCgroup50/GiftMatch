@@ -15,6 +15,99 @@
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/ajaxCalls.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                api = "https://localhost:7284/api/";
+                imageFolder = "https://localhost:7284/images/";
+            }
+            else {
+                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/api/";
+                imageFolder = "https://localhost:7284/images/";
+            }
+
+            if (sessionStorage["connectedUser"] != undefined) {
+                connectedUser = JSON.parse(sessionStorage["connectedUser"]);
+                document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
+            }
+
+            ajaxCall("GET", api + "Big5qs/unifiedList", "", successCB, errorCB);
+            currentcardFrame = 0;
+        });
+
+        function successCB(data) {
+            globalData = data;
+            let name = 'משתמש';
+            if (sessionStorage["recepientName"] != undefined) {
+                name = sessionStorage["recepientName"];
+                document.getElementById("ph").innerHTML = `הנה רשימת המתנות שהכי מתאימות ל${name}`;
+            }
+
+            var cardFrame = document.getElementsByClassName('review_form_content')[0];
+            cardFrame.innerHTML = '';
+            for (var i = currentcardFrame; i < data.length; i++) {
+                var cardFrameDiv = document.createElement('div');
+                cardFrameDiv.innerHTML =
+                    `<div class="cardFrame align-items-end justify-content-start">
+                                <img src="images/empty_heart.png" class="heart" alt="heart" />
+                                <button type="button" class="collapsible">
+                                    <div class="card">
+                                        <img src="${imageFolder}${data[i].image}" id="pic" alt="Avatar"><br />
+                                        <div class="container">
+                                            <h4><b>${data[i].giftName}</b></h4><br />
+                                        </div>
+                                    </div>
+                                </button>
+                                <div class="content">
+                                    <br />
+                                    <p>מחיר מוצע: ${data[i].price}</p>
+                                    <p>תיאור: ${data[i].description}</p>
+                                </div>
+                            </div><br />`;
+                cardFrame.appendChild(cardFrameDiv);
+            }
+
+            // להוסיף פונקציה לכפתורים שנוספו דינמית
+            var coll = document.getElementsByClassName("collapsible");
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+
+            // הוספת פונקציה לכפתורים של הלב
+            var hearts = document.getElementsByClassName('heart');
+            for (let i = 0; i < hearts.length; i++) {
+                hearts[i].addEventListener('click', function () {
+                    if (this.src.includes('empty_heart.png')) {
+                        this.src = 'images/filled_heart.png';
+                    } else {
+                        this.src = 'images/empty_heart.png';
+                    }
+                });
+            }
+        }
+
+        function errorCB(err) {
+            console.log(err);
+        }
+
+        function enter_basket() {
+            window.location.href = "basket ideas.html";
+        } 
+
+        function Logout() {
+            window.location.href = "index.html";
+        }
+    </script>
+
 </head>
 <body>
     <div class="super_container">
@@ -88,14 +181,16 @@
             </div>
         </div>
 
+        <!-- Final Gift List -->
         <div class="gift">
             <div class="container">
                 <div class="row">
                     <div class="col">
                         <div class="review_form_container">
-                            <div class="review_form_title">אנחנו כבר לא יכולים לחכות לדעת מה המתנה המושלמת שתבחר!</div><br />
-                            <div class="review_form_title">הנה רשימת המתנות שהכי מתאימות ל__</div> <!-- צריך להוסיף את שם הנמען -->
-                            <div class="review_form_content">
+                            <div class="review_form_title">אנחנו כבר לא יכולים לחכות לדעת מה המתנה המושלמת שתבחר!</div><br /><br />
+                            <div class="review_form_title" id="ph"></div><br /><br />
+                            <h3>הרשימה מסודרת מימין לשמאל</h3>
+                            <div class="review_form_content row">
                                 <!--כאן יופיעו כרטיסי הרעיונות-->
                             </div>
                         </div>
@@ -136,89 +231,5 @@
     <script src="plugins/colorbox/jquery.colorbox-min.js"></script>
     <script src="js/custom.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                api = "https://localhost:7284/api/";
-                imageFolder = "https://localhost:7284/images/";
-            } else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/api/";
-                imageFolder = "https://localhost:7284/images/";
-            }
-
-            if (sessionStorage["connectedUser"] != undefined) {
-                connectedUser = JSON.parse(sessionStorage["connectedUser"]);
-                document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
-            }
-
-            ajaxCall("GET", api + "Big5qs/unifiedList", "", successCB, errorCB);
-            currentcardFrame = 0;
-
-            function successCB(data) {
-                globalData = data;
-                let name = 'משתמש';
-                if (sessionStorage["recepientName"] != undefined) {
-                    name = sessionStorage["recepientName"];
-                }
-
-                var cardFrame = document.getElementsByClassName('review_form_content')[0];
-                cardFrame.innerHTML = '';
-                for (var i = currentcardFrame; i < data.length; i++) {
-                    var cardFrameDiv = document.createElement('div');
-                    cardFrameDiv.innerHTML =
-                        `<div class="cardFrame">
-                                <img src="images/empty-heart.png" class="heart" alt="heart" />
-                                <button type="button" class="collapsible">
-                                    <div class="card">
-                                        <img src="${imageFolder}${data[i].image}" id="pic" alt="Avatar"><br />
-                                        <div class="container">
-                                            <h4><b>${data[i].giftName}</b></h4><br />
-                                        </div>
-                                    </div>
-                                </button>
-                                <div class="content">
-                                    <br />
-                                    <p>מחיר מוצע: ${data[i].price}</p>
-                                    <p>תיאור: ${data[i].description}</p>
-                                </div>
-                            </div>`;
-                    cardFrame.appendChild(cardFrameDiv);
-                }
-
-                // להוסיף פונקציה לכפתורים שנוספו דינמית
-                var coll = document.getElementsByClassName("collapsible");
-                for (let i = 0; i < coll.length; i++) {
-                    coll[i].addEventListener("click", function () {
-                        this.classList.toggle("active");
-                        var content = this.nextElementSibling;
-                        if (content.style.display === "block") {
-                            content.style.display = "none";
-                        } else {
-                            content.style.display = "block";
-                        }
-                    });
-                }
-
-                // הוספת פונקציה לכפתורים של הלב
-                var hearts = document.getElementsByClassName('heart');
-                for (let i = 0; i < hearts.length; i++) {
-                    hearts[i].addEventListener('click', function () {
-                        if (this.src.includes('empty-heart.png')) {
-                            this.src = 'images/filled-heart.png';
-                        } else {
-                            this.src = 'images/empty-heart.png';
-                        }
-                    });
-                }
-            }
-
-            function errorCB(err) {
-                console.log(err);
-            }
-        });
-        function Logout() {
-            window.location.href = "index.html";
-        }
-    </script>
 </body>
 </html>
