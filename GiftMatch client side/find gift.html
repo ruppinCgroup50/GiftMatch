@@ -259,7 +259,7 @@
      <script>
             document.getElementById("review_form").addEventListener("submit", function (event) {
             var interests = document.querySelectorAll('input[name="interest"]:checked');
-
+                event.preventDefault();
             // בדיקה אם לא נבחרו תחומי עניין
             if (interests.length === 0) {
                 event.preventDefault();

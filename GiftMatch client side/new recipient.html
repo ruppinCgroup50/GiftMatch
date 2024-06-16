@@ -42,8 +42,27 @@
             //ajaxCall("GET", api + 'Recipient', '', getSCB, getECB);
 
             $("#review_form").submit(f1);
-        });
+            const phoneInput = document.getElementById('phone');
+           
 
+            // מוסיפים את אירוע הקשה של input
+            phoneInput.addEventListener('input', function () {
+                // מקבלים את הערך הנוכחי של input
+                const phoneNumber = phoneInput.value;
+                if (phoneNumber.length==10)
+                ajaxCall('GET', api + `Recipient/CheckPhoneNumber/${phoneNumber}`,'',succPhone,errPhone)
+
+            });
+        });
+        function succPhone(data) {
+            if (data == 1) {
+                alert("מספר זה כבר קיים במערכת")
+            }
+        }
+        function errPhone(err) {
+            alert("שגיאה בעת בדיקת מספר פלאפון");
+            console.log(err);
+        }
         function getSCB(res) {
             console.log(res);
         }
@@ -70,8 +89,7 @@
             }
 
             recipient = {
-                Id: 1,//חייב להיות מספר שלם לא משנה איזה כי הבסיס נתונים ישנה גם ככה
-                Name: name,
+                Name:name,
                 Gender: gender,
                 RelationType: $("#relationType").val(),
                 Birthday: new Date($("#birthday").val()),
@@ -79,7 +97,7 @@
                 RelationshipScore: $("#myRange").val(),
                 Image: image,
                 UserEmail: userEmail,
-                IdBasket: 1//נותנים ערך אמיתי בהמשך חייב להיות מספר שלם
+              
         
             }
             sessionStorage["recepientName"] = name;
