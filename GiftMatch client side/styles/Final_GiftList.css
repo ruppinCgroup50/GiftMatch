@@ -943,14 +943,22 @@ input[type="file"] {
     margin: 0 auto; /* מרכז את הכרטיס */
 }
 
+#heart_h4 {
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: -3px;
+}
+
 .heart {
     position: relative;
     right: 60px;
-    top: 43px;
+    top: 38px;
     width: 40px;
     height: 40px;
     z-index: 1;
 }
+
 
 /*********************************
 8. Footer
