@@ -919,6 +919,7 @@ input[type="file"] {
 .content {
     padding: 0 18px;
     display: none;
+    width:280px;
     margin-right: 43px;
     text-align: center; /* מרכז את הטקסט */
 }
