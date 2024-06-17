@@ -27,7 +27,7 @@
 
             }
             else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/api/Recipient/GetRecipient/";
+                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/Recipient/GetRecipient/";
             }
 
             if (sessionStorage["connectedUser"] != undefined) {
@@ -42,7 +42,7 @@
         function success(data) {
             let str = '';
             for (var i = 0; i < data.length; i++) {
-                str += `<div class="tagname col-6 col-md-3" onclick="navigateToPage('${data[i].name}')">
+                str += `<div class="tagname col-6 col-md-3" onclick="navigateToPage('${data[i].name}', '${data[i].phone}')">
                     <div class="product_image"><img src="${imageFolder}${data[i].image}" alt=""></div>
                         <div class="product_content clearfix">
                                 <div class="product_name">${data[i].name}</div>
@@ -57,8 +57,9 @@
             console.log(err);
         }
 
-        function navigateToPage(name) {
-            window.location.href = "recipient's board.html?name=" + encodeURIComponent(name);
+        function navigateToPage(name, phone) {
+            // שליחת השם והטלפון כפרמטרים ל-URL של הדף הבא
+            window.location.href = `recipient's board.html?name=${encodeURIComponent(name)}&phone=${encodeURIComponent(phone)}`;
         }
 
         function enter_basket() {
@@ -94,11 +95,6 @@
                     <a href="#">
                         <div class="cart" onclick="enter_basket()">
                             <img src="images/shopping-bag.svg" alt="">
-                            <div class="cart_num_container">
-                                <div class="cart_num_inner">
-                                    <div class="cart_num">0</div>
-                                </div>
-                            </div>
                         </div>
                     </a>
 

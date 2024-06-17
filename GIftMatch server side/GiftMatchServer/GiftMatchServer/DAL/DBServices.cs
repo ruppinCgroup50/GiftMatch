@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml.Linq;
 using GiftMatchServer.BL;
 using System.Text.Json;
+using System.Numerics;
 
 public class DBservices
 {
@@ -241,8 +242,6 @@ public class DBservices
 
     }
 
-
-
     public List<Big5Q> GetQuestion()
     {
 
@@ -292,9 +291,56 @@ public class DBservices
                 con.Close();
             }
         }
-
     }
 
+    public List<RecipientFavorites> GetFavoritesGiftIdea(string phone)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureGetMyFavorites("sp_GetFavoritesGiftIdea", con, phone);   // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<RecipientFavorites> list = new List<RecipientFavorites>();
+            while (dataReader.Read())
+            {
+                RecipientFavorites i = new RecipientFavorites();
+                i.GiftName = dataReader["GiftName"].ToString();
+                list.Add(i);
+
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
 
     public int CheckPhoneNumber(string phone)
     {
@@ -537,6 +583,7 @@ public class DBservices
         }
 
     }
+
     public int InsertGiftAttr(string giftName, string attrString)
     {
 
@@ -656,6 +703,85 @@ public class DBservices
 
     }
 
+    public int InsertFavoritesGiftIdea(RecipientFavorites gift)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = FavoriteIdeaInsertCommandWithStoredProcedure("sp_InsertFavoriteGiftIdea", con, gift);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    public int RemoveFavoritesGiftIdea(RecipientFavorites gift)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = FavoriteIdeaRemoveCommandWithStoredProcedure("sp_RemoveFavoriteGiftIdea", con, gift);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
 
     ////---------------------------------------------------------------------------------
     //// Create the SqlCommand login user using a stored procedure
@@ -727,6 +853,32 @@ public class DBservices
 
         return cmd;
     }
+    private SqlCommand FavoriteIdeaInsertCommandWithStoredProcedure(String spName, SqlConnection con, RecipientFavorites gift)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@GiftName", gift.GiftName);
+        cmd.Parameters.AddWithValue("@phone", gift.Phone);
+
+        return cmd;
+    }
+    private SqlCommand FavoriteIdeaRemoveCommandWithStoredProcedure(String spName, SqlConnection con, RecipientFavorites gift)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@GiftName", gift.GiftName);
+        cmd.Parameters.AddWithValue("@phone", gift.Phone);
+
+        return cmd;
+    }
     private SqlCommand CreateCommandWithStoredProcedureGetMyRecipient(String spName, SqlConnection con, string email)
     {
 
@@ -736,6 +888,17 @@ public class DBservices
         cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
         cmd.Parameters.AddWithValue("@email", email);
+        return cmd;
+    }
+    private SqlCommand CreateCommandWithStoredProcedureGetMyFavorites(String spName, SqlConnection con, string phone)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@phone", phone);
         return cmd;
     }
     private SqlCommand CreateCommandWithStoredProcedureCheckPhone(String spName, SqlConnection con, string phone)

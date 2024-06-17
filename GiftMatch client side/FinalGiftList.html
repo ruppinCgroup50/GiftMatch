@@ -23,7 +23,7 @@
                 imageFolder = "https://localhost:7284/images/";
             }
             else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/api/";
+                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/";
                 imageFolder = "https://localhost:7284/images/";
             }
 
@@ -41,6 +41,7 @@
             let name = 'משתמש';
             if (sessionStorage["recepientName"] != undefined) {
                 name = sessionStorage["recepientName"];
+                phone = sessionStorage["recepientPhone"];
                 document.getElementById("ph").innerHTML = `הנה רשימת המתנות שהכי מתאימות ל${name}`;
             }
 
@@ -88,8 +89,11 @@
                 hearts[i].addEventListener('click', function () {
                     if (this.src.includes('empty_heart.png')) {
                         this.src = 'images/filled_heart.png';
-                    } else {
+                        SaveFavoriteIdea(globalData[i].giftName);
+                    }
+                    else {
                         this.src = 'images/empty_heart.png';
+                        RemoveFavoriteIdea(globalData[i].giftName);
                     }
                 });
             }
@@ -97,6 +101,56 @@
 
         function errorCB(err) {
             console.log(err);
+        }
+
+        // פונקציה המוסיפה רעיון לרשימת המעודפים
+        function SaveFavoriteIdea(gift) {
+            if (!connectedUser) {
+                alert("יש להתחבר למערכת כדי לשמור רעיונות מועדפים.");
+                return;
+            }
+
+            // הכנת הנתונים לשליחה לשרת
+            const favoriteIdea = {
+                giftName: gift,
+                phone: phone
+            };
+
+            // שליחת הנתונים לשרת
+            ajaxCall("POST", api + "RecipientFavorites/SaveIdea", JSON.stringify(favoriteIdea), sucSave, errSave)
+
+            function sucSave(){
+                console.log("רעיון מועדף נשמר בהצלחה");
+            }
+
+            function errSave(){
+                console.error("שגיאה בשמירת הרעיון המועדף");
+            }
+        }
+
+         // פונקציה המסירה רעיון מרשימת המעודפים
+        function RemoveFavoriteIdea(gift) {
+            if (!connectedUser) {
+                alert("יש להתחבר למערכת כדי להסיר רעיונות מועדפים.");
+                return;
+            }
+
+           // הכנת הנתונים לשליחה לשרת
+            const favoriteIdea = {
+                giftName: gift,
+                phone: phone
+            };
+
+            // שליחת הנתונים לשרת
+            ajaxCall("DELETE", api + "RecipientFavorites/RemoveIdea", JSON.stringify(favoriteIdea), sucRemove, errRemove)
+
+            function sucRemove() {
+                console.log("רעיון מועדף הוסר בהצלחה מרשימת המועדפים");
+            }
+
+            function errRemove() {
+                console.error("שגיאה בהסרת הרעיון המועדף");
+            }
         }
 
         function enter_basket() {
@@ -128,11 +182,6 @@
                     <a href="#">
                         <div class="cart" onclick="enter_basket()">
                             <img src="images/shopping-bag.svg" alt="">
-                            <div class="cart_num_container">
-                                <div class="cart_num_inner">
-                                    <div class="cart_num">0</div>
-                                </div>
-                            </div>
                         </div>
                     </a>
                     <nav class="main_nav">

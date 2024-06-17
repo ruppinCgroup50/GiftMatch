@@ -14,6 +14,7 @@
     <link href="plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="styles/responsive.css">
     <link href="styles/basket ideas.css" rel="stylesheet" />
+    <link href="styles/Final_GiftList.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/ajaxCalls.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
@@ -22,12 +23,12 @@
     <script>
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                api = "https://localhost:7284/api/Recipient/GetRecipient/";
+                api = "https://localhost:7284/api/RecipientFavorites/";
                 imageFolder = "https://localhost:7284/images/";
-
             }
             else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/api/Recipient/GetRecipient/";
+                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/RecipientFavorites/";
+                imageFolder = "https://localhost:7284/images/";
             }
 
             if (sessionStorage["connectedUser"] != undefined) {
@@ -35,26 +36,141 @@
                 document.getElementById("phUserName").innerHTML = `שלום, ${connectedUser.firstName} ${connectedUser.lastName}|<a href="index.html">התנתקות</a>`;
             }
 
-            ajaxCall("GET", api + connectedUser.email, "", success, errFunction)
+            // פונקציה שמביאה את השם של הנמען והטלפון
+            window.onload = function () {
+                // קבלת השם והטלפון שנשלחו דרך ה-URL
+                const params = new URLSearchParams(window.location.search);
+                const name = params.get('name');
+                const phone = params.get('phone');
+
+                // שינוי התוכן של כותרת הלוח לשם הנמען
+                document.getElementById("phName").innerText = "הלוח של " + name;
+
+                ajaxCall("GET", api + "GetFavorites/" + phone, "", successCB, errorCB);
+                currentcardFrame = 0;
+            };
+
         });
 
         //פונקציה שמביאה את הרעיונות האהובים מהשרת במידה והשרת הצליח
-        function success(data) {
+        function successCB(data) {
+            globalData = data;
+            let name = 'משתמש';
+            let phone = new URLSearchParams(window.location.search).get('phone');
 
+            if (sessionStorage["recepientName"] != undefined) {
+                name = sessionStorage["recepientName"];
+                phone = sessionStorage["recepientPhone"];
+            }
+
+            var cardFrame = document.getElementsByClassName('review_form_content')[0];
+            cardFrame.innerHTML = '';
+            for (var i = currentcardFrame; i < data.length; i++) {
+                var cardFrameDiv = document.createElement('div');
+                cardFrameDiv.innerHTML =
+                    `<div class="cardFrame align-items-end justify-content-start">
+                         <img src="images/filled_heart.png" class="heart" alt="heart" />
+                         <button type="button" class="collapsible">
+                             <div class="card">
+                                 <img src="${imageFolder}${data[i].image}" id="pic" alt="Avatar"><br />
+                                 <div class="container">
+                                     <h4><b>${data[i].giftName}</b></h4><br />
+                                 </div>
+                             </div>
+                         </button>
+                         <div class="content">
+                             <br />
+                             <p>מחיר מוצע: ${data[i].price}</p>
+                             <p>תיאור: ${data[i].description}</p>
+                         </div>
+                     </div><br />`;
+                cardFrame.appendChild(cardFrameDiv);
+            }
+
+            // להוסיף פונקציה לכפתורים שנוספו דינמית
+            var coll = document.getElementsByClassName("collapsible");
+            for (let i = 0; i < coll.length; i++) {
+                coll[i].addEventListener("click", function () {
+                    this.classList.toggle("active");
+                    var content = this.nextElementSibling;
+                    if (content.style.display === "block") {
+                        content.style.display = "none";
+                    } else {
+                        content.style.display = "block";
+                    }
+                });
+            }
+
+            // הוספת פונקציה לכפתורים של הלב
+            var hearts = document.getElementsByClassName('heart');
+            for (let i = 0; i < hearts.length; i++) {
+                hearts[i].addEventListener('click', function () {
+
+                    if (this.src.includes('filled_heart.png')) {
+                        this.src = 'images/empty_heart.png';
+                        RemoveFavoriteIdea(globalData[i].giftName, phone); 
+                    }
+                    else {
+                        this.src = 'images/filled_heart.png';
+                        SaveFavoriteIdea(globalData[i].giftName, phone);
+                    }
+                });
+            }
         }
-        function errFunction(err) {
+
+        function errorCB(err) {
             console.log(err);
         }
 
-        //פונקציה שמביאה את השם של הנמען
-        window.onload = function () {
-            // קבלת השם שנשלח דרך ה-URL
-            const params = new URLSearchParams(window.location.search);
-            const name = params.get('name');
+        // פונקציה המוסיפה רעיון לרשימת המעודפים
+        function SaveFavoriteIdea(gift, phone) {
+            if (!connectedUser) {
+                alert("יש להתחבר למערכת כדי לשמור רעיונות מועדפים.");
+                return;
+            }
 
-            // שינוי התוכן של כותרת הלוח לשם הנמען
-            document.getElementById("phName").innerText = "הלוח של " + name;
-        };
+            // הכנת הנתונים לשליחה לשרת
+            const favoriteIdea = {
+                giftName: gift,
+                phone: phone
+            };
+
+            // שליחת הנתונים לשרת
+            ajaxCall("POST", api + "SaveIdea", JSON.stringify(favoriteIdea), sucSave, errSave)
+
+            function sucSave() {
+                console.log("רעיון מועדף נשמר בהצלחה");
+            }
+
+            function errSave() {
+                console.error("שגיאה בשמירת הרעיון המועדף");
+            }
+        }
+
+        // פונקציה המסירה רעיון מרשימת המעודפים
+        function RemoveFavoriteIdea(gift, phone) {
+            if (!connectedUser) {
+                alert("יש להתחבר למערכת כדי להסיר רעיונות מועדפים.");
+                return;
+            }
+
+            // הכנת הנתונים לשליחה לשרת
+            const favoriteIdea = {
+                giftName: gift,
+                phone: phone
+            };
+
+            // שליחת הנתונים לשרת
+            ajaxCall("DELETE", api + "RemoveIdea", JSON.stringify(favoriteIdea), sucRemove, errRemove)
+
+            function sucRemove() {
+                console.log("רעיון מועדף הוסר בהצלחה מרשימת המועדפים");
+            }
+
+            function errRemove() {
+                console.error("שגיאה בהסרת הרעיון המועדף");
+            }
+        }
 
         function enter_basket() {
             window.location.href = "basket ideas.html";
@@ -89,11 +205,6 @@
                     <a href="#">
                         <div class="cart" onclick="enter_basket()">
                             <img src="images/shopping-bag.svg" alt="">
-                            <div class="cart_num_container">
-                                <div class="cart_num_inner">
-                                    <div class="cart_num">0</div>
-                                </div>
-                            </div>
                         </div>
                     </a>
 
@@ -145,15 +256,21 @@
             </div>
         </div>
 
-        <!-- Add Basket Ideas Form -->
+        <!-- Favorites Gift Ideas Form -->
 
         <div class="basket_idea">
             <div class="container">
                 <div class="row">
                     <div class="col">
                         <div class="review_form_container">
-                            <div class="review_form_title" id="phName"></div>
-                            <div class="review_form_content product row" id="phCard">
+                            <div class="review_form_title" id="phName">
+                            </div><br /><br />
+                            <div>
+                                <button type="submit" class="review_form_button">עריכת תחומי עניין</button>
+                                <button type="submit" class="review_form_button">חיפוש חוזר של רעיונות</button>
+                            </div>
+                            <div class="review_form_content row justify-content-center">
+                                <!--כאן יופיעו כרטיסי הרעיונות-->
                             </div>
                         </div>
                     </div>

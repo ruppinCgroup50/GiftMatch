@@ -31,7 +31,7 @@
 
             }
             else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/api/";
+                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/";
             }
 
             if (sessionStorage["connectedUser"] != undefined) {
@@ -75,7 +75,7 @@
             const connectedUserString = sessionStorage.getItem('connectedUser');
             const connectedUser = JSON.parse(connectedUserString);
             const userEmail = connectedUser.email;
-            //const phone = $("#phone").val();
+            const phone = $("#phone").val();
             const gender = $("input[name='gender']:checked").val();
             const name = $("#name").val();
             const imageFile = document.getElementById('upload-btn').files[0];
@@ -93,7 +93,7 @@
                 Gender: gender,
                 RelationType: $("#relationType").val(),
                 Birthday: new Date($("#birthday").val()),
-                Phone: $("#phone").val(),
+                Phone: phone,
                 RelationshipScore: $("#myRange").val(),
                 Image: image,
                 UserEmail: userEmail,
@@ -101,6 +101,8 @@
         
             }
             sessionStorage["recepientName"] = name;
+            sessionStorage["recepientPhone"] = phone;
+
             ajaxCall("POST", api + "Recipient/AddNewRecipient", JSON.stringify(recipient), postSCB, postECB);
 
             return false;
@@ -171,11 +173,6 @@
                     <a href="#">
                         <div class="cart" onclick="enter_basket()">
                             <img src="images/shopping-bag.svg" alt="">
-                            <div class="cart_num_container">
-                                <div class="cart_num_inner">
-                                    <div class="cart_num">0</div>
-                                </div>
-                            </div>
                         </div>
                     </a>
 
