@@ -954,6 +954,7 @@ public class DBservices
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
         cmd.Parameters.AddWithValue("@GiftName", interst.GiftName);
         cmd.Parameters.AddWithValue("@id", interst.IntrestID);
+        cmd.Parameters.AddWithValue("@priority", interst.Priority);
 
         return cmd;
     }
