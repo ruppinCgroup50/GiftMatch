@@ -741,6 +741,84 @@ public class DBservices
             }
         }
 
+    }  
+    public int insertNewsAssociatedInterest(AssociatedInterest interest)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = AssociatedInterestInsertCommandWithStoredProcedure("sp_InsertAssociatedInterest", con, interest);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+    public int insertNewsAssociatedAttr(AssociatedAtrr attr)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = AssociatedAttrInsertCommandWithStoredProcedure("sp_InsertAssociatedAttr", con, attr);             // create the command
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
     }
 
     public int RemoveFavoritesGiftIdea(RecipientFavorites gift)
@@ -863,6 +941,33 @@ public class DBservices
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
         cmd.Parameters.AddWithValue("@GiftName", gift.GiftName);
         cmd.Parameters.AddWithValue("@phone", gift.Phone);
+
+        return cmd;
+    }
+    private SqlCommand AssociatedInterestInsertCommandWithStoredProcedure(String spName, SqlConnection con, AssociatedInterest interst)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@GiftName", interst.GiftName);
+        cmd.Parameters.AddWithValue("@id", interst.IntrestID);
+        cmd.Parameters.AddWithValue("@priority", interst.Priority);
+
+        return cmd;
+    }
+    private SqlCommand AssociatedAttrInsertCommandWithStoredProcedure(String spName, SqlConnection con, AssociatedAtrr attr)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@GiftName", attr.GiftName);
+        cmd.Parameters.AddWithValue("@id", attr.Id);
 
         return cmd;
     }
