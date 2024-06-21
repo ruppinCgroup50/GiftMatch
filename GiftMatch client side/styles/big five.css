@@ -744,6 +744,24 @@ input[type="radio"] {
         color: #232323;
     }
 
+.progress-bar-container {
+    width: 100px;
+    background-color: #e0e3e4;
+    border-radius: 25px;
+    margin: 20px 0;
+    float:left;
+}
+
+.progress-bar {
+    width: 0;
+    height: 20px;
+    background-color: mediumpurple;
+    border-radius: 25px;
+    text-align: center;
+    line-height: 25px;
+    color: white;
+}
+
 /*********************************
 7. Footer
 *********************************/

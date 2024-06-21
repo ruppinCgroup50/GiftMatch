@@ -73,6 +73,13 @@
         function errorCB(err) {
             console.log(err);
         }
+
+        function updateProgressBar() {
+            let totalQuestions = 15; // סך כל השאלות
+            let progressPercentage = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progressPercentage + '%';
+        }
+
         //פונקציה שבודקת האם ניתן לעבור לדף השאלות הבא כלומר האם כל השאלות נענו
         function nextQuestions() {
             console.log("Checking if all questions are rated...");
@@ -84,6 +91,8 @@
             console.log("All questions are rated.");
             currentQuestion += 5;
             answeredQuestions += 5;
+
+            updateProgressBar(); // עדכון progress bar
 
             if (answeredQuestions >= 15) {
                 let obj = {
@@ -120,12 +129,14 @@
             } else {
                 successCB(globalData);
             }
-            
+            window.scrollTo(0, 600); // גלילה אוטומטית לתחילת השאלון
         }
+
         function successCBAns(data) {
             console.log(data);
             window.location.href = "find gift.html";
         }
+
         function allQuestionsRated() {
             var questionCount = Math.min(5, globalData.length - currentQuestion);
             for (var i = currentQuestion; i < currentQuestion + questionCount; i++) {
@@ -261,7 +272,9 @@
                                 <h6>עלייך לדרג את השאלות הבאות לפי סולם ערכים 1-5 בהתאם לנמען שלך</h6>
                                 <h6>(1- מסכים ברמה נמוכה, 5- מסכים במידה רבה).</h6><br /><br />
                                 <form id="surveyForm" action="#">
-                                    <br />
+                                    <div class="progress-bar-container"> <!-- בר התקדמות בשאלון -->
+                                       <div id="progressBar" class="progress-bar"></div>
+                                    </div><br /><br /><br /><br />
                                     <div id="questionContainer">
                                         <!-- כאן יופיעו השאלות -->
                                     </div><br />
