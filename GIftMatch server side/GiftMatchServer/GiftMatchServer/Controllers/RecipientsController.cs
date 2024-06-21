@@ -47,6 +47,82 @@ namespace GiftMatchServer.Controllers
                 return Ok(res);
 
         }
+        [HttpPost("insertNewsAssociatedInterest")]
+        public IActionResult insertNewsAssociatedInterest([FromBody] AssociatedInterest interest)
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                int res = dbs.insertNewsAssociatedInterest(interest);
 
+                if (res > 0)
+                {
+                    return Ok(res);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("insertNewsAssociatedAttr")]
+        public IActionResult insertNewsAssociatedAttr([FromBody] AssociatedAtrr attr)
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                int res = dbs.insertNewsAssociatedAttr(attr);
+
+                if (res > 0)
+                {
+                    return Ok(res);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("getRecipientAssociatedAttr/{phone}")]
+        public IActionResult getRecipientAssociatedAttr(string phone)
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                List<AssociatedAtrr> res = dbs.getRecipientAssociatedAttr(phone);
+
+                if (res.Count > 0)
+                {
+                    return Ok(res);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet("getRecipientAssociatedInterest/{phone}")]
+        public IActionResult getRecipientAssociatedInterest(string phone)
+        {
+            try
+            {
+                DBservices dbs = new DBservices();
+                List<AssociatedInterest> res = dbs.getRecipientAssociatedInterest(phone);
+
+                if (res.Count > 0)
+                {
+                    return Ok(res);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

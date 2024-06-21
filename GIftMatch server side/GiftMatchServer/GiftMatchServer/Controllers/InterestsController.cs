@@ -20,24 +20,6 @@ namespace GiftMatchServer.Controllers
                 return Ok(res);
             return NotFound();
         }
-        [HttpPost("insertNewsAssociatedInterest")]
-        public IActionResult insertNewsAssociatedInterest([FromBody] AssociatedInterest interest)
-        {
-            try
-            {
-                DBservices dbs = new DBservices();
-                int res = dbs.insertNewsAssociatedInterest(interest);
-
-                if (res > 0)
-                {
-                    return Ok(res);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+       
     }
 }

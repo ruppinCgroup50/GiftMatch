@@ -3,16 +3,16 @@
     public class AssociatedInterest
     {
         public int IntrestID { get; set; }
-        public string GiftName { get; set; }
+        public string Phone { get; set; }
         public int Priority { get; set; }
         public AssociatedInterest()
         {
 
         }
-        public AssociatedInterest(int id, string giftName,int priority)
+        public AssociatedInterest(int id, string phone,int priority)
         {
             IntrestID = id;
-            GiftName = giftName;
+            Phone = phone;
             Priority = priority;
 
         }

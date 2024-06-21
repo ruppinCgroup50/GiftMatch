@@ -9,24 +9,6 @@ namespace GiftMatchServer.Controllers
     [ApiController]
     public class AttributesController : ControllerBase
     {
-        [HttpPost("insertNewsAssociatedAttr")]
-        public IActionResult insertNewsAssociatedAttr([FromBody] AssociatedAtrr attr)
-        {
-            try
-            {
-                DBservices dbs = new DBservices();
-                int res = dbs.insertNewsAssociatedAttr(attr);
-
-                if (res > 0)
-                {
-                    return Ok(res);
-                }
-                return NotFound();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
+       
     }
 }
