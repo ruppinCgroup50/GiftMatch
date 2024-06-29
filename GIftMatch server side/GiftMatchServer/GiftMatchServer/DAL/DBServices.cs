@@ -448,9 +448,64 @@ public class DBservices
             }
         }
 
-    }  
-    
-    
+    }
+
+
+    public List<RecipientRelationshipScore> GetRecipientRelationshipScore(string recipientPhoneNumber)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureGetMyRecipient("sp_GetRecipientRelationshipScore", con, recipientPhoneNumber);             // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<RecipientRelationshipScore> list = new List<RecipientRelationshipScore>();
+            while (dataReader.Read())
+            {
+                RecipientRelationshipScore r = new RecipientRelationshipScore();
+
+                r.Phone = dataReader["phone"].ToString();
+                r.RelationshipScore = Convert.ToInt32(dataReader["RelationshipScore"].ToString());
+
+
+
+                list.Add(r);
+
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+
     public List<AssociatedAtrr> getRecipientAssociatedAttr(string phone)
     {
 

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace GiftMatchServer.Controllers
 {
@@ -10,6 +9,7 @@ namespace GiftMatchServer.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+
 
         [HttpPost("AddNewUser")]
         public IActionResult InsertUser([FromBody] User user)
@@ -91,7 +91,5 @@ namespace GiftMatchServer.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-
     }
 }

@@ -27,6 +27,28 @@ namespace GiftMatchServer.Controllers
 
         // משתנה סטטי לשמירת unifiedList
         private static List<string> unifiedList = new List<string>();
+        // משתנה סטטי לשמירת מספר הטלפון
+        private static string recipientPhoneNumber;
+
+
+        // POST: api/Big5qsController/RecipientPhone
+        [HttpPost("RecipientPhone")]
+        public IActionResult PostRecipientPhone([FromBody] JsonElement data)
+        {
+            try
+            {
+                if (data.TryGetProperty("phone", out JsonElement phoneElement) && phoneElement.ValueKind == JsonValueKind.String)
+                {
+                    recipientPhoneNumber = phoneElement.GetString();
+                    return Ok("Phone number received and saved successfully.");
+                }
+                return BadRequest("Invalid data. Phone number not received.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
 
         // GET: api/Big5qsController/question
@@ -218,39 +240,52 @@ namespace GiftMatchServer.Controllers
         // חישוב ציוני המתנות לתכונות
         private Dictionary<string, Dictionary<string, double>> CalculateScoresAtt(Dictionary<string, List<string>> dictionary)
         {
+            //לקיחת אחוז מידה הכרות מהדאטה בייס
+            DBservices dbs = new DBservices();
+            List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(recipientPhoneNumber);
+            int relationshipScore = res.First().RelationshipScore;
             Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
-            double dictionaryScore = 50.0;
 
-            double listScore = dictionaryScore / dictionary.Count;
-
-            foreach (var list in dictionary)
+            if (relationshipScore > 5)
             {
-                Dictionary<string, double> itemScores = new Dictionary<string, double>();
-                for (int i = 0; i < list.Value.Count; i++)
-                {
-                    double itemScore = 100.0 - (i * (100.0 / list.Value.Count));
-                    itemScores[list.Value[i]] = itemScore;
-                }
-                scores[list.Key] = itemScores;
-            }
+                double dictionaryScore = (relationshipScore - 5) / 10.0;
 
-            foreach (var list in scores)
-            {
-                double listFinalScore = listScore;
-                foreach (var item in list.Value)
+                double listScore = dictionaryScore / dictionary.Count;
+
+                foreach (var list in dictionary)
                 {
-                    double itemFinalScore = item.Value * listFinalScore / 100;
-                    scores[list.Key][item.Key] = itemFinalScore;
+                    Dictionary<string, double> itemScores = new Dictionary<string, double>();
+                    for (int i = 0; i < list.Value.Count; i++)
+                    {
+                        double itemScore = 100.0 - (i * (100.0 / list.Value.Count));
+                        itemScores[list.Value[i]] = itemScore;
+                    }
+                    scores[list.Key] = itemScores;
+                }
+
+                foreach (var list in scores)
+                {
+                    double listFinalScore = listScore;
+                    foreach (var item in list.Value)
+                    {
+                        double itemFinalScore = item.Value * listFinalScore / 100;
+                        scores[list.Key][item.Key] = itemFinalScore;
+                    }
                 }
             }
-
             return scores;
         }
         // חישוב ציוני המתנות לתחומי עניין
         private Dictionary<string, Dictionary<string, double>> CalculateScoresInter(Dictionary<string, List<string>> dictionary)
         {
+            //לקיחת אחוז מידה הכרות מהדאטה בייס
+            DBservices dbs = new DBservices();
+            List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(recipientPhoneNumber);
+            int relationshipScore = res.First().RelationshipScore;
+
             Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
-            double dictionaryScore = 50.0;
+            if (relationshipScore <= 5) { 
+                double dictionaryScore = 100.0;
 
             // Compute scores for each list (similar to how item scores are computed)
             Dictionary<string, double> listScores = new Dictionary<string, double>();
@@ -281,9 +316,43 @@ namespace GiftMatchServer.Controllers
                     scores[list.Key][item.Key] = itemFinalScore;
                 }
             }
+            }
+            else {
+                double dictionaryScore = ( 10 - (relationshipScore - 5) ) / 10.0;
 
+                // Compute scores for each list (similar to how item scores are computed)
+                Dictionary<string, double> listScores = new Dictionary<string, double>();
+                var lists = dictionary.Keys.ToList();
+                for (int i = 0; i < lists.Count; i++)
+                {
+                    double listScore = 100.0 - (i * (100.0 / lists.Count));
+                    listScores[lists[i]] = listScore;
+                }
+
+                foreach (var list in dictionary)
+                {
+                    Dictionary<string, double> itemScores = new Dictionary<string, double>();
+                    for (int i = 0; i < list.Value.Count; i++)
+                    {
+                        double itemScore = 100.0 - (i * (100.0 / list.Value.Count));
+                        itemScores[list.Value[i]] = itemScore;
+                    }
+                    scores[list.Key] = itemScores;
+                }
+
+                foreach (var list in scores)
+                {
+                    double listFinalScore = listScores[list.Key] * dictionaryScore / 100;
+                    foreach (var item in list.Value)
+                    {
+                        double itemFinalScore = item.Value * listFinalScore / 100;
+                        scores[list.Key][item.Key] = itemFinalScore;
+                    }
+                }
+            }
             return scores;
         }
+           
 
 
 

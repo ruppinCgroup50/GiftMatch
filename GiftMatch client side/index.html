@@ -191,44 +191,64 @@
 		}
 
 		function forgotPassword() {
+            event.preventDefault(); // מניעת שליחת הטופס
+
 			var email = document.getElementById("loginUsername").value; // הנחה ששם המשתמש הוא גם האימייל
 
-			// הגדר את הפרטים של השליחה
-			var data = {
-				"personalizations": [{
-					"to": [{
-						"email": email
-					}],
-					"subject": "איפוס סיסמה"
-				}],
-				"from": {
-					"email": "Giftmatch2024@gmail.com" // כתובת האימייל שבה תרצה לשלוח ממנה
-				},
-				"content": [{
-					"type": "text/plain",
-					"value": "לחץ על הקישור הבא לאיפוס סיסמה: https://yourwebsite.com/reset-password"
-				}]
-			};
+            // בדיקה אם האימייל לא ריק
+            if (!email) {
+                alert("אנא הכנס אימייל.");
+                return;
+            }
 
-			// שליחת הבקשה ל-API של SendGrid
-			fetch('https://api.sendgrid.com/v3/mail/send', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': 'Bearer YOUR_SENDGRID_API_KEY' // הוסף כאן המפתח
-				},
-				body: JSON.stringify(data)
-			})
-				.then(response => response.json())
-				.then(data => {
-					console.log(data);
-					alert("בקשת איפוס סיסמה נשלחה למייל שלך.");
-				})
-				.catch((error) => {
-					console.error('Error:', error);
-					alert("ארעה שגיאה בעת שליחת האימייל. נסה שנית מאוחר יותר.");
-				});
-		}
+            // קריאה לשרת לבדוק אם האימייל קיים
+            $.ajax({
+                type: "POST",
+                url: api + "CheckIfUserExists/" + email,
+                contentType: "application/json",
+                success: function (response) {
+                    // אם האימייל קיים, להמשיך עם שליחת האימייל לאיפוס סיסמה
+                    var data = {
+                        "personalizations": [{
+                            "to": [{
+                                "email": email
+                            }],
+                            "subject": "איפוס סיסמה"
+                        }],
+                        "from": {
+                            "email": "Giftmatch2024@gmail.com" // כתובת האימייל שבה תרצה לשלוח ממנה
+                        },
+                        "content": [{
+                            "type": "text/plain",
+                            "value": "לחץ על הקישור הבא לאיפוס סיסמה: https://yourwebsite.com/reset-password"
+                        }]
+                    };
+
+                    // שליחת הבקשה ל-API של SendGrid
+                    $.ajax({
+                        type: "POST",
+                        url: 'https://api.sendgrid.com/v3/mail/send',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer YOUR_SENDGRID_API_KEY' // הוסף כאן המפתח
+                        },
+                        data: JSON.stringify(data),
+                        success: function (response) {
+                            console.log(response);
+                            alert("בקשת איפוס סיסמה נשלחה למייל שלך.");
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            alert('שגיאה בשליחת האימייל');
+                        }
+                    });
+                },
+                error: function (error) {
+                    console.log(error);
+                    alert('האימייל לא קיים במערכת');
+                }
+            });
+        }
 	</script>
 
 </head>

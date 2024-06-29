@@ -57,7 +57,9 @@
         });
         function succPhone(data) {
             if (data == 1) {
-                alert("מספר זה כבר קיים במערכת")
+                alert("מספר זה כבר קיים במערכת");
+            } else {
+                sendPhoneToBig5qsController(phoneInput.value);
             }
         }
         function errPhone(err) {
@@ -146,6 +148,24 @@
 
         function Logout() {
             window.location.href = "index.html";
+        }
+
+        function sendPhoneToBig5qsController(phoneNumber) {
+            const url = api + 'Big5qsController/RecipientPhone';
+            const data = { phone: phoneNumber };
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: JSON.stringify(data),
+                contentType: "application/json",
+                success: function (response) {
+                    console.log("Phone number sent successfully", response);
+                },
+                error: function (err) {
+                    console.error("Error sending phone number", err);
+                }
+            });
         }
     </script>
 
