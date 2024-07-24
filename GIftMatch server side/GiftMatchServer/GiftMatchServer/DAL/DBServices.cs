@@ -467,7 +467,7 @@ public class DBservices
             throw (ex);
         }
 
-        cmd = CreateCommandWithStoredProcedureGetMyRecipient("sp_GetRecipientRelationshipScore", con, recipientPhoneNumber);             // create the command
+        cmd = CreateCommandWithStoredProcedureGetMyRecipientByPhone("sp_GetRecipientRelationshipScore", con, recipientPhoneNumber);             // create the command
 
         try
         {
@@ -1251,6 +1251,17 @@ public class DBservices
 
         return cmd;
     }
+    private SqlCommand CreateCommandWithStoredProcedureGetMyRecipientByPhone(String spName, SqlConnection con, string phone)
+    {
+
+        SqlCommand cmd = new SqlCommand(); // create the command object
+        cmd.Connection = con;              // assign the connection to the command object
+        cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
+        cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
+        cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
+        cmd.Parameters.AddWithValue("@RecipientPhone", phone);
+        return cmd;
+    }  
     private SqlCommand CreateCommandWithStoredProcedureGetMyRecipient(String spName, SqlConnection con, string email)
     {
 
