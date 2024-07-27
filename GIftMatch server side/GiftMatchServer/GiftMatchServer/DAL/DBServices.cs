@@ -1261,6 +1261,7 @@ public class DBservices
         cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
         cmd.Parameters.AddWithValue("@RecipientPhone", phone);
         return cmd;
+        
     }  
     private SqlCommand CreateCommandWithStoredProcedureGetMyRecipient(String spName, SqlConnection con, string email)
     {

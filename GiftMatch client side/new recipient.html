@@ -361,6 +361,7 @@
         }
 
         function navigateToPage() {
+            sessionStorage["recipientPhone"] =$("#phone").val();
             var sliderValue = document.getElementById("myRange").value;
             if (sliderValue > 5) {
                 window.location.href = "big five.html";

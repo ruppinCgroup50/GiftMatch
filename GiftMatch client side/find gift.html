@@ -253,37 +253,46 @@
     <script src="js/custom.js"></script>
 
      <script>
-            document.getElementById("review_form").addEventListener("submit", function (event) {
-            var interests = document.querySelectorAll('input[name="interest"]:checked');
-                event.preventDefault();
-            // בדיקה אם לא נבחרו תחומי עניין
-            if (interests.length === 0) {
-                event.preventDefault();
-            alert("יש לבחור לפחות תחום עניין אחד");
-            }
-            else {
-            showPopuploading();
-            // יצירת אובייקט המכיל את הנתונים שיש לשלוח
-            let dataToSend = {
-            selectedInterests: selectedInterests,
-            };
-            // שליחת הנתונים לשרת באמצעות AJAX
-            $.ajax({
-            type: "POST",
-            url: api + "Big5qs/InterestsToGpt", 
-            data: JSON.stringify(dataToSend),
-            contentType: "application/json",
-                success: function (response) {
-                hidePopuploading();
-                // מעבר לעמוד תצוגת רעיונות
-                window.location.href = "FinalGiftList.html"; },
-            error: function(error) {
-                // טיפול בשגיאות
-                hidePopuploading();
-                console.log(error);
-                    }
-                });
-            }
+         document.getElementById("review_form").addEventListener("submit", function (event) {
+             var interests = document.querySelectorAll('input[name="interest"]:checked');
+             event.preventDefault();
+             // בדיקה אם לא נבחרו תחומי עניין
+             if (interests.length === 0) {
+                 event.preventDefault();
+                 alert("יש לבחור לפחות תחום עניין אחד");
+             }
+             else {
+                 showPopuploading();
+
+                 recipientPhoneSS = '';
+                 if (sessionStorage["recipientPhone"] != undefined) {
+                     recipientPhoneSS = sessionStorage["recipientPhone"]
+                 }
+
+                 // יצירת אובייקט המכיל את הנתונים שיש לשלוח
+                 let dataToSend = {
+                     phone: recipientPhoneSS,
+                     selectedInterests: selectedInterests,
+                 };
+                 // שליחת הנתונים לשרת באמצעות AJAX
+                 $.ajax({
+                     type: "POST",
+                     url: api + "Big5qs/InterestsToGpt",
+                     data: JSON.stringify(dataToSend),
+                     contentType: "application/json",
+                     success: function (response) {
+                         hidePopuploading();
+                         // מעבר לעמוד תצוגת רעיונות
+                         window.location.href = "FinalGiftList.html";
+                     },
+                     error: function (error) {
+                         // טיפול בשגיאות
+                         hidePopuploading();
+                         console.log(error);
+                     }
+                 });
+             }
+         
             });
 
          function showPopuploading() {

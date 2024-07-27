@@ -149,6 +149,9 @@ namespace GiftMatchServer.Controllers
         {
             try
             {
+
+                    data.TryGetProperty("phone", out JsonElement phoneElement);
+                    string phone = phoneElement.GetString();
                 if (data.TryGetProperty("selectedInterests", out JsonElement interestsElement) && interestsElement.ValueKind == JsonValueKind.Array)
                 {
                     // מילון חדש לאחסון רשימות העניינים
@@ -191,8 +194,8 @@ namespace GiftMatchServer.Controllers
                     var (updatedGiftsByAttributes, updatedInterestLists) = await gpt3GiftList.ProcessGiftLists(interestLists, giftsByAttributes).ConfigureAwait(false);
 
                     // חישוב ציוני המתנות והעניינים
-                    Dictionary<string, Dictionary<string, double>> giftsByAttributesScores = CalculateScoresAtt(giftsByAttributes);
-                    Dictionary<string, Dictionary<string, double>> interestListsScores = CalculateScoresInter(interestLists);
+                    Dictionary<string, Dictionary<string, double>> giftsByAttributesScores = CalculateScoresAtt(giftsByAttributes,phone);
+                    Dictionary<string, Dictionary<string, double>> interestListsScores = CalculateScoresInter(interestLists, phone);
 
                     // מיזוג הרשימות ומיון לפי הציונים
                     unifiedList = MergeLists(giftsByAttributesScores, interestListsScores);
@@ -238,11 +241,11 @@ namespace GiftMatchServer.Controllers
 
 
         // חישוב ציוני המתנות לתכונות
-        private Dictionary<string, Dictionary<string, double>> CalculateScoresAtt(Dictionary<string, List<string>> dictionary)
+        private Dictionary<string, Dictionary<string, double>> CalculateScoresAtt(Dictionary<string, List<string>> dictionary,string phone)
         {
             //לקיחת אחוז מידה הכרות מהדאטה בייס
             DBservices dbs = new DBservices();
-            List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(recipientPhoneNumber);
+            List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(phone);
             int relationshipScore = res.First().RelationshipScore;
             Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
 
@@ -276,11 +279,11 @@ namespace GiftMatchServer.Controllers
             return scores;
         }
         // חישוב ציוני המתנות לתחומי עניין
-        private Dictionary<string, Dictionary<string, double>> CalculateScoresInter(Dictionary<string, List<string>> dictionary)
+        private Dictionary<string, Dictionary<string, double>> CalculateScoresInter(Dictionary<string, List<string>> dictionary,string phone)
         {
             //לקיחת אחוז מידה הכרות מהדאטה בייס
             DBservices dbs = new DBservices();
-            List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(recipientPhoneNumber);
+            List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(phone);
             int relationshipScore = res.First().RelationshipScore;
 
             Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
