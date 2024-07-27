@@ -249,8 +249,8 @@ namespace GiftMatchServer.Controllers
             if (relationshipScore > 5)
             {
                 double dictionaryScore = (relationshipScore - 5) / 10.0;
-
-                double listScore = dictionaryScore / dictionary.Count;
+                //לקחת אחוזי ציון מהדאטה בייס לכל תכונה 
+                double listScore = dictionaryScore / dictionary.Count;  //במקום זה - להשתמש באחוז ציון מהדאטה בייס
 
                 foreach (var list in dictionary)
                 {
