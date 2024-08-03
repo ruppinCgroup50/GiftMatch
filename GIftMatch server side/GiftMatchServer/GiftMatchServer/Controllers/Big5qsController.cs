@@ -247,13 +247,18 @@ namespace GiftMatchServer.Controllers
             DBservices dbs = new DBservices();
             List<RecipientRelationshipScore> res = dbs.GetRecipientRelationshipScore(phone);
             int relationshipScore = res.First().RelationshipScore;
+
+            //לקיחת אחוז התאמה מהדאטה בייס
+            List<AttributeMatchingPercentage> matchingPercentages = dbs.GetAttributeMatchingPercentage(phone);
+
             Dictionary<string, Dictionary<string, double>> scores = new Dictionary<string, Dictionary<string, double>>();
 
             if (relationshipScore > 5)
             {
                 double dictionaryScore = (relationshipScore - 5) / 10.0;
+
                 //לקחת אחוזי ציון מהדאטה בייס לכל תכונה 
-                double listScore = dictionaryScore / dictionary.Count;  //במקום זה - להשתמש באחוז ציון מהדאטה בייס
+                //double listScore = dictionaryScore / dictionary.Count;  //במקום זה - להשתמש באחוז ציון מהדאטה בייס
 
                 foreach (var list in dictionary)
                 {
@@ -268,10 +273,16 @@ namespace GiftMatchServer.Controllers
 
                 foreach (var list in scores)
                 {
-                    double listFinalScore = listScore;
+                    // חיפוש אחוז התאמה לפי ID התכונה
+                    int attributeId = Attributes.IndexOf(list.Key) + 1;
+                    double listScore = matchingPercentages
+                        .Where(m => m.Id == attributeId)
+                        .Select(m => m.MatchingPercentage)
+                        .FirstOrDefault();
+
                     foreach (var item in list.Value)
                     {
-                        double itemFinalScore = item.Value * listFinalScore / 100;
+                        double itemFinalScore = item.Value * listScore / 100;
                         scores[list.Key][item.Key] = itemFinalScore;
                     }
                 }

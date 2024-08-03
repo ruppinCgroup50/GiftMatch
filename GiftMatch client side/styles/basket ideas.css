@@ -918,4 +918,14 @@ section {
     #Logo {
         margin-right: 10px;
     }
+
+    .popuploading img {
+        height: 50px;
+        width: 50px;
+        margin: 50px
+    }
+
+    .popuploading h4 {
+        direction: rtl;
+    }
 }

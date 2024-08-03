@@ -505,6 +505,58 @@ public class DBservices
 
     }
 
+    public List<AttributeMatchingPercentage> GetAttributeMatchingPercentage(string recipientPhoneNumber)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("myProjDB"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        cmd = CreateCommandWithStoredProcedureGetMyRecipientByPhone("sp_GetAttributeMatchingPercentage", con, recipientPhoneNumber);             // create the command
+
+        try
+        {
+            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            List<AttributeMatchingPercentage> list = new List<AttributeMatchingPercentage>();
+            while (dataReader.Read())
+            {
+                AttributeMatchingPercentage r = new AttributeMatchingPercentage();
+
+                r.Phone = dataReader["phone"].ToString();
+                r.MatchingPercentage = Convert.ToInt32(dataReader["MatchingPercentage"].ToString());
+                r.Id = Convert.ToInt32(dataReader["Id"].ToString());
+                list.Add(r);
+
+            }
+            return list;
+
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
 
     public List<AssociatedAtrr> getRecipientAssociatedAttr(string phone)
     {
