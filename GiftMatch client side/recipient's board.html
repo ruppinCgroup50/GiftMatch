@@ -20,16 +20,15 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
             crossorigin="anonymous"></script>
-    <link href="styles/find gift.css" rel="stylesheet" />
     <script>
         $(document).ready(function () {
             if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-                api = "https://localhost:7284/api/";
+                api = "https://localhost:7284/api/RecipientFavorites/";
                 imageFolder = "https://localhost:7284/images/";
             }
             else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/";
-                imageFolder = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/images/";
+                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/RecipientFavorites/";
+                imageFolder = "https://proj.ruppin.ac.il/cgroup50/test2/tar2/images/";
             }
 
             if (sessionStorage["connectedUser"] != undefined) {
@@ -47,20 +46,9 @@
                 // שינוי התוכן של כותרת הלוח לשם הנמען
                 document.getElementById("phName").innerText = "הלוח של " + name;
 
-                ajaxCall("GET", api + "RecipientFavorites/GetFavorites/" + phone, "", successCB, errorCB);
+                ajaxCall("GET", api + "GetFavorites/" + phone, "", successCB, errorCB);
                 currentcardFrame = 0;
             };
-
-            // הוספת מאזין אירועים לכפתור חיפוש חוזר של רעיונות
-            document.getElementById("searchAgainButton").addEventListener("click", function () {
-                showPopuploading();
-                searchAgain();
-            });
-
-            // הוספת מאזין אירועים לכפתור עריכה של תחומי עניין
-            document.getElementById("changeButton").addEventListener("click", function () {
-                changeinterest();
-            });
 
         });
 
@@ -148,7 +136,7 @@
             };
 
             // שליחת הנתונים לשרת
-            ajaxCall("POST", api + "RecipientFavorites/SaveIdea", JSON.stringify(favoriteIdea), sucSave, errSave)
+            ajaxCall("POST", api + "SaveIdea", JSON.stringify(favoriteIdea), sucSave, errSave)
 
             function sucSave() {
                 console.log("רעיון מועדף נשמר בהצלחה");
@@ -173,7 +161,7 @@
             };
 
             // שליחת הנתונים לשרת
-            ajaxCall("DELETE", api + "RecipientFavorites/RemoveIdea", JSON.stringify(favoriteIdea), sucRemove, errRemove)
+            ajaxCall("DELETE", api + "RemoveIdea", JSON.stringify(favoriteIdea), sucRemove, errRemove)
 
             function sucRemove() {
                 console.log("רעיון מועדף הוסר בהצלחה מרשימת המועדפים");
@@ -182,37 +170,6 @@
             function errRemove() {
                 console.error("שגיאה בהסרת הרעיון המועדף");
             }
-        }
-
-        function searchAgain() {
-            const phone = new URLSearchParams(window.location.search).get('phone');
-            const data = { phone: phone };
-
-            ajaxCall("POST", api + "Big5qs/InterestsToGpt", JSON.stringify(data), function (response) {
-                console.log("חיפוש חוזר הצליח");
-                hidePopuploading();
-                // מעבר לעמוד תצוגת רעיונות
-                window.location.href = "FinalGiftList.html";
-            }, function (error) {
-                hidePopuploading();
-                console.error("שגיאה בחיפוש חוזר");
-            });
-        }
-
-        function changeinterest() {
-            sessionStorage["recipientPhone"] = $("#phone").val();
-            // מעבר לעמוד בחירת תחומי עניין
-            window.location.href ="find gift.html";
-        }
-
-        function showPopuploading() {
-            document.getElementById('loading').style.display = 'block';
-            document.querySelector('.popuploading').style.display = 'block';
-        }
-
-        function hidePopuploading() {
-            document.getElementById('loading').style.display = 'none';
-            document.querySelector('.popuploading').style.display = 'none';
         }
 
         function enter_basket() {
@@ -309,8 +266,8 @@
                             <div class="review_form_title" id="phName">
                             </div><br /><br />
                             <div>
-                                <button type="submit" class="review_form_button" id="changeButton">עריכת תחומי עניין</button>
-                                <button type="submit" class="review_form_button" id="searchAgainButton">חיפוש חוזר של רעיונות</button>
+                                <button type="submit" class="review_form_button">עריכת תחומי עניין</button>
+                                <button type="submit" class="review_form_button">חיפוש חוזר של רעיונות</button>
                             </div>
                             <div class="review_form_content row justify-content-center">
                                 <!--כאן יופיעו כרטיסי הרעיונות-->
@@ -318,14 +275,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- חלון קופץ -->
-        <div class="overlay" id="loading" style="display:none">
-            <div class="popup popuploading">
-                <img src="images/loading.gif" id="loadingImg" />
-                <h4>עוד רגע והמתנה המושלמת בדרך אלייך</h4>
             </div>
         </div>
 
