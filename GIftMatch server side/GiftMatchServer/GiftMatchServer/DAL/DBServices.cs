@@ -89,7 +89,6 @@ public class DBservices
         }
 
     }
-
     public List<GiftList> GetGiftList()
     {
 
@@ -425,8 +424,6 @@ public class DBservices
                 r.Image = dataReader["Image"].ToString();
                 r.UserEmail = dataReader["UserEmail"].ToString();
 
-
-
                 list.Add(r);
 
             }
@@ -449,7 +446,6 @@ public class DBservices
         }
 
     }
-
 
     public List<RecipientRelationshipScore> GetRecipientRelationshipScore(string recipientPhoneNumber)
     {
@@ -480,8 +476,6 @@ public class DBservices
                 r.Phone = dataReader["phone"].ToString();
                 r.RelationshipScore = Convert.ToInt32(dataReader["RelationshipScore"].ToString());
 
-
-
                 list.Add(r);
 
             }
@@ -504,59 +498,6 @@ public class DBservices
         }
 
     }
-
-    public List<AttributeMatchingPercentage> GetAttributeMatchingPercentage(string recipientPhoneNumber)
-    {
-
-        SqlConnection con;
-        SqlCommand cmd;
-
-        try
-        {
-            con = connect("myProjDB"); // create the connection
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        cmd = CreateCommandWithStoredProcedureGetMyRecipientByPhone("sp_GetAttributeMatchingPercentage", con, recipientPhoneNumber);             // create the command
-
-        try
-        {
-            SqlDataReader dataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            List<AttributeMatchingPercentage> list = new List<AttributeMatchingPercentage>();
-            while (dataReader.Read())
-            {
-                AttributeMatchingPercentage r = new AttributeMatchingPercentage();
-
-                r.Phone = dataReader["phone"].ToString();
-                r.MatchingPercentage = Convert.ToInt32(dataReader["MatchingPercentage"].ToString());
-                r.Id = Convert.ToInt32(dataReader["Id"].ToString());
-                list.Add(r);
-
-            }
-            return list;
-
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-
-        finally
-        {
-            if (con != null)
-            {
-                // close the db connection
-                con.Close();
-            }
-        }
-
-    }
-
 
     public List<AssociatedAtrr> getRecipientAssociatedAttr(string phone)
     {
@@ -641,7 +582,6 @@ public class DBservices
                 ai.Priority = Convert.ToInt32(dataReader["priority"].ToString());
 
                 list.Add(ai);
-
             }
             return list;
            
@@ -662,7 +602,6 @@ public class DBservices
         }
 
     }
-
 
     //--------------------------------------------------------------------------------------------------
     // This method Inserts a user to the user table 
@@ -734,7 +673,6 @@ public class DBservices
                 u.LastName = dataReader["lastName"].ToString();
                 u.Password = "";
                 return u;
-
             }
             return null;
 
@@ -805,7 +743,6 @@ public class DBservices
         }
 
     }
-
     public int InsertRecipient(Recipient recipient)
     {
 
@@ -891,7 +828,6 @@ public class DBservices
         }
 
     }
-
     public int InsertGiftAttr(string giftName, string attrString)
     {
 
@@ -970,7 +906,6 @@ public class DBservices
         }
 
     }
-
     public int InsertGiftIdea(GiftIdea gift)
     {
 
@@ -1010,7 +945,6 @@ public class DBservices
         }
 
     }
-
     public int InsertFavoritesGiftIdea(RecipientFavorites gift)
     {
 
@@ -1128,7 +1062,6 @@ public class DBservices
         }
 
     }
-
     public int RemoveFavoritesGiftIdea(RecipientFavorites gift)
     {
 
@@ -1388,252 +1321,5 @@ public class DBservices
         cmd.Parameters.AddWithValue("@password", password);
         return cmd;
     }
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand update user using a stored procedure
-    ////---------------------------------------------------------------------------------
-
-    //private SqlCommand CreateUpdateUserCommandWithStoredProcedure(String spName, SqlConnection con, User user, string email)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@firstName", user.FirstName);
-
-    //    cmd.Parameters.AddWithValue("@familyName", user.FamilyName);
-
-    //    cmd.Parameters.AddWithValue("@email", email);
-
-    //    cmd.Parameters.AddWithValue("@password", user.Password);
-
-    //    cmd.Parameters.AddWithValue("@isActive", user.IsActive);
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand read user using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateReadUsersCommandWithStoredProcedureWithoutParameters(String spName, SqlConnection con)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand delete user using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateDeleteUserCommandWithStoredProcedure(String spName, SqlConnection con, string email)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@email", email);
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand insert flat using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateInsertFlatCommandWithStoredProcedure(String spName, SqlConnection con, Flat flat)
-    //{
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-
-    //    cmd.Parameters.AddWithValue("@city", flat.City);
-
-    //    cmd.Parameters.AddWithValue("@address", flat.Address);
-
-    //    cmd.Parameters.AddWithValue("@numberofroom", flat.Numberofroom);
-
-    //    cmd.Parameters.AddWithValue("@price", flat.Price);
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand read flat using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateReadFlatsCommandWithStoredProcedureWithoutParameters(String spName, SqlConnection con)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand delete flat using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateDeleteFlatCommandWithStoredProcedure(String spName, SqlConnection con, int id)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@id", id);
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand insert vacation using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateInsertVacationCommandWithStoredProcedure(String spName, SqlConnection con, Vacation vacation)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@userId", vacation.UserId);
-
-    //    cmd.Parameters.AddWithValue("@flatId", vacation.FlatId);
-
-    //    cmd.Parameters.AddWithValue("@startDate", vacation.StartDate);
-
-    //    cmd.Parameters.AddWithValue("@endDate", vacation.EndDate);
-
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand read vacation using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateReadVacationsCommandWithStoredProcedureWithoutParameters(String spName, SqlConnection con)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand read vacation by email using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateReadVacationsByEmailCommandWithStoredProcedureWithoutParameters(String spName, SqlConnection con, string email)
-    //{
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@email", email);
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand delete vacation using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //private SqlCommand CreateDeleteVacationCommandWithStoredProcedure(String spName, SqlConnection con, int id)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@id", id);
-
-    //    return cmd;
-    //}
-
-    ////---------------------------------------------------------------------------------
-    //// Create the SqlCommand read average price per night using a stored procedure
-    ////---------------------------------------------------------------------------------
-    //SqlCommand BuildReadAvgPricePerNightStoredProcedureCommand(SqlConnection con, string spName, int month)
-    //{
-
-    //    SqlCommand cmd = new SqlCommand(); // create the command object
-
-    //    cmd.Connection = con;              // assign the connection to the command object
-
-    //    cmd.CommandText = spName;      // can be Select, Insert, Update, Delete 
-
-    //    cmd.CommandTimeout = 10;           // Time to wait for the execution' The default is 30 seconds
-
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure; // the type of the command, can also be text
-
-    //    cmd.Parameters.AddWithValue("@month", month);
-
-    //    return cmd;
-
-    //}
 
 }
