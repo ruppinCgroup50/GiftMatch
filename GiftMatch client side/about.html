@@ -190,31 +190,45 @@
 <body>
 
     <div class="super_container">
-
         <!-- Header -->
 
-        <header class="header">
+        <header class="header ">
 
             <div class="header_inner d-flex justify-content-between flex-wrap ">
                 <div class="d-flex align-content-center flex-wrap g15">
                     <div class="burger_container d-flex flex-column align-items-center justify-content-around menu_mm"><div></div><div></div><div></div></div>
+                    <div class="shopping">
+                        <!-- Avatar -->
+
+                    </div>
+
+                    <!-- Cart -->
+                    <a href="#">
+                        <div class="cart" onclick="enter_basket()">
+                            <img src="images/shopping-bag.svg" alt="">
+                        </div>
+                    </a>
 
                     <nav class="main_nav">
                         <ul>
                             <li><a href="home.html">דף הבית</a></li>
-                            <li><a href="about.html">אודות</a></li>
+                            <li><a href="about connected.html">אודות</a></li>
                         </ul>
                     </nav>
                 </div>
 
-                <div class="d-flex align-content-center flex-wrap align-items-center">
-                    <input type="submit" class="LoginBTN" value="התחברות / הרשמה" onclick="openActionPopup()" />
-                    <div id="Logo"><a href="index.html"><img src="images/logo.jpg" /></a></div>
+                <div class="d-flex align-content-center flex-wrap align-items-center" id="userHeader">
+                    <a href="#">
+                        <div class="avatar">
+                            <img src="images/avatar.svg" alt="">
+                        </div>
+                    </a>
+                    <div id="phUserName"></div>
+                    <div id="Logo"><a href="home.html"><img src="images/logo.jpg" /></a></div>
                 </div>
 
             </div>
         </header>
-
         <!-- Menu -->
 
         <div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">

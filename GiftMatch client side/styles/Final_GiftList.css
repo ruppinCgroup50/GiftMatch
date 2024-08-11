@@ -23,7 +23,13 @@
 /***********
 1. Fonts
 ***********/
+#userHeader {
+    gap: 10px;
+}
 
+.burger_container.d-flex.flex-column.align-items-center.justify-content-around.menu_mm {
+    margin-top: 5px;
+}
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800');
 
 @font-face {

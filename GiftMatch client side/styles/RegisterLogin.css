@@ -1,4 +1,11 @@
-﻿/* סגנון לחלון הקופץ */
+﻿#userHeader {
+    gap: 10px;
+}
+
+.burger_container.d-flex.flex-column.align-items-center.justify-content-around.menu_mm {
+    margin-top: 5px;
+}
+/* סגנון לחלון הקופץ */
 #RegisterPopup {
     display: none;
     position: fixed;

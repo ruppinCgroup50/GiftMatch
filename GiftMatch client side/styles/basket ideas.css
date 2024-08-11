@@ -903,29 +903,39 @@ section {
 .g15 {
     gap: 15px;
 }
-
-@media only screen and (max-width: 575px) {
-    .header {
-        height: 70px;
-        padding: 10px;
-    }
-
-    #Logo img {
-        height: 50px;
-        width: 50px;
-    }
-
-    #Logo {
-        margin-right: 10px;
-    }
-
-    .popuploading img {
-        height: 50px;
-        width: 50px;
-        margin: 50px
-    }
-
-    .popuploading h4 {
-        direction: rtl;
-    }
+#phCard {
+    display: flex;
+    justify-content: center;
 }
+#userHeader{
+    gap:10px;
+}
+.burger_container.d-flex.flex-column.align-items-center.justify-content-around.menu_mm {
+    margin-top:5px;
+}
+
+    @media only screen and (max-width: 575px) {
+        .header {
+            height: 70px;
+            padding: 10px;
+        }
+
+        #Logo img {
+            height: 50px;
+            width: 50px;
+        }
+
+        #Logo {
+            margin-right: 10px;
+        }
+
+        .popuploading img {
+            height: 50px;
+            width: 50px;
+            margin: 50px
+        }
+
+        .popuploading h4 {
+            direction: rtl;
+        }
+    }

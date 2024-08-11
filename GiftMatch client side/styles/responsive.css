@@ -24,7 +24,13 @@
 /************
 1. 1800px
 ************/
+#userHeader {
+	gap: 10px;
+}
 
+.burger_container.d-flex.flex-column.align-items-center.justify-content-around.menu_mm {
+	margin-top: 5px;
+}
 @media only screen and (max-width: 1800px) {
 	.search {
 		width: 200px;
