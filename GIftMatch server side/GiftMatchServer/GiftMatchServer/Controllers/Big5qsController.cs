@@ -115,6 +115,7 @@ namespace GiftMatchServer.Controllers
                         }
                     }
 
+                    giftsByAttributes.Clear();
 
                     // שליפת רשימת המתנות לפי תכונות
                     DBservices dbs = new DBservices();
@@ -162,6 +163,7 @@ namespace GiftMatchServer.Controllers
         {
             try
             {
+                unifiedList.Clear();
 
                 data.TryGetProperty("phone", out JsonElement phoneElement);
                 string phone = phoneElement.GetString();

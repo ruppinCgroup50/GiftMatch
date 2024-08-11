@@ -83,9 +83,11 @@ namespace GiftMatchServer.BL
                             sortedGiftsText = sortedGiftsText.Trim('[', ']');
                             var sortedGifts = sortedGiftsText.Split(new[] { ',', '\n' }, StringSplitOptions.RemoveEmptyEntries)
                                                              .Select(gift => gift.Trim()) // Trim leading and trailing spaces
+                                                             .Select(gift => gift.Contains(". ") ? gift.Split(new[] { ". " }, 2, StringSplitOptions.None)[1] : gift)
                                                              .ToList();
                             return new List<string>(sortedGifts);
                         }
+
 
                     }
                     else
