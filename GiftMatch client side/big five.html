@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Big five questionnaire">
+    <link rel="icon" type="image/png" href="https://proj.ruppin.ac.il/cgroup50/test2/tar2/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
     <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -42,11 +43,11 @@
         });
         function successCB(data) {
             globalData = data;
-            let name='משתמש';
+            let name = 'משתמש';
             if (sessionStorage["recepientName"] != undefined) {
                 name = sessionStorage["recepientName"];
             }
-            
+
             var questionContainer = document.getElementById('questionContainer');
             questionContainer.innerHTML = '';
             for (var i = currentQuestion; i < currentQuestion + 5 && i < data.length; i++) {
@@ -98,34 +99,34 @@
                 let obj = {
                     ansArr: ansArr
                 }
-                ajaxCall("POST", api +"Big5qs/allAnswers",JSON.stringify(obj),successCBAns,errorCB)
-               // let avgArr = [];//מערך של ממוצעי שאלות לפי תכונות
+                ajaxCall("POST", api + "Big5qs/allAnswers", JSON.stringify(obj), successCBAns, errorCB)
+                // let avgArr = [];//מערך של ממוצעי שאלות לפי תכונות
 
-               // //לולאה שעושה ממוצע לכל 3 תאים ומכניסה את התוצאה למערך הממוצעים
-               // for (let i = 0; i < ansArr.length; i += 3) {
-               //     let group = ansArr.slice(i, i + 3);
-               //     let sum = group.reduce((acc, val) => acc + parseFloat(val), 0);//המרה לעשרוני
-               //     let average = sum / group.length;
-               //     avgArr.push(average.toFixed(2));//הכנסה למערך ממוצעים
-               // }
+                // //לולאה שעושה ממוצע לכל 3 תאים ומכניסה את התוצאה למערך הממוצעים
+                // for (let i = 0; i < ansArr.length; i += 3) {
+                //     let group = ansArr.slice(i, i + 3);
+                //     let sum = group.reduce((acc, val) => acc + parseFloat(val), 0);//המרה לעשרוני
+                //     let average = sum / group.length;
+                //     avgArr.push(average.toFixed(2));//הכנסה למערך ממוצעים
+                // }
 
-               // console.log(avgArr);
-               // //הכנסה לג'ייסון את הממוצע והמספר של התכונה
-               // let avgJsonArr = avgArr.map((value, index) => ({
-               //     value,
-               //     attId: index + 1
-               // }));
+                // console.log(avgArr);
+                // //הכנסה לג'ייסון את הממוצע והמספר של התכונה
+                // let avgJsonArr = avgArr.map((value, index) => ({
+                //     value,
+                //     attId: index + 1
+                // }));
 
-               // // מיון מערך ממוצעים
-               // avgJsonArr.sort((a, b) => b.value - a.value);
+                // // מיון מערך ממוצעים
+                // avgJsonArr.sort((a, b) => b.value - a.value);
 
-               // // מקבלים את ה2 ממוצעים הגבוהים ביותר
-               // let maxValues = avgJsonArr.slice(0, 2);
+                // // מקבלים את ה2 ממוצעים הגבוהים ביותר
+                // let maxValues = avgJsonArr.slice(0, 2);
 
-               // //console.log(maxValues);
-               // //alert("end");
+                // //console.log(maxValues);
+                // //alert("end");
 
-               //window.location.href = "find gift.html";
+                //window.location.href = "find gift.html";
             } else {
                 successCB(globalData);
             }
@@ -174,7 +175,7 @@
                 data: { data: data },
                 contentType: "application/json",
                 success: function (response) {
-                  
+
                     console.log(response);
                 },
                 error: function (error) {
