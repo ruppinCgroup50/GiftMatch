@@ -6,6 +6,7 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="description" content="GiftMatch project">
+	<link rel="icon" type="image/png" href="https://proj.ruppin.ac.il/cgroup50/test2/tar2/favicon.ico">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
 	<link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -29,7 +30,7 @@
 
 			}
 			else {
-                api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/Users/";
+				api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/Users/";
 			}
 
 			$("#RegisterForm").submit(Register);
@@ -53,7 +54,7 @@
 					lastName: lastname,
 					password: password
 				}
-                ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, errorReg)
+				ajaxCall("POST", api + "AddNewUser", JSON.stringify(newuser), successReg, errorReg)
 			}
 		}
 		function successReg(data) {
@@ -61,9 +62,9 @@
 			window.location.href = 'home.html';
 		}
 
-        function errorReg(err) {
-            alert("משתמש זה כבר קיים במערכת");
-            console.log(err);
+		function errorReg(err) {
+			alert("משתמש זה כבר קיים במערכת");
+			console.log(err);
 		}
 
 		function login() {
@@ -81,7 +82,7 @@
 				password: password
 			}
 
-            ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, errorLogin)
+			ajaxCall("POST", api + "Connect", JSON.stringify(obj), successLogin, errorLogin)
 		}
 
 		function successLogin(data) {
@@ -90,9 +91,9 @@
 
 		}
 
-        function errorLogin(err) {
-            alert("המייל או הסיסמה שהזנת שגויים");
-            console.log(err);
+		function errorLogin(err) {
+			alert("המייל או הסיסמה שהזנת שגויים");
+			console.log(err);
 		}
 
 		function openActionPopup() {

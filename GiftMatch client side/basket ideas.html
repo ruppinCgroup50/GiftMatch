@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Basket ideas">
+    <link rel="icon" type="image/png" href="https://proj.ruppin.ac.il/cgroup50/test2/tar2/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
     <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -44,13 +45,13 @@
             let str = '';
             for (var i = 0; i < data.length; i++) {
                 str += `<div class="tagname col-6 col-md-3" onclick="navigateToPage('${data[i].name}', '${data[i].phone}')">
-                    <div class="product_image"><img src="${imageFolder}${data[i].image}" alt=""></div>
-                        <div class="product_content clearfix">
-                                <div class="product_name">${data[i].name}</div>
-                                <div class="product_relationType">${data[i].relationType}</div>
+                        <div class="product_image"><img src="${imageFolder}${data[i].image}" alt=""></div>
+                            <div class="product_content clearfix">
+                                    <div class="product_name">${data[i].name}</div>
+                                    <div class="product_relationType">${data[i].relationType}</div>
+                            </div>
                         </div>
-                    </div>
-                `
+                    `
             }
             document.getElementById("phCard").innerHTML = str;
         }

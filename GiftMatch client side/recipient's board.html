@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Recipient's board">
+    <link rel="icon" type="image/png" href="https://proj.ruppin.ac.il/cgroup50/test2/tar2/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
     <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -69,21 +70,21 @@
                 var cardFrameDiv = document.createElement('div');
                 cardFrameDiv.innerHTML =
                     `<div class="cardFrame align-items-end justify-content-start">
-                             <img src="images/filled_heart.png" class="heart" alt="heart" />
-                             <button type="button" class="collapsible">
-                                 <div class="card">
-                                     <img src="${imageFolder}${data[i].image}" id="pic" alt="Avatar"><br />
-                                     <div class="container">
-                                         <h4><b>${data[i].giftName}</b></h4><br />
+                                 <img src="images/filled_heart.png" class="heart" alt="heart" />
+                                 <button type="button" class="collapsible">
+                                     <div class="card">
+                                         <img src="${imageFolder}${data[i].image}" id="pic" alt="Avatar"><br />
+                                         <div class="container">
+                                             <h4><b>${data[i].giftName}</b></h4><br />
+                                         </div>
                                      </div>
+                                 </button>
+                                 <div class="content">
+                                     <br />
+                                     <p>מחיר מוצע: ${data[i].price}</p>
+                                     <p>תיאור: ${data[i].description}</p>
                                  </div>
-                             </button>
-                             <div class="content">
-                                 <br />
-                                 <p>מחיר מוצע: ${data[i].price}</p>
-                                 <p>תיאור: ${data[i].description}</p>
-                             </div>
-                         </div><br />`;
+                             </div><br />`;
                 cardFrame.appendChild(cardFrameDiv);
             }
 

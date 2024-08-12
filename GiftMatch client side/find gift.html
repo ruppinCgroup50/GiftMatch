@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Find gift">
+    <link rel="icon" type="image/png" href="https://proj.ruppin.ac.il/cgroup50/test2/tar2/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="styles/bootstrap4/bootstrap.min.css">
     <link href="plugins/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -46,7 +47,7 @@
             let str = '';
             for (var i = 0; i < data.length; i++) {
                 str += `<div class="interest">
-                    <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}" onchange="updateClickCount('${data[i].id}')">`;
+                        <input type="checkbox" id="${data[i].id}" name="interest" value="${data[i].interestName}" onchange="updateClickCount('${data[i].id}')">`;
                 if (data[i].interestName.length > 6) {
                     str += `<label for="${data[i].id}" onclick="updateClickCount('${data[i].id}')">`;
                 }
@@ -54,7 +55,7 @@
                     str += `<label for="${data[i].id}" onclick="updateClickCount('${data[i].id}')"><br/>`;
                 }
                 str += `<img src="images/${data[i].logoPath}" alt="icon" class="interest_icon">
-                    <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
+                        <span class="interest_title">${data[i].interestName}</span><br/></label></div>`;
             }
             document.getElementById("PHinterest_grid").innerHTML = str;
         }
@@ -67,7 +68,7 @@
             var checkbox = document.getElementById(checkboxId);
             changeCardAppearance(checkboxId, checkbox.checked);
         }
-        
+
         function changeCardAppearance(interestId, checked) {
             var checkbox = document.getElementById(interestId);
             var label = document.querySelector(`label[for="${interestId}"]`);
