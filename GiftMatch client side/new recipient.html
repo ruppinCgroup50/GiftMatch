@@ -32,7 +32,7 @@
             }
             else {
                 api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/";
-                apiImage = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/images/";
+                apiImage = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/Upload";
             }
 
             if (sessionStorage["connectedUser"] != undefined) {
@@ -49,7 +49,7 @@
             // מוסיפים את אירוע הקשה של input
             phoneInput.addEventListener('input', function () {
                 // מקבלים את הערך הנוכחי של input
-                const phoneNumber = phoneInput.value;
+               const phoneNumber = phoneInput.value;
                 if (phoneNumber.length==10)
                 ajaxCall('GET', api + `Recipient/CheckPhoneNumber/${phoneNumber}`,'',succPhone,errPhone)
 

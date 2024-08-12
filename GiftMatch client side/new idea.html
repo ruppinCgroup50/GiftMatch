@@ -28,7 +28,7 @@
             }
             else {
                 api = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/";
-                imageFolder = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/images/";
+                imageFolder = "https://proj.ruppin.ac.il/cgroup50/test2/tar1/api/Upload";
             }
 
             if (sessionStorage["connectedUser"] != undefined) {
@@ -293,7 +293,7 @@
 
 
             }
-            ajaxCall("POST", 'https://localhost:7284/GiftMatch/SubmitIdea', JSON.stringify(obj), successGpt, errFunctionGpt)
+            ajaxCall("POST", api+'GiftMatch/SubmitIdea', JSON.stringify(obj), successGpt, errFunctionGpt)
             // שליחת הנתונים לצד השרת
 
             function errFunctionGpt(err) {
@@ -303,7 +303,7 @@
             }
             function successGpt(data) {
                 hidePopuploading();
-                apiImage = 'https://localhost:7284/api/Upload'
+                apiImage = imageFolder 
                 var data = new FormData();
                 var files = $("#upload-btn").get(0).files;
                 if (files.length > 0) {

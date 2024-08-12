@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace GiftMatchServer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class GiftMatchController : ControllerBase
     {
         [HttpPost("SubmitIdea")]
